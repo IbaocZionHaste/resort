@@ -138,20 +138,45 @@
 
 
     <!-- Message Icon next to Palawan CheckBox -->
-
-    <ImageView
-        android:id="@+id/messageIcon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="56dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_edit"
-        app:tint="@color/color_blue"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/textView12"
-        app:layout_constraintStart_toEndOf="@+id/checkBoxPalawan"
-        app:layout_constraintTop_toTopOf="@+id/textView12"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toTopOf="@+id/textView12">
+
+        <!-- Your message icon -->
+
+        <!-- Badge (dot with number) -->
+
+        <ImageView
+            android:id="@+id/messageIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_profile_feedback"
+            app:layout_constraintBottom_toBottomOf="@+id/textView12"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxPalawan"
+            app:layout_constraintTop_toTopOf="@+id/textView12"
+            app:layout_constraintVertical_bias="0.0"
+            app:tint="@color/light_blue" />
+
+        <TextView
+            android:id="@+id/badge"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="top|end"
+            android:background="@drawable/unread_dot"
+            android:text="1"
+        android:textColor="@android:color/white"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"/>
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/textView24"

@@ -1,5 +1,6 @@
 package com.example.resort;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -70,38 +72,63 @@ public class Payment extends AppCompatActivity {
         submitButton = findViewById(R.id.submit);
         backButton = findViewById(R.id.back2);
 
-
-        // Set up message icon to show modal with RecyclerView.
         ImageView messageIcon = findViewById(R.id.messageIcon);
-        messageIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Inflate the custom layout for the dialog
-                View dialogView = LayoutInflater.from(Payment.this).inflate(R.layout.dialog_recyclerview, null);
+        TextView badge = findViewById(R.id.badge); // Your badge TextView (Optional if you want to show a count)
+        messageIcon.setOnClickListener(view -> {
+            // Inflate the custom layout for the dialog
+            View dialogView = LayoutInflater.from(Payment.this).inflate(R.layout.dialog_recyclerview, null);
 
-                // Set up RecyclerView
-                RecyclerView recyclerView = dialogView.findViewById(R.id.dialogRecyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(Payment.this));
+            // Set up RecyclerView
+            RecyclerView recyclerView = dialogView.findViewById(R.id.dialogRecyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(Payment.this));
 
-                // Example data list for the adapter (populate with your real data)
-                List<String> dataList = new ArrayList<>();
-                dataList.add("Refund Policy Detail 1");
-                dataList.add("Refund Policy Detail 2");
-                dataList.add("Refund Policy Detail 3");
+            // Create the adapter and attach immediately (empty for now)
+            List<String> dataList = new ArrayList<>();
+            YourAdapter adapter = new YourAdapter(dataList);
+            recyclerView.setAdapter(adapter);
 
-                // Set your adapter (replace YourAdapter with your actual adapter class)
-                YourAdapter adapter = new YourAdapter(dataList);
-                recyclerView.setAdapter(adapter);
+            // Fetch data from Firebase Realtime Database
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("paymentdescription"); // path to your data
 
-                // Build and show the dialog
-                AlertDialog dialog = new AlertDialog.Builder(Payment.this)
-                        .setTitle("Refund Information")
-                        .setView(dialogView)
-                        .setPositiveButton("OK", null)
-                        .create();
-                dialog.show();
-            }
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // Check if 'description' exists
+                    if (dataSnapshot.exists() && dataSnapshot.child("description").getValue() != null) {
+                        String message = dataSnapshot.child("description").getValue(String.class);
+                        if (message != null && !message.isEmpty()) {
+                            dataList.add(message);  // Add the description to the list
+                            adapter.notifyDataSetChanged();
+
+                            // Optionally, you can add a badge count if needed (e.g., 1 if there's a description)
+                            badge.setText("1");  // Badge will show 1 since there’s only one description
+                            badge.setVisibility(View.VISIBLE); // Show badge
+                        }
+                    } else {
+                        dataList.add("No refund info available.");
+                        adapter.notifyDataSetChanged();
+                        badge.setVisibility(View.GONE); // Hide badge if no description is found
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    dataList.add("Error loading refund info.");
+                    adapter.notifyDataSetChanged();
+                    badge.setVisibility(View.GONE); // Hide badge in case of an error
+                }
+            });
+
+            // Build and show the dialog
+            AlertDialog dialog = new AlertDialog.Builder(Payment.this)
+                    .setTitle("Payment Information")
+                    .setView(dialogView)
+                    .setPositiveButton("OK", null)
+                    .create();
+            dialog.show();
         });
+
 
 
         // Fetch the current user
