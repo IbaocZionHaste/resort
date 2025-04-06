@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <!-- Fixed Header: Back Button -->
+
+        <!-- Fixed Header: Title -->
+
+        <!-- Scrollable Content Area -->
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/back2"
+            android:layout_width="45dp"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/light_blue"
+            android:drawableLeft="@drawable/ic_profile_arrow"
+            app:layout_constraintBottom_toTopOf="@+id/scrollViewContent"
+            app:layout_constraintEnd_toStartOf="@+id/textView25"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/textView25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:fontFamily="@font/arial_th"
+            android:text="User Account Details"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/scrollViewContent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <ScrollView
+            android:id="@+id/scrollViewContent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="85dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+                <!-- FrameLayout to layer the blue background and your fields -->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+
+                        <!-- Blue Background View -->
+                        <View
+                            android:id="@+id/view3"
+                            android:layout_width="match_parent"
+                            android:layout_height="680dp"
+                            android:background="@drawable/background_account_color" />
+
+                        <!-- Overlay container for Input Fields -->
+                        <LinearLayout
+                            android:id="@+id/contentLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                                <EditText
+                                    android:id="@+id/editTextText18"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="First Name"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText8"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Last Name"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText19"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Middle Name"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+
+                                <EditText
+                                    android:id="@+id/editTextText9"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Phone Number"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText10"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Municipality"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+
+
+                                <EditText
+                                    android:id="@+id/editTextText7"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Province"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText4"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Gender"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Age"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText13"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Barangay"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText20"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Street Purok"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Email"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText5"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Username"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+
+                        </LinearLayout>
+                </FrameLayout>
+        </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

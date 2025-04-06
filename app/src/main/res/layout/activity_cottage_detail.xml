@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".accommodation.data.CottageDetailActivity">
+
+    <!-- Cottage Image: now edge-to-edge top, left, and right -->
+    <ImageView
+        android:id="@+id/ivCottageImage"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llDots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@id/ivCottageImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp">
+    </LinearLayout>
+
+    <!-- New: Available Date TextView over the image -->
+    <TextView
+        android:id="@+id/tvAvailableDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#66000000"
+        android:text=""
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ivCottageImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/ivCottageImage"
+        app:layout_constraintTop_toTopOf="parent" />  <!-- semi-transparent black -->
+
+    <!-- Back Button positioned on the top-left corner of the image -->
+    <ImageView
+        android:id="@+id/btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:padding="3dp"
+        app:tint="@color/grey"
+        android:src="@drawable/ic_book_arrow"
+        app:layout_constraintTop_toTopOf="@id/ivCottageImage"
+        app:layout_constraintStart_toStartOf="@id/ivCottageImage" />
+
+    <!-- Heart Button -->
+    <ImageView
+        android:id="@+id/heart"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:padding="3dp"
+        android:src="@drawable/ic_heart"
+        app:layout_constraintBottom_toBottomOf="@+id/ivCottageImage"
+        app:layout_constraintEnd_toEndOf="@+id/ivCottageImage"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/ivCottageImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:tint="@color/grey" />
+
+
+    <!-- ScrollView wrapping the content below the image -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/ivCottageImage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--            android:layout_marginTop="16dp"-->
+            <!--            android:layout_marginStart="15dp"-->
+            <!--            android:layout_marginEnd="15dp"-->
+
+            <!-- CardView containing details with horizontal margins for a neat inset -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Row 1: Cottage Name and Rating -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <!-- Cottage Name -->
+                        <TextView
+                            android:id="@+id/tvCottageName"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Cottage Name"
+                            android:textColor="@android:color/black"
+                            android:textSize="25sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/arial_th" />
+
+                        <!-- Rating with Star Icon -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/rating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/red"
+                                android:textSize="18sp"
+                                android:layout_marginEnd="5dp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:id="@+id/rating_star"
+                                android:layout_width="24dp"
+                                android:layout_height="30dp"
+                                android:layout_marginStart="4dp"
+                                android:src="@drawable/ic_stars"
+                                app:tint="@color/yellow" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Row 2: Price and Available Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="4dp">
+
+                        <!-- Price -->
+                        <TextView
+                            android:id="@+id/tvCottagePrice"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="₱0.00"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <!-- Available Status -->
+                        <TextView
+                            android:id="@+id/tvCottageStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Available"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/arial_th" />
+                    </LinearLayout>
+
+                    <!-- Description Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description:"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvCottageDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:textSize="20sp"
+                        android:textColor="@color/grey"
+                        android:fontFamily="@font/arial_th"
+                        android:textAlignment="viewStart"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Specifications Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Specifications:"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="8dp" />
+
+                    <!-- Capacity -->
+                    <TextView
+                        android:id="@+id/tvCottageCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Capacity: "
+                        android:textSize="20sp"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Design -->
+                    <TextView
+                        android:id="@+id/tvCottageDesign"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Design: "
+                        android:textSize="20sp"
+                        android:textAlignment="viewStart"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Cottage Design -->
+                    <TextView
+                        android:id="@+id/tvCottageAmenities"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Amenities: "
+                        android:textSize="20sp"
+                        android:textAlignment="viewStart"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Location -->
+                    <TextView
+                        android:id="@+id/tvCottageLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Location: "
+                        android:textSize="20sp"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Review Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Review:"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- RecyclerView for Reviews -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewReviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Add-to-Cart Button outside the CardView, with horizontal margins -->
+            <Button
+                android:id="@+id/btn_add_to_cart"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:backgroundTint="@color/light_blue"
+                android:fontFamily="@font/arial_th"
+                android:text="Book Now"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+    <!--    <ScrollView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:padding="16dp">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="vertical">-->
+
+    <!--            &lt;!&ndash; Image with Cottage Name overlaid at the bottom &ndash;&gt;-->
+    <!--            <FrameLayout-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="200dp"-->
+    <!--                android:layout_marginBottom="8dp">-->
+    <!--                <ImageView-->
+    <!--                    android:id="@+id/ivCottageImage"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:scaleType="centerCrop" />-->
+    <!--            </FrameLayout>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvCottageName"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_gravity="bottom"-->
+    <!--                android:text="Cottage Name"-->
+    <!--                android:textColor="@color/black"-->
+    <!--                android:textSize="25sp"-->
+    <!--                android:fontFamily="@font/arial_th"-->
+    <!--                android:textStyle="bold"-->
+    <!--                tools:ignore="ChildInNonViewGroup" />-->
+    <!--            &lt;!&ndash; Price and Status in the same row &ndash;&gt;-->
+    <!--            <LinearLayout-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:orientation="horizontal"-->
+    <!--                android:gravity="center_vertical"-->
+    <!--                android:layout_marginBottom="8dp">-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/tvCottagePrice"-->
+    <!--                    android:layout_width="0dp"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:text="Price:"-->
+    <!--                    android:textColor="#FF5722"-->
+    <!--                    android:textSize="20sp"-->
+    <!--                    android:textStyle="bold" />-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/tvCottageStatus"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:text="Status:"-->
+    <!--                    android:textColor="#FF5722"-->
+    <!--                    android:textSize="20sp"-->
+    <!--                    android:textStyle="bold" />-->
+    <!--            </LinearLayout>-->
+
+    <!--            <TextView-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Description:"-->
+    <!--                android:textSize="22sp"-->
+    <!--                android:textStyle="bold"-->
+    <!--                android:layout_marginBottom="8dp" />-->
+
+    <!--            &lt;!&ndash; Description &ndash;&gt;-->
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvCottageDescription"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Description"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:layout_marginBottom="8dp" />-->
+
+    <!--            &lt;!&ndash; Specifications header for clarity &ndash;&gt;-->
+    <!--            <TextView-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Specifications:"-->
+    <!--                android:textSize="22sp"-->
+    <!--                android:textStyle="bold"-->
+    <!--                android:layout_marginBottom="8dp" />-->
+
+    <!--            &lt;!&ndash; Additional specifications &ndash;&gt;-->
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvCottageCapacity"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Capacity:"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:layout_marginBottom="4dp" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvCottageDesign"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Design:"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:layout_marginBottom="4dp" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvCottageLocation"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Location:"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:layout_marginBottom="16dp" />-->
+
+    <!--            &lt;!&ndash; Added action button &ndash;&gt;-->
+    <!--            <Button-->
+    <!--                android:id="@+id/btnAction"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:backgroundTint="@color/light_blue"-->
+    <!--                android:text="Book Now" />-->
+
+    <!--        </LinearLayout>-->
+    <!--    </ScrollView>-->
+
+
+    <!--    <?xml version="1.0" encoding="utf-8"?>-->
+    <!--<ScrollView-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:fillViewport="true"-->
+    <!--tools:context=".accommodation.data.CottageDetailActivity">-->
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--    android:id="@+id/main"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="wrap_content">-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/view2"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="40dp"-->
+    <!--        android:background="@color/whiteSmoke"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.034" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/btn"-->
+    <!--        android:layout_width="40dp"-->
+    <!--        android:layout_height="40dp"-->
+    <!--        android:layout_margin="0dp"-->
+    <!--        android:background="@color/light_blue"-->
+    <!--        android:padding="3dp"-->
+    <!--        android:src="@drawable/ic_book_arrow"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.033" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/ivCottageImage"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="250dp"-->
+    <!--        android:layout_marginTop="72dp"-->
+    <!--        android:scaleType="centerCrop"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tvCottageName"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="12dp"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        android:fontFamily="@font/arial_th"-->
+    <!--        android:text="Cottage Name"-->
+    <!--        android:textColor="@android:color/black"-->
+    <!--        android:textSize="20sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintEnd_toStartOf="@id/tvCottageStatus"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/ivCottageImage" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tvCottageStatus"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="28dp"-->
+    <!--        android:fontFamily="@font/arial_th"-->
+    <!--        android:text="Available"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:textSize="18sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="1.0"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/tvCottageName"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/tvCottageName" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tvCottagePrice"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="4dp"-->
+    <!--        android:text="₱0.00"-->
+    <!--        android:textColor="@android:color/holo_red_dark"-->
+    <!--        android:textSize="18sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/tvCottageName" />-->
+
+    <!--    <ScrollView-->
+    <!--        android:id="@+id/scrollView_description"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:layout_marginTop="6dp"-->
+    <!--        android:layout_marginBottom="6dp"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/tvCottagePrice"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/btn_add_to_cart"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="vertical">-->
+
+    <!--            &lt;!&ndash; Description &ndash;&gt;-->
+    <!--            <TextView-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Description:"-->
+    <!--                android:textSize="22sp"-->
+    <!--                android:textStyle="bold" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvCottageDescription"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Description"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:textColor="@color/grey"-->
+    <!--                android:textAlignment="viewStart"-->
+    <!--                android:justificationMode="inter_word"-->
+    <!--                android:fontFamily="@font/arial_th"/>-->
+
+    <!--            &lt;!&ndash; Specifications &ndash;&gt;-->
+    <!--            <TextView-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Specifications:"-->
+    <!--                android:textSize="22sp"-->
+    <!--                android:textStyle="bold" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvCottageCapacity"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Capacity:"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:layout_marginBottom="4dp" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvCottageDesign"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Design:"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:layout_marginBottom="4dp" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvCottageLocation"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Location:"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:layout_marginBottom="16dp" />-->
+
+    <!--        </LinearLayout>-->
+    <!--    </ScrollView>-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btn_add_to_cart"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="45dp"-->
+    <!--        android:backgroundTint="@color/light_blue"-->
+    <!--        android:fontFamily="@font/arial_th"-->
+    <!--        android:text="Book Now"-->
+    <!--        android:textColor="@android:color/white"-->
+    <!--        android:textSize="16sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        android:layout_marginBottom="15dp"-->
+    <!--        android:layout_marginTop="16dp"/>-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/rating"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="9dp"-->
+    <!--        android:fontFamily="@font/arial_bold"-->
+    <!--        android:text="4.5"-->
+    <!--        android:textColor="@color/red"-->
+    <!--        android:textSize="16sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/tvCottageStatus"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.876"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/ivCottageImage" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/rating_star"-->
+    <!--        style="bold"-->
+    <!--        android:layout_width="24dp"-->
+    <!--        android:layout_height="30dp"-->
+    <!--        android:layout_marginStart="10dp"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:layout_marginBottom="2dp"-->
+    <!--        android:src="@drawable/ic_stars"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/tvCottageStatus"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.971"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/ivCottageImage"-->
+    <!--        app:tint="@color/yellow" />-->
+
+    <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+    <!--</ScrollView>-->

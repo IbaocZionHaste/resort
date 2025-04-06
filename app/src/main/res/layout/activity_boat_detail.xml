@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".accommodation.data.BoatDetailActivity">
+
+    <!-- Boat Image: edge-to-edge top, left, and right -->
+    <ImageView
+        android:id="@+id/ivBoatImage"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/llDots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@id/ivBoatImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp">
+    </LinearLayout>
+
+
+    <!-- Heart Button -->
+    <ImageView
+        android:id="@+id/heart"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:padding="3dp"
+        android:src="@drawable/ic_heart"
+        app:layout_constraintBottom_toBottomOf="@+id/ivBoatImage"
+        app:layout_constraintEnd_toEndOf="@+id/ivBoatImage"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/ivBoatImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:tint="@color/grey" />
+
+    <!-- New: Available Date TextView over the image -->
+    <TextView
+        android:id="@+id/tvAvailableDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#66000000"
+        android:text=""
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ivBoatImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/ivBoatImage"
+        app:layout_constraintTop_toTopOf="parent" />  <!-- semi-transparent black -->
+
+
+    <!-- Back Button overlaid on the top-left of the boat image -->
+    <ImageView
+        android:id="@+id/btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:padding="3dp"
+        app:tint="@color/grey"
+        android:src="@drawable/ic_book_arrow"
+        app:layout_constraintTop_toTopOf="@id/ivBoatImage"
+        app:layout_constraintStart_toStartOf="@id/ivBoatImage" />
+
+    <!-- ScrollView to contain the CardView and Book Now button -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/ivBoatImage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- CardView containing boat details with horizontal margins -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Row 1: Boat Name and Rating -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <!-- Boat Name -->
+                        <TextView
+                            android:id="@+id/tvBoatName"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Boat Name"
+                            android:textColor="@android:color/black"
+                            android:textSize="25sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/arial_th" />
+
+                        <!-- Rating with Star Icon -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/rating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/red"
+                                android:textSize="18sp"
+                                android:layout_marginEnd="5dp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:id="@+id/rating_star"
+                                android:layout_width="24dp"
+                                android:layout_height="30dp"
+                                android:layout_marginStart="4dp"
+                                android:src="@drawable/ic_stars"
+                                app:tint="@color/yellow" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Row 2: Boat Price and Available Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="4dp">
+
+                        <!-- Boat Price -->
+                        <TextView
+                            android:id="@+id/tvBoatPrice"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="₱0.00"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <!-- Available Status -->
+                        <TextView
+                            android:id="@+id/tvBoatStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Available"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/arial_th" />
+                    </LinearLayout>
+
+                    <!-- Description Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description:"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvBoatDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:textSize="20sp"
+                        android:textColor="@color/grey"
+                        android:fontFamily="@font/arial_th"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Specifications Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Specifications:"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="8dp" />
+
+                    <!-- Boat Capacity -->
+                    <TextView
+                        android:id="@+id/tvBoatCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Capacity: "
+                        android:textSize="20sp"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Boat Design -->
+                    <TextView
+                        android:id="@+id/tvBoatDesign"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Design: "
+                        android:textSize="20sp"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Boat Amenities -->
+                    <TextView
+                        android:id="@+id/tvBoatAmenities"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Amenities: "
+                        android:textSize="20sp"
+                        android:textAlignment="viewStart"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Review Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Review:"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- RecyclerView for Reviews -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewReviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Add-to-Cart (Book Now) Button outside the CardView with horizontal margins -->
+            <Button
+                android:id="@+id/btn_add_to_cart"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:backgroundTint="@color/light_blue"
+                android:fontFamily="@font/arial_th"
+                android:text="Book Now"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/main"-->
+<!--    android:background="@color/white"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".accommodation.data.BoatDetailActivity">-->
+
+<!--    &lt;!&ndash; Boat Image: edge-to-edge top, left, and right &ndash;&gt;-->
+<!--    <ImageView-->
+<!--        android:id="@+id/ivBoatImage"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="250dp"-->
+<!--        android:layout_marginTop="0dp"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
+
+<!--    &lt;!&ndash; Back Button overlaid on the top-left of the boat image &ndash;&gt;-->
+<!--    <ImageView-->
+<!--        android:id="@+id/btn"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:padding="3dp"-->
+<!--        android:src="@drawable/ic_book_arrow"-->
+<!--        app:layout_constraintTop_toTopOf="@id/ivBoatImage"-->
+<!--        app:layout_constraintStart_toStartOf="@id/ivBoatImage" />-->
+
+<!--    &lt;!&ndash; ScrollView to contain the CardView and Book Now button &ndash;&gt;-->
+<!--    <ScrollView-->
+<!--        android:id="@+id/scrollView"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/ivBoatImage"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+
+<!--            &lt;!&ndash; CardView containing boat details with horizontal margins &ndash;&gt;-->
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:id="@+id/card_view_details"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:cardCornerRadius="16dp"-->
+<!--                app:cardElevation="4dp">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:padding="16dp">-->
+
+<!--                    &lt;!&ndash; Row 1: Boat Name and Rating &ndash;&gt;-->
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="horizontal"-->
+<!--                        android:gravity="center_vertical">-->
+
+<!--                        &lt;!&ndash; Boat Name &ndash;&gt;-->
+<!--                        <TextView-->
+<!--                            android:id="@+id/tvBoatName"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Boat Name"-->
+<!--                            android:textColor="@android:color/black"-->
+<!--                            android:textSize="25sp"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:fontFamily="@font/arial_th" />-->
+
+<!--                        &lt;!&ndash; Rating with Star Icon &ndash;&gt;-->
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:gravity="center_vertical">-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/rating"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:text="4.5"-->
+<!--                                android:textColor="@color/red"-->
+<!--                                android:textSize="16sp"-->
+<!--                                android:textStyle="bold"-->
+<!--                                android:fontFamily="@font/arial_bold" />-->
+
+<!--                            <ImageView-->
+<!--                                android:id="@+id/rating_star"-->
+<!--                                android:layout_width="24dp"-->
+<!--                                android:layout_height="30dp"-->
+<!--                                android:layout_marginStart="4dp"-->
+<!--                                android:src="@drawable/ic_stars"-->
+<!--                                app:tint="@color/yellow" />-->
+<!--                        </LinearLayout>-->
+<!--                    </LinearLayout>-->
+
+<!--                    &lt;!&ndash; Row 2: Boat Price and Available Status &ndash;&gt;-->
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="horizontal"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:layout_marginTop="4dp">-->
+
+<!--                        &lt;!&ndash; Boat Price &ndash;&gt;-->
+<!--                        <TextView-->
+<!--                            android:id="@+id/tvBoatPrice"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="₱0.00"-->
+<!--                            android:textColor="@android:color/holo_red_dark"-->
+<!--                            android:textSize="18sp"-->
+<!--                            android:textStyle="bold" />-->
+
+<!--                        &lt;!&ndash; Available Status &ndash;&gt;-->
+<!--                        <TextView-->
+<!--                            android:id="@+id/tvBoatStatus"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Available"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textSize="18sp"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:fontFamily="@font/arial_th" />-->
+<!--                    </LinearLayout>-->
+
+<!--                    &lt;!&ndash; Description Section &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Description:"-->
+<!--                        android:textSize="22sp"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:textColor="@android:color/black"-->
+<!--                        android:layout_marginTop="8dp" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvBoatDescription"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Description"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textColor="@color/grey"-->
+<!--                        android:fontFamily="@font/arial_th"-->
+<!--                        android:layout_marginTop="4dp" />-->
+
+<!--                    &lt;!&ndash; Specifications Section &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Specifications:"-->
+<!--                        android:textSize="22sp"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:textColor="@android:color/black"-->
+<!--                        android:layout_marginTop="8dp" />-->
+
+<!--                    &lt;!&ndash; Boat Capacity &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvBoatCapacity"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Capacity: "-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:layout_marginTop="4dp" />-->
+
+<!--                    &lt;!&ndash; Boat Design &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvBoatDesign"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Design: "-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:layout_marginTop="4dp" />-->
+
+<!--                    &lt;!&ndash; Boat Design &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvBoatAmenities"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Amenities: "-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textAlignment="viewStart"-->
+<!--                        android:justificationMode="inter_word"-->
+<!--                        android:layout_marginTop="4dp" />-->
+<!--                </LinearLayout>-->
+<!--            </androidx.cardview.widget.CardView>-->
+
+<!--            &lt;!&ndash; Add-to-Cart (Book Now) Button outside the CardView with horizontal margins &ndash;&gt;-->
+<!--            <Button-->
+<!--                android:id="@+id/btn_add_to_cart"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="45dp"-->
+<!--                android:backgroundTint="@color/light_blue"-->
+<!--                android:fontFamily="@font/arial_th"-->
+<!--                android:text="Book Now"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:layout_marginStart="15dp"-->
+<!--                android:layout_marginEnd="15dp" />-->
+<!--        </LinearLayout>-->
+<!--    </ScrollView>-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+
+

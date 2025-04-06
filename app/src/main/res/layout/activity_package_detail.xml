@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".accommodation.data.PackageDetailActivity">
+
+    <!-- Package Image: edge-to-edge at the top -->
+    <ImageView
+        android:id="@+id/ivPackageImage"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llDots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@id/ivPackageImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp">
+    </LinearLayout>
+
+
+
+    <!-- New: Available Date TextView over the image -->
+    <TextView
+        android:id="@+id/tvAvailableDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#66000000"
+        android:text=""
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPackageImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/ivPackageImage"
+        app:layout_constraintTop_toTopOf="parent" />  <!-- semi-transparent black -->
+
+    <!-- Back Button -->
+    <ImageView
+        android:id="@+id/btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:padding="3dp"
+        android:src="@drawable/ic_book_arrow"
+        app:tint="@color/grey"
+        app:layout_constraintTop_toTopOf="@id/ivPackageImage"
+        app:layout_constraintStart_toStartOf="@id/ivPackageImage" />
+
+    <!-- Heart Button -->
+    <ImageView
+        android:id="@+id/heart"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:padding="3dp"
+        android:src="@drawable/ic_heart"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPackageImage"
+        app:layout_constraintEnd_toEndOf="@+id/ivPackageImage"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/ivPackageImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:tint="@color/grey" />
+
+    <!-- ScrollView -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/ivPackageImage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- CardView for Package Details -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Row 1: Package Name and Rating -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvPackageName"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Package Name"
+                            android:textColor="@android:color/black"
+                            android:textSize="25sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/arial_th" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/rating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/red"
+                                android:textSize="18sp"
+                                android:layout_marginEnd="5dp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:id="@+id/rating_star"
+                                android:layout_width="24dp"
+                                android:layout_height="30dp"
+                                android:layout_marginStart="4dp"
+                                android:src="@drawable/ic_stars"
+                                app:tint="@color/yellow" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Row 2: Package Price and Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="4dp">
+
+                        <TextView
+                            android:id="@+id/tvPackagePrice"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="₱0.00"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvPackageStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Available"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/arial_th" />
+                    </LinearLayout>
+
+                    <!-- Description Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description:"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvPackageDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:textSize="20sp"
+                        android:textAlignment="viewStart"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/grey"
+                        android:fontFamily="@font/arial_th"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Specifications Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Specifications:"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="8dp" />
+
+                    <!-- Package Capacity -->
+                    <TextView
+                        android:id="@+id/tvPackageCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Capacity:"
+                        android:textSize="20sp"
+                        android:textAlignment="viewStart"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <!-- Package Capacity -->
+                    <TextView
+                        android:id="@+id/tvPackageCottage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cottage:"
+                        android:textSize="20sp"
+                        android:textAlignment="viewStart"
+                        android:justificationMode="inter_word"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp" />
+
+
+                    <!-- Package Items -->
+                    <TextView
+                        android:id="@+id/tvPackageItems"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Item1:"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvPackageItems2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Item2:"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvPackageItems3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Item3:"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvPackageItems4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Item4:"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvPackageItems5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Item5:"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvPackageItems6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Item6:"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <!-- Package Location -->
+                    <TextView
+                        android:id="@+id/tvPackageBeverage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Beverage:"
+                        android:textSize="20sp"
+                        android:textAlignment="viewStart"
+                        android:justificationMode="inter_word" />
+
+                    <!-- Review Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Review:"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- RecyclerView for Reviews -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewReviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Book Now Button -->
+            <Button
+                android:id="@+id/btn_add_to_cart"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:backgroundTint="@color/light_blue"
+                android:fontFamily="@font/arial_th"
+                android:text="Book Now"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--    <ScrollView-->
+    <!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:padding="16dp">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="vertical">-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvPackageName"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="Package Name"-->
+    <!--                android:textSize="24sp"-->
+    <!--                android:textStyle="bold"/>-->
+
+    <!--            <ImageView-->
+    <!--                android:id="@+id/ivPackageImage"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="200dp"-->
+    <!--                android:layout_marginTop="8dp"-->
+    <!--                android:scaleType="centerCrop"/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvPackageDescription"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginTop="8dp"-->
+    <!--                android:text="Description"/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvPackageCapacity"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginTop="8dp"-->
+    <!--                android:text="Cottage:"/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvPackageFoods"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginTop="8dp"-->
+    <!--                android:text="Foods:"/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvPackageLocation"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginTop="8dp"-->
+    <!--                android:text="Location:"/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tvPackagePrice"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginTop="8dp"-->
+    <!--                android:text="Price:"/>-->
+    <!--        </LinearLayout>-->
+    <!--    </ScrollView>-->
+

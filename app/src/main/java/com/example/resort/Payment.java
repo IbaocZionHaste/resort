@@ -1,0 +1,697 @@
+package com.example.resort;
+
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.resort.review.data.YourAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+public class Payment extends AppCompatActivity {
+
+    private EditText firstName, lastName, reference, phoneNumber, amount;
+    private CheckBox checkBoxGcash, checkBoxPalawan;
+    private Button submitButton, backButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_payment);
+
+        // Adjust layout for system insets.
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Initialize views.
+        firstName = findViewById(R.id.firstName);
+        lastName = findViewById(R.id.lastName);
+        reference = findViewById(R.id.reference);
+        phoneNumber = findViewById(R.id.phoneNumber);
+        amount = findViewById(R.id.amount);
+        checkBoxGcash = findViewById(R.id.checkBoxGcash);
+        checkBoxPalawan = findViewById(R.id.checkBoxPalawan);
+        submitButton = findViewById(R.id.submit);
+        backButton = findViewById(R.id.back2);
+
+
+        // Set up message icon to show modal with RecyclerView.
+        ImageView messageIcon = findViewById(R.id.messageIcon);
+        messageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Inflate the custom layout for the dialog
+                View dialogView = LayoutInflater.from(Payment.this).inflate(R.layout.dialog_recyclerview, null);
+
+                // Set up RecyclerView
+                RecyclerView recyclerView = dialogView.findViewById(R.id.dialogRecyclerView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(Payment.this));
+
+                // Example data list for the adapter (populate with your real data)
+                List<String> dataList = new ArrayList<>();
+                dataList.add("Refund Policy Detail 1");
+                dataList.add("Refund Policy Detail 2");
+                dataList.add("Refund Policy Detail 3");
+
+                // Set your adapter (replace YourAdapter with your actual adapter class)
+                YourAdapter adapter = new YourAdapter(dataList);
+                recyclerView.setAdapter(adapter);
+
+                // Build and show the dialog
+                AlertDialog dialog = new AlertDialog.Builder(Payment.this)
+                        .setTitle("Refund Information")
+                        .setView(dialogView)
+                        .setPositiveButton("OK", null)
+                        .create();
+                dialog.show();
+            }
+        });
+
+
+        // Fetch the current user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(Payment.this, "User not logged in!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String userId = currentUser.getUid();
+
+        // Directly reference the user's "MyBooking" node.
+        DatabaseReference myBookingRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("MyBooking");
+
+        // Submit payment data.
+        submitButton.setOnClickListener(v -> {
+            if (validateFields()) {
+                // Retrieve field values.
+                String fName = firstName.getText().toString().trim();
+                String lName = lastName.getText().toString().trim();
+                String refNo = reference.getText().toString().trim();
+                String phone = phoneNumber.getText().toString().trim();
+                String amt = amount.getText().toString().trim();
+                String paymentMethodValue;
+                if (checkBoxGcash.isChecked()) {
+                    paymentMethodValue = "Gcash";
+                } else if (checkBoxPalawan.isChecked()) {
+                    paymentMethodValue = "Palawan";
+                } else {
+                    paymentMethodValue = "";
+                }
+
+                // Fetch the booking directly from "MyBooking" (assuming there’s one active booking)
+                String finalPaymentMethodValue = paymentMethodValue;
+                myBookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            // Get the first booking from MyBooking, assuming there is only one active booking.
+                            String bookingId = snapshot.getChildren().iterator().next().getKey();
+
+                            if (bookingId == null) {
+                                Toast.makeText(Payment.this, "No booking found for current user!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            // Proceed to update the payment method data.
+                            DatabaseReference bookingRef = FirebaseDatabase.getInstance()
+                                    .getReference("users")
+                                    .child(userId)
+                                    .child("MyBooking")
+                                    .child(bookingId);
+                            DatabaseReference paymentMethodRef = bookingRef.child("paymentMethod");
+
+                            /// Create current date/time string.
+                            String currentDateTime = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
+                            /// Build paymentMethod data.
+                            Map<String, Object> paymentData = new HashMap<>();
+                            paymentData.put("Payment", finalPaymentMethodValue);
+                            paymentData.put("Firstname", fName);
+                            paymentData.put("Lastname", lName);
+                            paymentData.put("Phone", phone);
+                            paymentData.put("Reference", refNo);
+                            paymentData.put("Amount", amt);
+                            paymentData.put("Date", currentDateTime);
+                            paymentData.put("Status", "Done");  // Set status to "Done"
+
+                            // Update the paymentMethod node.
+                            paymentMethodRef.updateChildren(paymentData)
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            // Append the same date into the paymentTransaction node.
+                                            DatabaseReference paymentTransactionRef = bookingRef.child("paymentTransaction");
+                                            Map<String, Object> transactionData = new HashMap<>();
+                                            transactionData.put("PaymentDate", currentDateTime);
+                                            paymentTransactionRef.updateChildren(transactionData)
+                                                    .addOnCompleteListener(task1 -> {
+                                                        if (task1.isSuccessful()) {
+                                                            Log.d("PaymentTransaction", "Payment date appended successfully.");
+
+                                                            // Create a new top-level node "paymentSent" and add a payment message with date.
+                                                            DatabaseReference paymentSentRef = FirebaseDatabase.getInstance()
+                                                                    .getReference("paymentSent");
+                                                            Map<String, Object> paymentSentData = new HashMap<>();
+                                                            paymentSentData.put("message", "Payment sent by " + fName + " " + lName);
+                                                            paymentSentData.put("date", currentDateTime);
+                                                            paymentSentRef.push().setValue(paymentSentData);
+
+
+                                                            // Clear all fields and checkboxes after successful payment
+                                                            firstName.setText("");
+                                                            lastName.setText("");
+                                                            reference.setText("");
+                                                            phoneNumber.setText("");
+                                                            amount.setText("");
+                                                            checkBoxGcash.setChecked(false);
+                                                            checkBoxPalawan.setChecked(false);
+
+                                                            Toast.makeText(Payment.this, "Payment submitted successfully!", Toast.LENGTH_SHORT).show();
+
+                                                            // Payment info complete; return submission time.
+                                                            String currentTime = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
+                                                            Intent resultIntent = new Intent();
+                                                            resultIntent.putExtra("paymentSubmittedTime", currentTime);
+                                                            setResult(RESULT_OK, resultIntent);
+                                                            finish();
+
+                                                        } else {
+                                                            Log.e("PaymentTransaction", "Failed to append payment date to paymentTransaction.");
+                                                        }
+                                                    });
+                                        } else {
+                                            Toast.makeText(Payment.this, "Failed to update payment info", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(Payment.this, "No booking found for current user!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(Payment.this, "Failed to fetch booking info", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(Payment.this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Go back to the previous screen
+        backButton.setOnClickListener(v -> onBackPressed());
+    }
+
+
+
+    private boolean validateFields() {
+        return !TextUtils.isEmpty(firstName.getText().toString().trim())
+                && !TextUtils.isEmpty(lastName.getText().toString().trim())
+                && !TextUtils.isEmpty(reference.getText().toString().trim())
+                && !TextUtils.isEmpty(phoneNumber.getText().toString().trim())
+                && !TextUtils.isEmpty(amount.getText().toString().trim())
+                && (checkBoxGcash.isChecked() || checkBoxPalawan.isChecked());
+    }
+}
+
+
+
+///Booking id exist this code
+//package com.example.resort;
+//
+//import android.content.Intent;
+//import android.os.Bundle;
+//import android.text.TextUtils;
+//import android.util.Log;
+//import android.widget.Button;
+//import android.widget.CheckBox;
+//import android.widget.EditText;
+//import android.widget.Toast;
+//
+//import androidx.activity.EdgeToEdge;
+//import androidx.annotation.NonNull;
+//import androidx.appcompat.app.AppCompatActivity;
+//import androidx.core.graphics.Insets;
+//import androidx.core.view.ViewCompat;
+//import androidx.core.view.WindowInsetsCompat;
+//
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.auth.FirebaseUser;
+//import com.google.firebase.database.DataSnapshot;
+//import com.google.firebase.database.DatabaseError;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.database.ValueEventListener;
+//
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
+//import java.util.HashMap;
+//import java.util.Locale;
+//import java.util.Map;
+//
+//public class Payment extends AppCompatActivity {
+//
+//    private EditText firstName, lastName, reference, phoneNumber, amount;
+//    private CheckBox checkBoxGcash, checkBoxPalawan;
+//    private Button submitButton, backButton;
+//    private String bookingId; // Will be fetched from Firebase based on the current user
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        EdgeToEdge.enable(this);
+//        setContentView(R.layout.activity_payment);
+//
+//        // Adjust layout for system insets.
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
+//
+//        // Initialize views.
+//        firstName = findViewById(R.id.firstName);
+//        lastName = findViewById(R.id.lastName);
+//        reference = findViewById(R.id.reference);
+//        phoneNumber = findViewById(R.id.phoneNumber);
+//        amount = findViewById(R.id.amount);
+//        checkBoxGcash = findViewById(R.id.checkBoxGcash);
+//        checkBoxPalawan = findViewById(R.id.checkBoxPalawan);
+//        submitButton = findViewById(R.id.submit);
+//        backButton = findViewById(R.id.back2);
+//
+//        // Instead of getting bookingId from intent extras, fetch it from the current user's booking node.
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (currentUser == null) {
+//            Toast.makeText(Payment.this, "User not logged in!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        String userId = currentUser.getUid();
+//        DatabaseReference myBookingRef = FirebaseDatabase.getInstance()
+//                .getReference("users")
+//                .child(userId)
+//                .child("MyBooking");
+//        myBookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.exists()) {
+//                    /// Assuming there's one active booking, get its key.
+//                    for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
+//                        bookingId = bookingSnapshot.getKey();
+//                        break;
+//                    }
+//                    if (bookingId == null) {
+//                        Toast.makeText(Payment.this, "No booking found for current user!", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(Payment.this, "No booking found for current user!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Toast.makeText(Payment.this, "Failed to fetch booking info", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        // Submit payment data.
+//        submitButton.setOnClickListener(v -> {
+//            if (validateFields()) {
+//                // Retrieve field values.
+//                String fName = firstName.getText().toString().trim();
+//                String lName = lastName.getText().toString().trim();
+//                String refNo = reference.getText().toString().trim();
+//                String phone = phoneNumber.getText().toString().trim();
+//                String amt = amount.getText().toString().trim();
+//                String paymentMethodValue = "";
+//                if (checkBoxGcash.isChecked()) {
+//                    paymentMethodValue = "Gcash";
+//                } else if (checkBoxPalawan.isChecked()) {
+//                    paymentMethodValue = "Palawan";
+//                }
+//
+//                if (bookingId == null) {
+//                    Toast.makeText(Payment.this, "Booking not found!", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                // Update payment method data in the booking node.
+//                DatabaseReference bookingRef = FirebaseDatabase.getInstance()
+//                        .getReference("users")
+//                        .child(userId)
+//                        .child("MyBooking")
+//                        .child(bookingId);
+//                DatabaseReference paymentMethodRef = bookingRef.child("paymentMethod");
+//
+//                // Create current date/time string.
+//                String currentDateTime = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
+//                // Build paymentMethod data.
+//                Map<String, Object> paymentData = new HashMap<>();
+//                paymentData.put("Payment", paymentMethodValue);
+//                paymentData.put("Firstname", fName);
+//                paymentData.put("Lastname", lName);
+//                paymentData.put("Phone", phone);
+//                paymentData.put("Reference", refNo);
+//                paymentData.put("Amount", amt);
+//                paymentData.put("Date", currentDateTime);
+//                paymentData.put("Status", "Done");
+//
+//                /// Update the paymentMethod node.
+//                paymentMethodRef.updateChildren(paymentData)
+//                        .addOnCompleteListener(task -> {
+//                            if (task.isSuccessful()) {
+//                                /// Append the same date into the paymentTransaction node.
+//                                DatabaseReference paymentTransactionRef = bookingRef.child("paymentTransaction");
+//                                Map<String, Object> transactionData = new HashMap<>();
+//                                transactionData.put("PaymentDate", currentDateTime);
+//                                paymentTransactionRef.updateChildren(transactionData)
+//                                        .addOnCompleteListener(task1 -> {
+//                                            if (task1.isSuccessful()) {
+//                                                Log.d("PaymentTransaction", "Payment date appended successfully.");
+//
+//                                                /// Create a new top-level node "paymentSent" and add a payment message with date.
+//                                                DatabaseReference paymentSentRef = FirebaseDatabase.getInstance()
+//                                                        .getReference("paymentSent");
+//                                                Map<String, Object> paymentSentData = new HashMap<>();
+//                                                paymentSentData.put("message", "Payment sent by " + fName + " " + lName);
+//                                                paymentSentData.put("date", currentDateTime);
+//                                                paymentSentRef.push().setValue(paymentSentData);
+//
+//                                                /// Clear all fields and checkboxes after successful payment
+//                                                firstName.setText("");
+//                                                lastName.setText("");
+//                                                reference.setText("");
+//                                                phoneNumber.setText("");
+//                                                amount.setText("");
+//                                                checkBoxGcash.setChecked(false);
+//                                                checkBoxPalawan.setChecked(false);
+//
+//                                                Toast.makeText(Payment.this, "Payment submitted successfully!", Toast.LENGTH_SHORT).show();
+//                                            } else {
+//                                                Log.e("PaymentTransaction", "Failed to append payment date to paymentTransaction.");
+//                                            }
+//                                        });
+//                            } else {
+//                                Toast.makeText(Payment.this, "Failed to update payment info", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//            } else {
+//                Toast.makeText(Payment.this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        backButton.setOnClickListener(v -> onBackPressed());
+//    }
+//
+//    private boolean validateFields() {
+//        return !TextUtils.isEmpty(firstName.getText().toString().trim())
+//                && !TextUtils.isEmpty(lastName.getText().toString().trim())
+//                && !TextUtils.isEmpty(reference.getText().toString().trim())
+//                && !TextUtils.isEmpty(phoneNumber.getText().toString().trim())
+//                && !TextUtils.isEmpty(amount.getText().toString().trim())
+//                && (checkBoxGcash.isChecked() || checkBoxPalawan.isChecked());
+//    }
+//
+//}
+//
+//
+
+
+///Not use
+//                // Payment info complete; return submission time.
+//                String currentTime = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
+//                Intent resultIntent = new Intent();
+//                resultIntent.putExtra("paymentSubmittedTime", currentTime);
+//                setResult(RESULT_OK, resultIntent);
+//                finish();
+
+
+
+///Booking Id is remove because no need
+//package com.example.resort;
+//
+//import android.content.Intent;
+//import android.os.Bundle;
+//import android.text.TextUtils;
+//import android.util.Log;
+//import android.widget.Button;
+//import android.widget.CheckBox;
+//import android.widget.EditText;
+//import android.widget.Toast;
+//
+//import androidx.activity.EdgeToEdge;
+//import androidx.appcompat.app.AppCompatActivity;
+//import androidx.core.graphics.Insets;
+//import androidx.core.view.ViewCompat;
+//import androidx.core.view.WindowInsetsCompat;
+//
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.auth.FirebaseUser;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
+//
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
+//import java.util.HashMap;
+//import java.util.Locale;
+//import java.util.Map;
+//
+//public class Payment extends AppCompatActivity {
+//
+//    private EditText firstName, lastName, reference, phoneNumber, amount;
+//    private CheckBox checkBoxGcash, checkBoxPalawan;
+//    private Button submitButton, backButton;
+//    private String bookingId; /// Booking ID passed from BookingStatus.
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        EdgeToEdge.enable(this);
+//        setContentView(R.layout.activity_payment);
+//
+//        /// Adjust layout for system insets.
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
+//
+//        /// Initialize views.
+//        firstName = findViewById(R.id.firstName);
+//        lastName = findViewById(R.id.lastName);
+//        reference = findViewById(R.id.reference);
+//        phoneNumber = findViewById(R.id.phoneNumber);
+//        amount = findViewById(R.id.amount);
+//        checkBoxGcash = findViewById(R.id.checkBoxGcash);
+//        checkBoxPalawan = findViewById(R.id.checkBoxPalawan);
+//        submitButton = findViewById(R.id.submit);
+//        backButton = findViewById(R.id.back2);
+//
+//        /// Get bookingId from intent extras.
+//        bookingId = getIntent().getStringExtra("bookingId");
+//        if (bookingId == null) {
+//            Toast.makeText(Payment.this, "Booking ID is missing!", Toast.LENGTH_SHORT).show();
+//        }
+//
+//
+//        ///Submit payment data
+//        submitButton.setOnClickListener(v -> {
+//            if (validateFields()) {
+//                // Retrieve field values.
+//                String fName = firstName.getText().toString().trim();
+//                String lName = lastName.getText().toString().trim();
+//                String refNo = reference.getText().toString().trim();
+//                String phone = phoneNumber.getText().toString().trim();
+//                String amt = amount.getText().toString().trim();
+//                String paymentMethodValue = "";
+//                if (checkBoxGcash.isChecked()) {
+//                    paymentMethodValue = "Gcash";
+//                } else if (checkBoxPalawan.isChecked()) {
+//                    paymentMethodValue = "Palawan";
+//                }
+//
+//                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//                if (currentUser != null && bookingId != null) {
+//                    String userId = currentUser.getUid();
+//                    DatabaseReference bookingRef = FirebaseDatabase.getInstance()
+//                            .getReference("users")
+//                            .child(userId)
+//                            .child("MyBooking")
+//                            .child(bookingId);
+//
+//                    DatabaseReference paymentMethodRef = bookingRef.child("paymentMethod");
+//
+//                    /// Create current date/time string.
+//                    String currentDateTime = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
+//                    /// Build paymentMethod data.
+//                    Map<String, Object> paymentData = new HashMap<>();
+//                    paymentData.put("Payment", paymentMethodValue);
+//                    paymentData.put("Firstname", fName);
+//                    paymentData.put("Lastname", lName);
+//                    paymentData.put("Phone", phone);
+//                    paymentData.put("Reference", refNo);
+//                    paymentData.put("Amount", amt);
+//                    paymentData.put("Date", currentDateTime);
+//
+//                    // Update the paymentMethod node.
+//                    paymentMethodRef.updateChildren(paymentData)
+//                            .addOnCompleteListener(task -> {
+//                                if (task.isSuccessful()) {
+//                                    // Append the same date into the paymentTransaction node.
+//                                    DatabaseReference paymentTransactionRef = bookingRef.child("paymentTransaction");
+//                                    Map<String, Object> transactionData = new HashMap<>();
+//                                    transactionData.put("PaymentDate", currentDateTime);
+//                                    paymentTransactionRef.updateChildren(transactionData)
+//                                            .addOnCompleteListener(task1 -> {
+//                                                if (task1.isSuccessful()) {
+//                                                    Log.d("PaymentTransaction", "Payment date appended successfully.");
+//
+//                                                    /// ******************* New Code Start *******************
+//                                                    /// Create a new top-level node "paymentSent" and add a payment message with date.
+//                                                    DatabaseReference paymentSentRef = FirebaseDatabase.getInstance()
+//                                                            .getReference("paymentSent");
+//                                                    Map<String, Object> paymentSentData = new HashMap<>();
+//                                                    paymentSentData.put("message", "Payment sent by " + fName + " " + lName);
+//                                                    paymentSentData.put("date", currentDateTime);
+//                                                    paymentSentRef.push().setValue(paymentSentData);
+//                                                    /// ******************* New Code End *******************
+//
+//                                                } else {
+//                                                    Log.e("PaymentTransaction", "Failed to append payment date to paymentTransaction.");
+//                                                }
+//                                            });
+//                                } else {
+//                                        ///Toast.makeText(Payment.this, "Failed to update payment info", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                        });
+//                                        } else {
+//                                        /// Toast.makeText(Payment.this, "Booking ID is missing or user not logged in", Toast.LENGTH_SHORT).show();
+//                                        return;
+//                                        }
+//
+// Payment info complete; return submission time.
+//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
+//String currentTime = sdf.format(new Date());
+//Intent resultIntent = new Intent();
+//                resultIntent.putExtra("paymentSubmittedTime", currentTime);
+//setResult(RESULT_OK, resultIntent);
+//finish();
+//            } else {
+//                    Toast.makeText(Payment.this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+//            }
+//                    });
+//
+//                    backButton.setOnClickListener(v -> onBackPressed());
+//        }
+//
+///**
+// * Validates that all required fields are filled.
+// */
+//private boolean validateFields() {
+//    boolean fieldsFilled = !TextUtils.isEmpty(firstName.getText()) &&
+//            !TextUtils.isEmpty(lastName.getText()) &&
+//            !TextUtils.isEmpty(reference.getText()) &&
+//            !TextUtils.isEmpty(phoneNumber.getText()) &&
+//            !TextUtils.isEmpty(amount.getText());
+//    boolean paymentMethodSelected = checkBoxGcash.isChecked() || checkBoxPalawan.isChecked();
+//    return fieldsFilled && paymentMethodSelected;
+//}
+//}
+//
+
+
+
+
+///this code no function append date and no payment send
+//        submitButton.setOnClickListener(v -> {
+//            if (validateFields()) {
+//                // Retrieve field values.
+//                String fName = firstName.getText().toString().trim();
+//                String lName = lastName.getText().toString().trim();
+//                String refNo = reference.getText().toString().trim();
+//                String phone = phoneNumber.getText().toString().trim();
+//                String amt = amount.getText().toString().trim();
+//                String paymentMethodValue = "";
+//                if (checkBoxGcash.isChecked()) {
+//                    paymentMethodValue = "Gcash";
+//                } else if (checkBoxPalawan.isChecked()) {
+//                    paymentMethodValue = "Palawan";
+//                }
+//
+//                // Update payment info in Firebase using the persistent booking ID.
+//                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//                if (currentUser != null && bookingId != null) {
+//                    String userId = currentUser.getUid();
+//                    DatabaseReference paymentMethodRef = FirebaseDatabase.getInstance()
+//                            .getReference("users")
+//                            .child(userId)
+//                            .child("MyBooking")
+//                            .child(bookingId)
+//                            .child("paymentMethod");
+//
+//                    Map<String, Object> paymentData = new HashMap<>();
+//                    paymentData.put("Payment", paymentMethodValue);
+//                    paymentData.put("Firstname", fName);
+//                    paymentData.put("Lastname", lName);
+//                    paymentData.put("Phone", phone);
+//                    paymentData.put("Reference", refNo);
+//                    paymentData.put("Amount", amt);
+//                    // Append the current date/time.
+//                    paymentData.put("Date", new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date()));
+//
+//                    paymentMethodRef.updateChildren(paymentData);
+//                } else {
+//                    Toast.makeText(Payment.this, "Booking ID is missing or user not logged in", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//
+//                // Payment info complete; return submission time.
+//                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
+//                String currentTime = sdf.format(new Date());
+//                Intent resultIntent = new Intent();
+//                resultIntent.putExtra("paymentSubmittedTime", currentTime);
+//                setResult(RESULT_OK, resultIntent);
+//                finish();
+//            } else {
+//                Toast.makeText(Payment.this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        backButton.setOnClickListener(v -> onBackPressed());
+//    }

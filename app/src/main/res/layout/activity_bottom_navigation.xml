@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pink"
+    tools:context=".BottomNavigation">
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppbar"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:backgroundTint="#E0E5EC"
+            app:fabAnchorMode="cradle"
+            app:fabAlignmentMode="center"
+            app:fabCradleMargin="0dp"
+            app:fabCradleRoundedCornerRadius="30dp"
+            android:layout_gravity="bottom"/>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_gravity="center|bottom"
+            android:layout_height="65dp"
+            app:labelVisibilityMode="labeled"
+            app:itemPaddingTop="4dp"
+            app:itemTextAppearanceInactive="@style/Size_Text"
+            app:itemTextAppearanceActive="@style/Size_Text"
+            android:background="@android:color/transparent"
+            app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
+            app:menu="@menu/bottom_navigation_menu"
+            app:itemTextColor="@color/bottom_nav_color_selector"
+            app:itemIconTint="@color/bottom_nav_color_selector"
+            app:itemBackground="@drawable/bottom_nav_item_selector"
+            app:elevation="0dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="TODO"
+            app:srcCompat="@drawable/ic_home_book"
+            app:backgroundTint="@color/light_blue"
+            app:fabCustomSize="55dp"
+            app:layout_anchor="@+id/bottomAppbar"
+            app:layout_anchorGravity="top|center"
+            app:maxImageSize="30dp"
+            app:shapeAppearanceOverlay="@style/fab_3_rounded"
+            app:tint="@color/black" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

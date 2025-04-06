@@ -1,0 +1,190 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/pink"
+    app:cardCornerRadius="10dp"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#E0E5EC"
+        android:padding="15dp">
+
+        <!-- CardView to round the promo image -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:cardCornerRadius="10dp"
+            android:elevation="0dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="false">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- ImageView for promo image -->
+                <ImageView
+                    android:id="@+id/promoImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"/>
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/promoViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+                <!-- Container for promo texts -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="8dp">
+
+                    <!-- Promo Discount -->
+                    <TextView
+                        android:id="@+id/promoDiscount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/holo_red_dark"/>
+
+                    <!-- Promo Duration -->
+                    <TextView
+                        android:id="@+id/promoDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="@color/whiteSmoke"/>
+
+                    <!-- Promo Start Date -->
+                    <TextView
+                        android:id="@+id/promoStartDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="@color/whiteSmoke"/>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/promoTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/promoDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textAlignment="viewStart"
+            android:justificationMode="inter_word"
+            android:layout_marginTop="4dp"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:background="@color/pink"-->
+<!--    app:cardCornerRadius="10dp"-->
+<!--    android:layout_margin="8dp">-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:background="#E0E5EC"-->
+<!--        android:padding="15dp">-->
+
+<!--        &lt;!&ndash; CardView to round the promo image &ndash;&gt;-->
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="200dp"-->
+<!--            app:cardCornerRadius="10dp"-->
+<!--            android:elevation="0dp"-->
+<!--            app:cardPreventCornerOverlap="false"-->
+<!--            app:cardUseCompatPadding="false">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/promoImage"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:scaleType="centerCrop"/>-->
+
+
+<!--            &lt;!&ndash; Replace the ImageView with a ViewPager2 for swiping images &ndash;&gt;-->
+<!--            <androidx.viewpager2.widget.ViewPager2-->
+<!--                android:id="@+id/promoViewPager"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" />-->
+
+<!--        </androidx.cardview.widget.CardView>-->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/promoTitle"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="18sp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textStyle="bold"-->
+<!--            android:layout_marginTop="8dp"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/promoDescription"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="14sp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textAlignment="viewStart"-->
+<!--            android:justificationMode="inter_word"-->
+<!--            android:layout_marginTop="4dp"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/promoDiscount"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="16sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@android:color/holo_red_dark"-->
+<!--            android:layout_marginTop="4dp"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/promoDuration"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="12sp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginTop="4dp"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/promoStartDate"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="12sp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginTop="4dp"/>-->
+<!--    </LinearLayout>-->
+<!--</androidx.cardview.widget.CardView>-->

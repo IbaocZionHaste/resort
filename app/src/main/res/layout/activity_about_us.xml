@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AboutUs">
+
+    <!-- Back Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/back2"
+        android:layout_width="47dp"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/light_blue"
+        android:drawableLeft="@drawable/ic_profile_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.043"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
+
+    <!-- About Us Title -->
+
+    <!-- Scrollable About Us Content -->
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About Us"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/arial_th"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.047" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/back2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Container for multiple views -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/about_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="@string/island_front_view_beach_resort_is_a_serene_and_picturesque_getaway_nestled_along_the_shorelines_of_a_pristine_tropical_island_with_its_breathtaking_views_of_the_ocean_the_resort_offers_guests_a_tranquil_escape_from_the_hustle_and_bustle_of_daily_life_n_n_the_resort_features_cozy_rustic_style_accommodations_including_beachfront_cottages_and_rooms_with_private_balconies_that_overlook_the_sparkling_turquoise_waters_surrounded_by_lush_greenery_and_swaying_palm_trees_the_resort_creates_a_perfect_harmony_with_nature_n_n_guests_can_enjoy_a_variety_of_activities_such_as_kayaking_snorkeling_in_vibrant_coral_reefs_and_lounging_on_the_powdery_white_sands_for_relaxation_there_s_an_inviting_beachside_bar_and_a_restaurant_serving_freshly_caught_seafood_and_local_delicacies_n_n_whether_you_re_seeking_a_romantic_retreat_a_family_vacation_or_an_adventure_packed_holiday_island_front_view_beach_resort_promises_an_unforgettable_experience_where_the_beauty_of_nature_meets_warm_hospitality"
+                android:textAlignment="viewStart"
+                android:justificationMode="inter_word"
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+
+            <!-- About Staff Text -->
+            <TextView
+                android:id="@+id/about_staff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Resort's Staff"
+                android:textStyle="bold"
+                android:textAlignment="viewStart"
+                android:justificationMode="inter_word"
+                android:textColor="@color/black"
+                android:textSize="24sp"  />
+
+            <!-- RecyclerView at the bottom -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewStaff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/about_question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Frequent Ask Question"
+                android:textStyle="bold"
+                android:textAlignment="viewStart"
+                android:justificationMode="inter_word"
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+
+            <!-- RecyclerView at the bottom -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
