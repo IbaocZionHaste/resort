@@ -102,23 +102,15 @@ public class BookingStatus extends AppCompatActivity {
     // For decline handling.
     private boolean declineProcessed = false;
     private boolean paymentDeclineProcessed = false;
+    private boolean bookingSubmittedProcessed = false;
 
-    private static final int PAYMENT_REQUEST_CODE = 1001;
+    ///private static final int PAYMENT_REQUEST_CODE = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_booking_status);
-
-        // Set up Firebase listeners for dynamic updates.
-        listenForPaymentMethodStatus();
-        listenForMyBooking();
-        listenForApproval();
-        listenForPaymentTransactionApproval();
-        FinalForApproval();
-
-
 
 
         // Get current user and set up user-specific SharedPreferences.
@@ -135,6 +127,13 @@ public class BookingStatus extends AppCompatActivity {
         if (bookingSubmittedIntent) {
             prefs.edit().putBoolean("bookingSubmitted", true).apply();
             progress = 1;
+            prefs.edit().putInt("bookingProgress", progress).apply();
+        }
+
+        boolean bookingPayIntent = getIntent().getBooleanExtra("paymentSubmitted", false);
+        if (bookingPayIntent) {
+            prefs.edit().putBoolean("paymentSubmitted", true).apply();
+            progress = 3;
             prefs.edit().putInt("bookingProgress", progress).apply();
         }
 
@@ -185,6 +184,7 @@ public class BookingStatus extends AppCompatActivity {
         messageText4.setVisibility(View.GONE);
         messageText5.setVisibility(View.GONE);
 
+         updateDots();
 
         // Restore persisted booking state.
         if (prefs.contains("bookingSubmitted") && prefs.getBoolean("bookingSubmitted", false)) {
@@ -192,30 +192,36 @@ public class BookingStatus extends AppCompatActivity {
             updateDots();
             showSubmissionMessage();
         }
-
         if (prefs.contains("paymentSubmitted") && prefs.getBoolean("paymentSubmitted", false)) {
             progress = Math.max(progress, 3);
             updateDots();
-            prefs.getString("paymentSubmittedTime", "");
-            showPaymentSubmittedMessage();
+            if (paymentMessageText.getVisibility() != View.VISIBLE) {
+                showPaymentSubmittedMessage();
+            }
         }
 
         if (prefs.contains("paymentApproved") && prefs.getBoolean("paymentApproved", false)) {
             progress = 4;
             updateDots();
-            showDot4Message();
+            if (messageText4.getVisibility() != View.VISIBLE) {
+                showDot4Message();
+            }
         }
 
         if (prefs.contains("reviewApproved") && prefs.getBoolean("reviewApproved", false)) {
             progress = 2;
             updateDots();
-            showApprovalMessage();
+            if (messageText2.getVisibility() != View.VISIBLE) {
+                showApprovalMessage();
+            }
         }
 
         if (prefs.contains("finalApproved") && prefs.getBoolean("finalApproved", false)) {
             progress = 5;
             updateDots();
-            showDot5Message();
+            if (messageText5.getVisibility() != View.VISIBLE) {
+                showDot5Message();
+            }
         }
 
 
@@ -226,12 +232,18 @@ public class BookingStatus extends AppCompatActivity {
                 return;
             }
             Intent paymentIntent = new Intent(BookingStatus.this, Payment.class);
-            startActivityForResult(paymentIntent, PAYMENT_REQUEST_CODE);
-            //startActivity(paymentIntent);
+            startActivity(paymentIntent);
         });
 
         backButton.setOnClickListener(v -> onBackPressed());
         cancelButton.setOnClickListener(view -> cancelBooking());
+
+        // Set up Firebase listeners for dynamic updates.
+        listenForPaymentMethodStatus();
+        listenForMyBooking();
+        listenForApproval();
+        listenForPaymentTransactionApproval();
+        FinalForApproval();
     }
 
 
@@ -254,7 +266,6 @@ public class BookingStatus extends AppCompatActivity {
         ///Save updated progress.
         prefs.edit().putInt("bookingProgress", progress).apply();
     }
-
 
 
 
@@ -442,18 +453,15 @@ public class BookingStatus extends AppCompatActivity {
     private void showPaymentSubmittedMessage() {
             messageFramedot3.setVisibility(View.VISIBLE);
             paymentMessageText.setVisibility(View.VISIBLE);
-
             String currentTime = getCurrentTime();
             String paymentMessage = "Payment has been Submitted. Please wait for admin review.<br>";
             String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
-
             paymentMessageText.setText(Html.fromHtml(paymentMessage + redTime));
-
             // Disable payment and cancel buttons
             payNowButton.setEnabled(false);
             payNowButton.setClickable(false);
             payNowButton.setAlpha(0.5f);
-
+            //Cancel
             cancelButton.setEnabled(false);
             cancelButton.setClickable(false);
             cancelButton.setAlpha(0.5f);
@@ -471,6 +479,7 @@ public class BookingStatus extends AppCompatActivity {
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         String fullMessage = approvalMessage + redTime;
         messageText2.setText(Html.fromHtml(fullMessage));
+        prefs.edit().putString("bookingStatus", "reviewApproved").apply();
         sendNotificationToFirebase(messageText2.getText().toString(), "dot2");
 
         // Disable the cancel button.
@@ -489,6 +498,7 @@ public class BookingStatus extends AppCompatActivity {
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         String fullMessage = msg + redTime;
         messageText4.setText(Html.fromHtml(fullMessage));
+        prefs.edit().putString("bookingStatus", "paymentApproved").apply();
         sendNotificationToFirebase(messageText4.getText().toString(), "dot4");
     }
 
@@ -501,28 +511,15 @@ public class BookingStatus extends AppCompatActivity {
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         String fullMessage = msg + redTime;
         messageText5.setText(Html.fromHtml(fullMessage));
+        prefs.edit().putString("bookingStatus", "finalApproved").apply();
         sendNotificationToFirebase(messageText5.getText().toString(), "dot5");
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PAYMENT_REQUEST_CODE && resultCode == RESULT_OK) {
-            String currentTime = data.getStringExtra("paymentSubmittedTime");
-            progress = 3;
-            updateDots();
-            showPaymentSubmittedMessage();
-            prefs.edit().putBoolean("paymentSubmitted", true)
-                    .putString("paymentSubmittedTime",  currentTime)
-                    .apply();
-        }
-    }
 
 
 
     /// Booking submitted
-    private boolean bookingSubmittedProcessed = false;
 
     private void listenForMyBooking() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -606,7 +603,6 @@ public class BookingStatus extends AppCompatActivity {
                                         bookingPayProcessed = false;
                                         updateDots();
                                         showPaymentSubmittedMessage();
-
                                         break;
                                     }
                                 }
@@ -631,7 +627,6 @@ public class BookingStatus extends AppCompatActivity {
             handler.post(pollTask[0]);  // Start polling
         }
     }
-
 
 
 
@@ -806,6 +801,7 @@ public class BookingStatus extends AppCompatActivity {
                                             moveAllBookingsToHistory();
                                             clearBookingMessageUI();
                                             clearBookingPreferences();
+
 
                                             // Delete the MyReview node after refund.
                                             DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
@@ -1917,7 +1913,7 @@ public class BookingStatus extends AppCompatActivity {
 //        // Start polling every second
 //        handler.post(pollTask);
 //    }
-//
+
 //
 //    //Payment Admin Approval
 //    private void listenForPaymentTransactionApproval() {

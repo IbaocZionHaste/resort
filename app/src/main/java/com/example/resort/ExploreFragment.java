@@ -779,7 +779,7 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
     private Button btnFollow, btnRefresh;
 
     // Destination: Island View Beachfront Resort in Bohol, Philippines.
-    private final LatLng destinationLatLng = new LatLng(10.134178, 124.380400);
+    private final LatLng destinationLatLng = new LatLng( 10.1341723, 124.3829805);
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     // Average walking speed (~83 m/min)
     private final double AVERAGE_WALKING_SPEED = 83.0;
@@ -826,7 +826,7 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
             }
         };
 
-        // Toggle follow mode: now, regardless of toggle, we always update the camera to show both markers.
+        /// Toggle follow mode: now, regardless of toggle, we always update the camera to show both markers.
         btnFollow.setOnClickListener(v -> {
             isFollowing = !v.isSelected();
             v.setSelected(isFollowing);
@@ -834,10 +834,14 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
             btnFollow.setBackgroundTintList(ColorStateList.valueOf(color));
 
             if (userMarker != null) {
-                // Always adjust camera to show both markers with fixed zoom.
+                // Toggle between satellite and normal map types
+                googleMap.setMapType(isFollowing ? GoogleMap.MAP_TYPE_SATELLITE : GoogleMap.MAP_TYPE_NORMAL);
+
+                // Adjust camera
                 updateCameraFixedZoom();
             }
         });
+
 
         // Refresh button to update distance and ETA manually
         btnRefresh.setOnClickListener(v -> fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
@@ -1056,7 +1060,6 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 }
-
 
 
 

@@ -203,13 +203,12 @@ public class ProfileFragment extends Fragment {
                                 .child("finalStatus")
                                 .getValue(String.class);
                         if (finalStatus != null && finalStatus.equalsIgnoreCase("Approved")) {
-                            //calculatedProgress = 5;
-                            calculatedProgress = 0;
+                            calculatedProgress = 5;
                         }
                     }
                 }
 
-                /// --- Update only if there's an actual improvement ---
+/// --- Update only if there's an actual improvement ---
 //                if (calculatedProgress > progress) {
 //                    progress = calculatedProgress;
 //                    updateDots();
@@ -219,6 +218,7 @@ public class ProfileFragment extends Fragment {
 //                        clearBookingPreferences();
 //                    }
 //                }
+
                 /// Always update the UI and SharedPreferences if there's a change in progress
                 if (calculatedProgress != progress) {
                     progress = calculatedProgress;
@@ -234,6 +234,7 @@ public class ProfileFragment extends Fragment {
                 }
 
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

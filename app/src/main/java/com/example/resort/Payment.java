@@ -211,7 +211,7 @@ public class Payment extends AppCompatActivity {
                                                         if (task1.isSuccessful()) {
                                                             Log.d("PaymentTransaction", "Payment date appended successfully.");
 
-                                                            // Create a new top-level node "paymentSent" and add a payment message with date.
+                                                            /// Create a new top-level node "paymentSent" and add a payment message with date.
                                                             DatabaseReference paymentSentRef = FirebaseDatabase.getInstance()
                                                                     .getReference("paymentSent");
                                                             Map<String, Object> paymentSentData = new HashMap<>();
@@ -219,6 +219,12 @@ public class Payment extends AppCompatActivity {
                                                             paymentSentData.put("date", currentDateTime);
                                                             paymentSentRef.push().setValue(paymentSentData);
 
+                                                            /// *** Update SharedPreferences for persistent UI state ***
+                                                            /// This ensures that in your Booking Status activity the progress (3) and payment submission time persist.
+                                                            SharedPreferences prefs = getSharedPreferences("BookingPref_" + userId, MODE_PRIVATE);
+                                                            prefs.edit().putBoolean("paymentSubmitted", true)
+                                                                    .putInt("bookingProgress", 3)
+                                                                    .apply();
 
                                                             // Clear all fields and checkboxes after successful payment
                                                             firstName.setText("");
@@ -230,12 +236,8 @@ public class Payment extends AppCompatActivity {
                                                             checkBoxPalawan.setChecked(false);
 
                                                             Toast.makeText(Payment.this, "Payment submitted successfully!", Toast.LENGTH_SHORT).show();
-
-                                                            // Payment info complete; return submission time.
-                                                            String currentTime = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
-                                                            Intent resultIntent = new Intent();
-                                                            resultIntent.putExtra("paymentSubmittedTime", currentTime);
-                                                            setResult(RESULT_OK, resultIntent);
+                                                            Intent intent = new Intent(Payment.this, BookingStatus.class);
+                                                            intent.putExtra("paymentSubmitted", true);
                                                             finish();
 
                                                         } else {
@@ -276,6 +278,7 @@ public class Payment extends AppCompatActivity {
                 && (checkBoxGcash.isChecked() || checkBoxPalawan.isChecked());
     }
 }
+
 
 
 
