@@ -528,8 +528,11 @@ public class BookingReceipt extends AppCompatActivity {
                     Log.w("BookingReceipt", "Uncategorized Item: " + item.getName());
             }
         }
+        ///Date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
+        String formattedDate = sdf.format(new Date());
 
-        // Build bookingReview map.
+        /// Build bookingReview map.
         Map<String, Object> bookingReview = new HashMap<>();
         bookingReview.put("statusReview", statusReview);
         bookingReview.put("name", name);
@@ -553,6 +556,7 @@ public class BookingReceipt extends AppCompatActivity {
         paymentTransaction.put("name", name);
         paymentTransaction.put("refNo", referenceNo);
         paymentTransaction.put("amount", totalAmount);
+        paymentTransaction.put("PaymentDate", formattedDate);
         paymentTransaction.put("downPayment", totalAmount * 0.50);
 
         /// Build paymentMethod map with default values ("N/A").
@@ -572,8 +576,8 @@ public class BookingReceipt extends AppCompatActivity {
         bookingData.put("paymentMethod", paymentMethod);
 
 
-            SharedPreferences preferences = getSharedPreferences("BookingPref_" + userId, MODE_PRIVATE);
-        // Prevent a new booking if any booking state is active.
+        SharedPreferences preferences = getSharedPreferences("BookingPref_" + userId, MODE_PRIVATE);
+        /// Prevent a new booking if any booking state is active.
         if (preferences.getBoolean("bookingSubmitted", false) ||
                 preferences.getBoolean("paymentSubmitted", false) ||
                 preferences.getBoolean("paymentApproved", false) ||
@@ -648,7 +652,7 @@ public class BookingReceipt extends AppCompatActivity {
                                                     // Add default statusReview
                                                     orderItemsMap.put("statusReview", "Pending");
 
-                                                    // Get a reference to the MyReview node
+                                                    /// Get a reference to the MyReview node
                                                     DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
                                                             .getReference("users")
                                                             .child(finalUserId)

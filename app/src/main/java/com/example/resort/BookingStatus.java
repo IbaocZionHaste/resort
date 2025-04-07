@@ -89,17 +89,17 @@ public class BookingStatus extends AppCompatActivity {
     private TextView dot1, dot2, dot3, dot4, dot5;
     private View line1_2, line2_3, line3_4, line4_5;
     private Button payNowButton, cancelButton;
-    // Message containers for dots 1 to 5.
+    /// Message containers for dots 1 to 5.
     private FrameLayout messageFramedot1, messageFramedot2, messageFramedot3, messageFramedot4, messageFramedot5;
     private TextView messageText, messageText2, paymentMessageText, messageText4, messageText5;
-    // SharedPreferences for persisting booking state.
+    /// SharedPreferences for persisting booking state.
     private SharedPreferences prefs;
-    // Flags for one-time processing.
+    /// Flags for one-time processing.
     private boolean approvalProcessed = false;
     private boolean paymentApprovedProcessed = false;
     private boolean finalProcessed = false;
 
-    // For decline handling.
+    /// For decline handling.
     private boolean declineProcessed = false;
     private boolean paymentDeclineProcessed = false;
     private boolean bookingSubmittedProcessed = false;
@@ -136,7 +136,6 @@ public class BookingStatus extends AppCompatActivity {
             progress = 3;
             prefs.edit().putInt("bookingProgress", progress).apply();
         }
-
 
 
 
@@ -473,7 +472,6 @@ public class BookingStatus extends AppCompatActivity {
     private void showApprovalMessage() {
         messageFramedot2.setVisibility(View.VISIBLE);
         messageText2.setVisibility(View.VISIBLE);
-
         String currentTime = getCurrentTime();
         String approvalMessage = "Booking has been Reviewed. Please proceed to the payment by clicking the Pay Now button.<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
@@ -518,9 +516,7 @@ public class BookingStatus extends AppCompatActivity {
 
 
 
-
     /// Booking submitted
-
     private void listenForMyBooking() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) return;
@@ -629,8 +625,6 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 
-
-
     ///Booking Review Admin
     private void listenForApproval() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -734,7 +728,7 @@ public class BookingStatus extends AppCompatActivity {
             }
         };
 
-        // Start polling every second
+        /// Start polling every second
         handler.post(pollTask[0]);
     }
 
@@ -868,12 +862,12 @@ public class BookingStatus extends AppCompatActivity {
                             }, 1000);
                             return;
                         }
-                        // Process each booking entry.
+                        /// Process each booking entry.
                         for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
                             String finalStatus = bookingSnapshot.child("paymentTransaction")
                                     .child("finalStatus")
                                     .getValue(String.class);
-                            // if Approved, stop polling and execute clear functions.
+                            /// if Approved, stop polling and execute clear functions.
                             if (finalStatus != null && finalStatus.equalsIgnoreCase("Approved") && !finalProcessed) {
                                 finalProcessed = true;
                                 progress = Math.max(progress, 5);
@@ -884,6 +878,7 @@ public class BookingStatus extends AppCompatActivity {
 
 
 
+                                ///This code the my review is change to my review done after the booking is done
                                 DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
                                         .getReference("users")
                                         .child(userId)
@@ -904,7 +899,7 @@ public class BookingStatus extends AppCompatActivity {
                                                 //noinspection unchecked
                                                 Map<String, Object> reviewData = (Map<String, Object>) review.getValue();
                                                 if (reviewData != null) {
-                                                    reviewData.put("statusReview", "Approved");
+                                                    reviewData.remove("statusReview");
 
                                                     // Generate a unique key for each review
                                                     DatabaseReference newReviewRef = myReviewDoneRef.push();
@@ -939,8 +934,7 @@ public class BookingStatus extends AppCompatActivity {
                                     }
                                 });
 
-
-
+                               ///Delay 1 minute
                                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                                     clearBookingMessageUI();
                                     clearBookingPreferences();
@@ -980,15 +974,13 @@ public class BookingStatus extends AppCompatActivity {
         pollingHandler.post(pollTask);
     }
 
-    // Function to stop the polling
+    /// Function to stop the polling
     private void stopPolling() {
         if (pollingHandler != null && pollTask != null) {
             pollingHandler.removeCallbacks(pollTask);
             Log.d(TAG, "Polling stopped.");
         }
     }
-
-
 
 
     /**
@@ -1171,8 +1163,6 @@ public class BookingStatus extends AppCompatActivity {
 }
 
 
-
-
 ///This is original
 //    private void showSubmissionMessage() {
 //        messageFramedot1.setVisibility(View.VISIBLE);
@@ -1218,7 +1208,6 @@ public class BookingStatus extends AppCompatActivity {
 //                    .apply();
 //        }
 //    }
-
 
 
 ///Use the already defined currentUser

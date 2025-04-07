@@ -61,16 +61,6 @@ public class Comment extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_comment);
 
-        View mainView = findViewById(R.id.scrollView);
-        ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        // Fullscreen
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         Button back = findViewById(R.id.back2);
         back.setOnClickListener(v -> finish());
@@ -165,7 +155,7 @@ public class Comment extends AppCompatActivity {
 
         // Initialize Recent field.
         recentEditText = findViewById(R.id.Recent);
-        recentEditText.setText("Tap to select review");
+        recentEditText.setText("Recent Booking");
         recentEditText.setFocusable(false);
 
         // Initialize rating prompt and comment field.
@@ -185,6 +175,8 @@ public class Comment extends AppCompatActivity {
      * Processes nodes "accommodations", "foodAndDrinks", and "package".
      * For list nodes, each item’s key is stored; for "package", we assume a single object.
      */
+
+
     private void fetchReviewNames() {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
@@ -198,44 +190,39 @@ public class Comment extends AppCompatActivity {
                 reviewItemsList.clear();
                 // Iterate through each review node.
                 for (DataSnapshot reviewSnapshot : snapshot.getChildren()) {
-                    // Retrieve the statusReview field.
-                    String statusReview = reviewSnapshot.child("statusReview").getValue(String.class);
-                    // Only process if statusReview is "Approved".
-                    if ("Approved".equalsIgnoreCase(statusReview)) {
-                        String reviewKey = reviewSnapshot.getKey();
-                        // Process "accommodations".
-                        DataSnapshot accommodationsSnapshot = reviewSnapshot.child("accommodations");
-                        if (accommodationsSnapshot.exists()) {
-                            for (DataSnapshot itemSnapshot : accommodationsSnapshot.getChildren()) {
-                                String name = itemSnapshot.child("name").getValue(String.class);
-                                String category = itemSnapshot.child("category").getValue(String.class);
-                                if (name != null && category != null) {
-                                    String itemKey = itemSnapshot.getKey();
-                                    reviewItemsList.add(new ReviewItem(name, category, reviewKey, "accommodations", itemKey));
-                                }
-                            }
-                        }
-                        // Process "foodAndDrinks".
-                        DataSnapshot foodSnapshot = reviewSnapshot.child("foodAndDrinks");
-                        if (foodSnapshot.exists()) {
-                            for (DataSnapshot itemSnapshot : foodSnapshot.getChildren()) {
-                                String name = itemSnapshot.child("name").getValue(String.class);
-                                String category = itemSnapshot.child("category").getValue(String.class);
-                                if (name != null && category != null) {
-                                    String itemKey = itemSnapshot.getKey();
-                                    reviewItemsList.add(new ReviewItem(name, category, reviewKey, "foodAndDrinks", itemKey));
-                                }
-                            }
-                        }
-                        // Process "package" as a single object.
-                        DataSnapshot packageSnapshot = reviewSnapshot.child("package");
-                        if (packageSnapshot.exists()) {
-                            String name = packageSnapshot.child("name").getValue(String.class);
-                            String category = packageSnapshot.child("category").getValue(String.class);
+                    String reviewKey = reviewSnapshot.getKey();
+                    // Process "accommodations".
+                    DataSnapshot accommodationsSnapshot = reviewSnapshot.child("accommodations");
+                    if (accommodationsSnapshot.exists()) {
+                        for (DataSnapshot itemSnapshot : accommodationsSnapshot.getChildren()) {
+                            String name = itemSnapshot.child("name").getValue(String.class);
+                            String category = itemSnapshot.child("category").getValue(String.class);
                             if (name != null && category != null) {
-                                // For package, we use "package" as the node type and key.
-                                reviewItemsList.add(new ReviewItem(name, category, reviewKey, "package", "package"));
+                                String itemKey = itemSnapshot.getKey();
+                                reviewItemsList.add(new ReviewItem(name, category, reviewKey, "accommodations", itemKey));
                             }
+                        }
+                    }
+                    // Process "foodAndDrinks".
+                    DataSnapshot foodSnapshot = reviewSnapshot.child("foodAndDrinks");
+                    if (foodSnapshot.exists()) {
+                        for (DataSnapshot itemSnapshot : foodSnapshot.getChildren()) {
+                            String name = itemSnapshot.child("name").getValue(String.class);
+                            String category = itemSnapshot.child("category").getValue(String.class);
+                            if (name != null && category != null) {
+                                String itemKey = itemSnapshot.getKey();
+                                reviewItemsList.add(new ReviewItem(name, category, reviewKey, "foodAndDrinks", itemKey));
+                            }
+                        }
+                    }
+                    // Process "package" as a single object.
+                    DataSnapshot packageSnapshot = reviewSnapshot.child("package");
+                    if (packageSnapshot.exists()) {
+                        String name = packageSnapshot.child("name").getValue(String.class);
+                        String category = packageSnapshot.child("category").getValue(String.class);
+                        if (name != null && category != null) {
+                            // For package, we use "package" as the node type and key.
+                            reviewItemsList.add(new ReviewItem(name, category, reviewKey, "package", "package"));
                         }
                     }
                 }
@@ -249,72 +236,12 @@ public class Comment extends AppCompatActivity {
         });
     }
 
-
-//    private void fetchReviewNames() {
-//        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
-//                .getReference("users")
-//                .child(userId)
-//                .child("MyReview");
-//
-//        myReviewRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot snapshot) {
-//                reviewItemsList.clear();
-//                // Iterate through each review node.
-//                for (DataSnapshot reviewSnapshot : snapshot.getChildren()) {
-//                    String reviewKey = reviewSnapshot.getKey();
-//                    // Process "accommodations".
-//                    DataSnapshot accommodationsSnapshot = reviewSnapshot.child("accommodations");
-//                    if (accommodationsSnapshot.exists()) {
-//                        for (DataSnapshot itemSnapshot : accommodationsSnapshot.getChildren()) {
-//                            String name = itemSnapshot.child("name").getValue(String.class);
-//                            String category = itemSnapshot.child("category").getValue(String.class);
-//                            if (name != null && category != null) {
-//                                String itemKey = itemSnapshot.getKey();
-//                                reviewItemsList.add(new ReviewItem(name, category, reviewKey, "accommodations", itemKey));
-//                            }
-//                        }
-//                    }
-//                    // Process "foodAndDrinks".
-//                    DataSnapshot foodSnapshot = reviewSnapshot.child("foodAndDrinks");
-//                    if (foodSnapshot.exists()) {
-//                        for (DataSnapshot itemSnapshot : foodSnapshot.getChildren()) {
-//                            String name = itemSnapshot.child("name").getValue(String.class);
-//                            String category = itemSnapshot.child("category").getValue(String.class);
-//                            if (name != null && category != null) {
-//                                String itemKey = itemSnapshot.getKey();
-//                                reviewItemsList.add(new ReviewItem(name, category, reviewKey, "foodAndDrinks", itemKey));
-//                            }
-//                        }
-//                    }
-//                    // Process "package" as a single object.
-//                    DataSnapshot packageSnapshot = reviewSnapshot.child("package");
-//                    if (packageSnapshot.exists()) {
-//                        String name = packageSnapshot.child("name").getValue(String.class);
-//                        String category = packageSnapshot.child("category").getValue(String.class);
-//                        if (name != null && category != null) {
-//                            // For package, we use "package" as the node type and key.
-//                            reviewItemsList.add(new ReviewItem(name, category, reviewKey, "package", "package"));
-//                        }
-//                    }
-//                }
-//                setupRecentField();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                Toast.makeText(Comment.this, "Error fetching data", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
     /**
      * Set up the Recent field so that tapping it shows a selection dialog with review items.
      * When an item is selected, update the field text, store its index and category,
      * and update the rating prompt accordingly.
      */
-        private void setupRecentField() {
+    private void setupRecentField() {
         recentEditText.setOnClickListener(v -> {
             if (!reviewItemsList.isEmpty()) {
                 CharSequence[] namesArray = new CharSequence[reviewItemsList.size()];
@@ -323,7 +250,7 @@ public class Comment extends AppCompatActivity {
                 }
 
                 new AlertDialog.Builder(Comment.this)
-                        .setTitle("Recent Booking")
+                        .setTitle("Tap to select review")
                         .setItems(namesArray, (dialog, which) -> {
                             ReviewItem selectedItem = reviewItemsList.get(which);
                             recentEditText.setText(selectedItem.name);
@@ -372,13 +299,20 @@ public class Comment extends AppCompatActivity {
         }
 
         String commentText = commentEditText.getText().toString().trim();
+        /// Add condition to check if the comment field is empty
+        if (commentText.isEmpty()) {
+            Toast.makeText(this, "Please add a comment", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        /// Get the current user's ID and reference to their data
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
         userRef.child("username").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                // Inside the onDataChange() method of userRef.child("username").addListenerForSingleValueEvent(...)
+                ///Inside the onDataChange() method of userRef.child("username").addListenerForSingleValueEvent(...)
                 String username = snapshot.getValue(String.class);
                 if (username == null || username.isEmpty()) {
                     username = "Unknown User";
@@ -418,14 +352,14 @@ public class Comment extends AppCompatActivity {
                                 itemRef = FirebaseDatabase.getInstance()
                                         .getReference("users")
                                         .child(userId)
-                                        .child("MyReview")
+                                        .child("MyReviewDone")
                                         .child(item.parentReviewKey)
                                         .child("package");
                             } else {
                                 itemRef = FirebaseDatabase.getInstance()
                                         .getReference("users")
                                         .child(userId)
-                                        .child("MyReview")
+                                        .child("MyReviewDone")
                                         .child(item.parentReviewKey)
                                         .child(item.nodeType)
                                         .child(item.itemKey);
@@ -433,19 +367,19 @@ public class Comment extends AppCompatActivity {
                             itemRef.removeValue();
                         }
 
-                        // Remove the item from the in-memory list.
+                        /// Remove the item from the in-memory list.
                         if (selectedReviewIndex != -1 && selectedReviewIndex < reviewItemsList.size()) {
                             reviewItemsList.remove(selectedReviewIndex);
                         }
 
-                        // Reset the UI fields.
+                        /// Reset the UI fields.
                         recentEditText.setText("Tap to select review");
                         selectedReviewCategory = "";
                         selectedReviewIndex = -1;
                         selectedRating = 0;
                         commentEditText.setText("");
 
-                        // Reset all RatingBars to zero.
+                        /// Reset all RatingBars to zero.
                         ratingBar5.setRating(0);
                         ratingBar4.setRating(0);
                         ratingBar3.setRating(0);
@@ -483,6 +417,70 @@ public class Comment extends AppCompatActivity {
 }
 
 
+///This code have status review approve but not use
+//    private void fetchReviewNames() {
+//        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
+//                .getReference("users")
+//                .child(userId)
+//                .child("MyReviewDone");
+//
+//        myReviewRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                reviewItemsList.clear();
+//                // Iterate through each review node.
+//                for (DataSnapshot reviewSnapshot : snapshot.getChildren()) {
+//                    // Retrieve the statusReview field.
+//                    String statusReview = reviewSnapshot.child("statusReview").getValue(String.class);
+//                    // Only process if statusReview is "Approved".
+//                    if ("Approved".equalsIgnoreCase(statusReview)) {
+//                        String reviewKey = reviewSnapshot.getKey();
+//                        // Process "accommodations".
+//                        DataSnapshot accommodationsSnapshot = reviewSnapshot.child("accommodations");
+//                        if (accommodationsSnapshot.exists()) {
+//                            for (DataSnapshot itemSnapshot : accommodationsSnapshot.getChildren()) {
+//                                String name = itemSnapshot.child("name").getValue(String.class);
+//                                String category = itemSnapshot.child("category").getValue(String.class);
+//                                if (name != null && category != null) {
+//                                    String itemKey = itemSnapshot.getKey();
+//                                    reviewItemsList.add(new ReviewItem(name, category, reviewKey, "accommodations", itemKey));
+//                                }
+//                            }
+//                        }
+//                        // Process "foodAndDrinks".
+//                        DataSnapshot foodSnapshot = reviewSnapshot.child("foodAndDrinks");
+//                        if (foodSnapshot.exists()) {
+//                            for (DataSnapshot itemSnapshot : foodSnapshot.getChildren()) {
+//                                String name = itemSnapshot.child("name").getValue(String.class);
+//                                String category = itemSnapshot.child("category").getValue(String.class);
+//                                if (name != null && category != null) {
+//                                    String itemKey = itemSnapshot.getKey();
+//                                    reviewItemsList.add(new ReviewItem(name, category, reviewKey, "foodAndDrinks", itemKey));
+//                                }
+//                            }
+//                        }
+//                        // Process "package" as a single object.
+//                        DataSnapshot packageSnapshot = reviewSnapshot.child("package");
+//                        if (packageSnapshot.exists()) {
+//                            String name = packageSnapshot.child("name").getValue(String.class);
+//                            String category = packageSnapshot.child("category").getValue(String.class);
+//                            if (name != null && category != null) {
+//                                // For package, we use "package" as the node type and key.
+//                                reviewItemsList.add(new ReviewItem(name, category, reviewKey, "package", "package"));
+//                            }
+//                        }
+//                    }
+//                }
+//                setupRecentField();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                Toast.makeText(Comment.this, "Error fetching data", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
 //    private void setupRecentField() {
 //        recentEditText.setOnClickListener(v -> {

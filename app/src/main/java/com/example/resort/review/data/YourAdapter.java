@@ -1,9 +1,13 @@
 package com.example.resort.review.data;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +33,20 @@ public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String item = dataList.get(position);
         holder.textView.setText(item);
+
+        // Enable text selection for copying
+        holder.textView.setTextIsSelectable(true);
+
+        // Set click listener to copy the text when clicked
+        holder.textView.setOnClickListener(v -> {
+            // Get the selected text and copy it to the clipboard
+            ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Copied Text", item);
+            clipboard.setPrimaryClip(clip);
+
+            // Optionally, show a toast to notify the user
+            Toast.makeText(v.getContext(), "Text copied to clipboard", Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -38,6 +56,7 @@ public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(android.R.id.text1);

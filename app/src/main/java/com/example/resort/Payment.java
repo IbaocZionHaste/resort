@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class Payment extends AppCompatActivity {
 
@@ -54,7 +57,7 @@ public class Payment extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_payment);
 
-        // Adjust layout for system insets.
+        /// Adjust layout for system insets.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -72,6 +75,21 @@ public class Payment extends AppCompatActivity {
         submitButton = findViewById(R.id.submit);
         backButton = findViewById(R.id.back2);
 
+        ///This code is one only check the checkbox
+        checkBoxGcash.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                checkBoxPalawan.setChecked(false);
+            }
+        });
+
+        checkBoxPalawan.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                checkBoxGcash.setChecked(false);
+            }
+        });
+
+
+        ///Payment Information
         ImageView messageIcon = findViewById(R.id.messageIcon);
         TextView badge = findViewById(R.id.badge); // Your badge TextView (Optional if you want to show a count)
         messageIcon.setOnClickListener(view -> {
@@ -120,14 +138,19 @@ public class Payment extends AppCompatActivity {
                 }
             });
 
-            // Build and show the dialog
-            AlertDialog dialog = new AlertDialog.Builder(Payment.this)
-                    .setTitle("Payment Information")
+            /// Build and show the dialog
+            AlertDialog dialog = new AlertDialog.Builder(Payment.this, R.style.CustomDialog)
                     .setView(dialogView)
-                    .setPositiveButton("OK", null)
                     .create();
+
+           /// Optional: Make it cancelable with background click
+            dialog.setCanceledOnTouchOutside(true);
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
+
         });
+
+
 
 
 
@@ -198,7 +221,7 @@ public class Payment extends AppCompatActivity {
                             paymentData.put("Date", currentDateTime);
                             paymentData.put("Status", "Done");  // Set status to "Done"
 
-                            // Update the paymentMethod node.
+                            /// Update the paymentMethod node.
                             paymentMethodRef.updateChildren(paymentData)
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
@@ -481,7 +504,6 @@ public class Payment extends AppCompatActivity {
 //
 //
 
-
 ///Not use
 //                // Payment info complete; return submission time.
 //                String currentTime = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
@@ -489,8 +511,6 @@ public class Payment extends AppCompatActivity {
 //                resultIntent.putExtra("paymentSubmittedTime", currentTime);
 //                setResult(RESULT_OK, resultIntent);
 //                finish();
-
-
 
 ///Booking Id is remove because no need
 //package com.example.resort;
@@ -663,9 +683,6 @@ public class Payment extends AppCompatActivity {
 //}
 //}
 //
-
-
-
 
 ///this code no function append date and no payment send
 //        submitButton.setOnClickListener(v -> {

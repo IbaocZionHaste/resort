@@ -34,10 +34,21 @@ public class MyRatingAdapter extends RecyclerView.Adapter<MyRatingAdapter.MyRati
         RatingItem item = ratingList.get(position);
         holder.nameTextView.setText(item.getItemName());
         holder.categoryTextView.setText(item.getCategory());
-        holder.commentTextView.setText(item.getComment());
+        ///holder.commentTextView.setText(item.getComment());
         holder.dateTextView.setText(item.getDate());
         holder.ratingBar.setRating(item.getRate());
+
+        /// Get the comment
+        String comment = item.getComment();
+        if (comment != null && !comment.trim().isEmpty()) {
+            /// Enclose the comment in double quotes if it's not empty
+            holder.commentTextView.setText("\"" + comment + "\"");
+        } else {
+            /// Set the TextView to an empty string if there's no comment
+            holder.commentTextView.setText("");
+        }
     }
+
 
     @Override
     public int getItemCount() {

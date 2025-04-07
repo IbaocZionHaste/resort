@@ -28,9 +28,6 @@
 
 
 
-
-
-
     <application
         android:hardwareAccelerated="true"
         android:allowBackup="true"
@@ -50,7 +47,7 @@
         <activity
             android:name=".Comment"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".BookingReceipt"
             android:exported="false" />
@@ -135,7 +132,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
     </application>
 </manifest>

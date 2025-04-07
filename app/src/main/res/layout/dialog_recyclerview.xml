@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/rounded_dialog_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payment Information"
+        android:textColor="@color/grey"
+        android:textSize="22sp"
+        android:fontFamily="@font/arial_bold"
+        android:background="?android:attr/windowBackground"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="8dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dialogRecyclerView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:scrollbars="vertical"
+        android:background="?android:attr/windowBackground" />
+</LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
