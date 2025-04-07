@@ -834,8 +834,8 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
             btnFollow.setBackgroundTintList(ColorStateList.valueOf(color));
 
             if (userMarker != null) {
-                // Toggle between satellite and normal map types
-                googleMap.setMapType(isFollowing ? GoogleMap.MAP_TYPE_SATELLITE : GoogleMap.MAP_TYPE_NORMAL);
+
+                googleMap.setMapType(isFollowing ? GoogleMap.MAP_TYPE_HYBRID : GoogleMap.MAP_TYPE_NORMAL);
 
                 // Adjust camera
                 updateCameraFixedZoom();
