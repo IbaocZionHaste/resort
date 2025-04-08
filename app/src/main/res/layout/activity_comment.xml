@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/whiteSmoke"
     android:fitsSystemWindows="true"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/whiteSmoke"
         android:focusable="true"
+        android:background="@color/whiteSmoke"
         android:focusableInTouchMode="true"
         tools:context=".Login">
 
-        <!-- Back Button -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/back2"
             android:layout_width="47dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/light_blue"
             android:drawableLeft="@drawable/ic_profile_arrow"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.043"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.03" />
 
-        <!-- Title Text -->
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -42,14 +40,16 @@
             android:textColor="@color/black"
             android:textSize="25dp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.514"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.054" />
 
-        <!-- Rating Prompt Text -->
+
+        <!-- Vertical LinearLayout for rating bars, centered horizontally -->
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
@@ -60,14 +60,13 @@
             android:textColor="@color/black"
             android:textSize="21dp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.505"
-            app:layout_constraintVertical_bias="0.22" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.229" />
 
-        <!-- "Review For:" Label -->
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
@@ -76,14 +75,13 @@
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/back2"
-            app:layout_constraintEnd_toStartOf="@+id/Recent"
-            app:layout_constraintHorizontal_bias="0.622"
-            app:layout_constraintVertical_bias="0.141" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.154"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.15" />
 
-        <!-- Recent Booking EditText -->
         <EditText
             android:id="@+id/Recent"
             android:layout_width="200dp"
@@ -96,29 +94,25 @@
             android:textColor="@color/black"
             android:textColorHint="@color/grey"
             android:textSize="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintBottom_toTopOf="@+id/textView2"
-            app:layout_constraintStart_toEndOf="@+id/back2"
+            app:layout_constraintBottom_toBottomOf="@+id/textView3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.675"
+            app:layout_constraintStart_toEndOf="@+id/back2"
+            app:layout_constraintTop_toTopOf="@+id/textView3"
             app:layout_constraintVertical_bias="0.538" />
-
-        <!-- Ratings Container -->
-
-        <!-- Rating Labels -->
 
         <LinearLayout
             android:id="@+id/ratingsContainer"
-            android:layout_width="235dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/rate1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.137"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/rate5"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintVertical_bias="0.0">
 
             <!-- 5-star RatingBar -->
             <RatingBar
@@ -184,38 +178,8 @@
                 android:scaleY="0.5"
                 android:stepSize="1"
                 app:tint="@color/grey" />
+
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/Excellent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Excellent"
-            android:textColor="@color/black"
-            android:textSize="12dp"
-            android:textStyle="bold"
-            android:layout_marginStart="100dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/rate5"
-            app:layout_constraintHorizontal_bias="0.626"
-            app:layout_constraintStart_toEndOf="@+id/number5"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.307" />
-
-        <TextView
-            android:id="@+id/VeryGood"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Very Good"
-            android:textColor="@color/black"
-            android:textSize="12dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/rate4"
-            app:layout_constraintEnd_toEndOf="@+id/Excellent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/Excellent"
-            app:layout_constraintTop_toTopOf="@+id/rate4"
-            app:layout_constraintVertical_bias="0.395" />
 
         <TextView
             android:id="@+id/Satisfactory"
@@ -225,12 +189,57 @@
             android:textColor="@color/black"
             android:textSize="12dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/rate3"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/VeryGood"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.428"
             app:layout_constraintStart_toStartOf="@+id/VeryGood"
-            app:layout_constraintTop_toTopOf="@+id/rate3"
-            app:layout_constraintVertical_bias="0.472" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.482" />
+
+        <TextView
+            android:id="@+id/Poor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Poor"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/Below"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/Below"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.64" />
+
+        <TextView
+            android:id="@+id/Excellent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Excellent"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.571"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.326" />
+
+        <TextView
+            android:id="@+id/VeryGood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Very Good"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/Excellent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/Excellent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4" />
 
         <TextView
             android:id="@+id/Below"
@@ -240,58 +249,13 @@
             android:textColor="@color/black"
             android:textSize="12dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/rate2"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/Satisfactory"
             app:layout_constraintHorizontal_bias="0.54"
             app:layout_constraintStart_toStartOf="@+id/Satisfactory"
-            app:layout_constraintTop_toTopOf="@+id/rate2"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.56" />
 
-        <!-- Rating Buttons -->
-        <TextView
-            android:id="@+id/Poor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Poor"
-            android:textColor="@color/black"
-            android:textSize="12dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/rate1"
-            app:layout_constraintEnd_toEndOf="@+id/Below"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/Below"
-            app:layout_constraintTop_toTopOf="@+id/rate1"
-            app:layout_constraintVertical_bias="0.333" />
-
-        <Button
-            android:id="@+id/rate5"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:backgroundTint="@color/yellow"
-            android:text="Rate"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.904"
-            app:layout_constraintVertical_bias="0.302" />
-
-        <Button
-            android:id="@+id/rate4"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:backgroundTint="@color/yellow"
-            android:text="Rate"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/rate5"
-            app:layout_constraintEnd_toEndOf="@+id/rate5"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="0.379" />
 
         <Button
             android:id="@+id/rate3"
@@ -299,14 +263,44 @@
             android:layout_height="40dp"
             android:backgroundTint="@color/yellow"
             android:text="Rate"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/rate4"
             app:layout_constraintEnd_toEndOf="@+id/rate4"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="0.464" />
+            app:layout_constraintStart_toStartOf="@+id/rate4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.483" />
+
+        <Button
+            android:id="@+id/rate4"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/yellow"
+            android:text="Rate"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/rate5"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/rate5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4" />
+
+        <Button
+            android:id="@+id/rate5"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/yellow"
+            android:text="Rate"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.904"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.322" />
 
         <Button
             android:id="@+id/rate2"
@@ -314,14 +308,17 @@
             android:layout_height="40dp"
             android:backgroundTint="@color/yellow"
             android:text="Rate"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/rate3"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.904"
             app:layout_constraintStart_toStartOf="@+id/rate3"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.548" />
+            app:layout_constraintVertical_bias="0.556" />
+
+
+        <!-- Comment box for review -->
 
         <Button
             android:id="@+id/rate1"
@@ -329,18 +326,14 @@
             android:layout_height="40dp"
             android:backgroundTint="@color/yellow"
             android:text="Rate"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/rate2"
             app:layout_constraintEnd_toEndOf="@+id/rate2"
             app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/rate2"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.641" />
-
-        <!-- Comment Box -->
-
-        <!-- Number Labels -->
 
         <EditText
             android:id="@+id/Comment"
@@ -348,6 +341,7 @@
             android:layout_height="130dp"
             android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
+            android:autofillHints=""
             android:background="@drawable/edittext_background"
             android:gravity="top|start"
             android:hint="Comment:"
@@ -362,10 +356,24 @@
             android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:layout_constraintVertical_bias="0.751" />
+
+        <Button
+            android:id="@+id/Submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/light_blue"
+            android:text="Submit"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.944"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.828" />
+            app:layout_constraintVertical_bias="0.932" />
 
         <TextView
             android:id="@+id/number5"
@@ -375,27 +383,12 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/Excellent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.08"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/Excellent"
-            app:layout_constraintVertical_bias="0.322" />
-
-        <TextView
-            android:id="@+id/number4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/VeryGood"
-            app:layout_constraintEnd_toEndOf="@+id/number5"
-            app:layout_constraintHorizontal_bias="0.11"
-            app:layout_constraintStart_toStartOf="@+id/number5"
-            app:layout_constraintTop_toTopOf="@+id/VeryGood"
-            app:layout_constraintVertical_bias="0.401" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.33" />
 
         <TextView
             android:id="@+id/number3"
@@ -405,11 +398,11 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/Satisfactory"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/number4"
             app:layout_constraintHorizontal_bias="0.11"
             app:layout_constraintStart_toStartOf="@+id/number4"
-            app:layout_constraintTop_toTopOf="@+id/Satisfactory"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.48" />
 
         <TextView
@@ -420,12 +413,12 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/Below"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/number3"
-            app:layout_constraintHorizontal_bias="0.11"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/number3"
-            app:layout_constraintTop_toTopOf="@+id/Below"
-            app:layout_constraintVertical_bias="0.562" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.554" />
 
         <TextView
             android:id="@+id/number1"
@@ -435,29 +428,27 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/Poor"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/number2"
-            app:layout_constraintHorizontal_bias="0.11"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/number2"
-            app:layout_constraintTop_toTopOf="@+id/Poor"
-            app:layout_constraintVertical_bias="0.643" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.63" />
 
-
-        <Button
-            android:id="@+id/Submit"
+        <TextView
+            android:id="@+id/number4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/light_blue"
-            android:text="Submit"
+            android:text="4"
             android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.944"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/number5"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/number5"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.932" />
-
-
+            app:layout_constraintVertical_bias="0.406" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
