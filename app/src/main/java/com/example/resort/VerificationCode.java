@@ -113,9 +113,16 @@ public class VerificationCode extends AppCompatActivity {
             }
         });
 
-        // Submit button click listener for manual code entry
+        /// Submit button click listener for manual code entry
         submit.setOnClickListener(v -> {
             String code = getCodeFromEditTexts();
+
+            // Check for a valid verification id before proceeding.
+            if (verificationId == null) {
+                Toast.makeText(VerificationCode.this, "Sorry, OTP code wrong", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (!TextUtils.isEmpty(code) && code.length() == 6) {
                 progressDialog.show();
                 verifyPhoneNumberWithCode(verificationId, code);
@@ -298,7 +305,7 @@ public class VerificationCode extends AppCompatActivity {
                 code6.getText().toString().trim();
     }
 
-//    private void autoFillCode(String code) {
+///    private void autoFillCode(String code) {
 //        if (code.length() == 6) {
 //            code1.setText(String.valueOf(code.charAt(0)));
 //            code2.setText(String.valueOf(code.charAt(1)));
@@ -319,6 +326,15 @@ public class VerificationCode extends AppCompatActivity {
         code4.addTextChangedListener(new OTPTextWatcher(code4, code5));
         code5.addTextChangedListener(new OTPTextWatcher(code5, code6));
         code6.addTextChangedListener(new OTPTextWatcher(code6, null));
+
+
+        // Add deletion behavior: if the current field is empty when back is pressed, focus goes back
+        // Note: code1 doesn't have a previous field, so only add for code2 to code6
+        setupDeleteKeyListener(code2, code1);
+        setupDeleteKeyListener(code3, code2);
+        setupDeleteKeyListener(code4, code3);
+        setupDeleteKeyListener(code5, code4);
+        setupDeleteKeyListener(code6, code5);
     }
 
     /// Custom TextWatcher class for OTP fields
@@ -346,6 +362,24 @@ public class VerificationCode extends AppCompatActivity {
             // No action needed here
         }
     }
+
+
+    private void setupDeleteKeyListener(final EditText currentField, final EditText previousField) {
+        currentField.setOnKeyListener((v, keyCode, event) -> {
+            // Check if the user pressed the DEL key
+            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
+                // If the current field is empty, move focus to the previous field.
+                if (currentField.getText().toString().isEmpty() && previousField != null) {
+                    previousField.requestFocus();
+                    // Optionally, clear previous field’s text if you want to simulate deletion
+                    previousField.setText("");
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
 }
 
 

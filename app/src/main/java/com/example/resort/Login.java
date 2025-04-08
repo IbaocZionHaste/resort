@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,8 +76,8 @@ public class Login extends AppCompatActivity {
         checkBoxRememberMe = findViewById(R.id.termsCheckBox);
 
         // NEW: Reference Google and Facebook login buttons (make sure these IDs exist in your layout)
-        Button buttonGoogle = findViewById(R.id.button3);
-        Button buttonFacebook = findViewById(R.id.button2);
+        ImageButton buttonGoogle = findViewById(R.id.button3);
+        ImageButton buttonFacebook = findViewById(R.id.button2);
 
         // Initialize the progress dialog
         progressDialog = new ProgressDialog(this);

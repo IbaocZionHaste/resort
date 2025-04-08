@@ -403,7 +403,7 @@ public class BookingReceipt extends AppCompatActivity {
         }
 
         StringBuilder receipt = new StringBuilder();
-        String formatLine = "%-30s %10s\n";
+        String formatLine = "%-25s %10s\n";
 
         if (!accommodations.isEmpty()) {
             receipt.append("Accommodation\n");

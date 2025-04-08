@@ -595,6 +595,7 @@ public class CottageDetailActivity extends AppCompatActivity {
         }
     }
 
+
     // ----- onCreate() -----
     @Override
     protected void onCreate(Bundle savedInstanceState) {

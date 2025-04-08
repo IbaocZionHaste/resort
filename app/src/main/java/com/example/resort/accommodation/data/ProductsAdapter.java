@@ -118,7 +118,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                                             byte[] imageBytes = Base64.decode(photo1, Base64.DEFAULT);
                                             Glide.with(holder.productImageView.getContext())
                                                     .load(imageBytes)
-                                                    //.skipMemoryCache(true)
+                                                    .skipMemoryCache(true)
                                                     .thumbnail(0.1f)
                                                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                                                     .transition(DrawableTransitionOptions.withCrossFade(500))
@@ -154,7 +154,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 }
                 Glide.with(holder.productImageView.getContext())
                         .load(imageBytes)
-                        //.skipMemoryCache(true)
+                        .skipMemoryCache(true)
                         .thumbnail(0.1f)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .transition(DrawableTransitionOptions.withCrossFade(100))
@@ -162,7 +162,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             } else {
                 Glide.with(holder.productImageView.getContext())
                         .load(imageUrl)
-                        //.skipMemoryCache(true)
+                        .skipMemoryCache(true)
                         .thumbnail(0.1f)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .transition(DrawableTransitionOptions.withCrossFade(100))
@@ -405,7 +405,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 break;
         }
 
-        // Handle image extra: if it's a Base64 string, decode it and save the bitmap to internal storage.
+        /// Handle image extra: if it's a Base64 string, decode it and save the bitmap to internal storage.
         if (imageUrl != null && imageUrl.startsWith("data:image/") && imageUrl.contains(",")) {
             String base64Data = imageUrl.substring(imageUrl.indexOf(",") + 1);
             byte[] imageBytes = base64Cache.get(base64Data);
@@ -428,7 +428,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         return productsList.size();
     }
 
-//    static class ProductViewHolder extends RecyclerView.ViewHolder {
+///    static class ProductViewHolder extends RecyclerView.ViewHolder {
 //        ImageView productImageView;
 //        TextView nameTextView;
 //        ImageView plusIcon; // Make sure this exists in your item layout
@@ -490,6 +490,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             return file.getAbsolutePath();
         } catch (IOException e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
             return null;
         }
@@ -500,14 +501,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
      * Helper method to extract only the Base64 portion of the image string.
      * If the image URL is not a Base64 string, it returns the original URL.
      */
-//    private String extractBase64Image(String imageUrl) {
-//        if (imageUrl != null && imageUrl.startsWith("data:image/") && imageUrl.contains(",")) {
-//            return imageUrl.substring(imageUrl.indexOf(",") + 1);
-//        }
-//        return imageUrl;
-//    }
-//}
-
     private String extractBase64Image(String imageUrl) {
         if (imageUrl != null && imageUrl.startsWith("data:image/") && imageUrl.contains(",")) {
             return imageUrl.substring(imageUrl.indexOf(",") + 1);
