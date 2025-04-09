@@ -270,14 +270,16 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/arial_bold"
+            android:fontFamily="@font/arial_th"
             android:text=""
             android:textColor="@color/red"
             android:textSize="18dp"
             app:layout_constraintBottom_toTopOf="@+id/button"
-            app:layout_constraintEnd_toEndOf="@+id/code6"
-            app:layout_constraintStart_toStartOf="@+id/code1"
-            app:layout_constraintTop_toBottomOf="@+id/code3" />
+            app:layout_constraintEnd_toEndOf="@+id/otpLinearLayout"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="@+id/otpLinearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/otpLinearLayout"
+            app:layout_constraintVertical_bias="0.46" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

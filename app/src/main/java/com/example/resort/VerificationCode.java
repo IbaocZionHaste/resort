@@ -50,8 +50,8 @@ public class VerificationCode extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken resendToken;
     private FirebaseAuth mAuth;
     private CountDownTimer countDownTimer;
-    // 1 minute (60000 milliseconds)
-    private static final long COUNTDOWN_TIME = 60000;
+    // 2 minute (60000 milliseconds)
+    private static final long COUNTDOWN_TIME = 120000;
 
     private boolean isTimerRunning = false;
 

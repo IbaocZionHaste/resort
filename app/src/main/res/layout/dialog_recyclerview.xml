@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dialogRoot"
     android:layout_width="match_parent"
@@ -15,7 +14,8 @@
         android:text="Payment Information"
         android:textColor="@color/grey"
         android:textSize="22sp"
-        android:fontFamily="@font/arial_bold"
+        android:fontFamily="@font/arial_th"
+        android:textStyle="bold"
         android:background="?android:attr/windowBackground"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="8dp"/>
