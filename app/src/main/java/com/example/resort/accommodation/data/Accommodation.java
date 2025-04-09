@@ -32,9 +32,6 @@ public class Accommodation implements Serializable {
     // New field for available date (e.g., when the product becomes available again)
     private String availableDate;
 
-    // Field for booking date (e.g., "Date: March 16 2025 (6:39pm - 6:39pm)")
-    // private String bookingDate;
-
     // No-argument constructor (required for Firebase)
     public Accommodation() {
     }
@@ -169,14 +166,6 @@ public class Accommodation implements Serializable {
         this.beverage = beverage;
     }
 
-//This not use
-//    public String getBookingDate() {
-//        return bookingDate;
-//    }
-//    public void setBookingDate(String bookingDate) {
-//        this.bookingDate = bookingDate;
-//    }
-
     public String getAvailableDate() {
         return availableDate;
     }
@@ -189,7 +178,7 @@ public class Accommodation implements Serializable {
 
 
 
-//package com.example.resort.accommodation.data;
+///package com.example.resort.accommodation.data;
 //
 //import java.io.Serializable;
 //

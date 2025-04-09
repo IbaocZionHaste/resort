@@ -85,7 +85,7 @@ public class PackageDetailActivity extends AppCompatActivity {
         for (int i = 0; i < swipeImages.size(); i++) {
             TextView dot = new TextView(this);
             dot.setText("●"); // Unicode bullet
-            dot.setTextSize(18);
+            dot.setTextSize(15);
             dot.setPadding(8, 0, 8, 0);
             dot.setTextColor(getResources().getColor(R.color.grey)); // Inactive color
             llDots.addView(dot);
@@ -97,7 +97,7 @@ public class PackageDetailActivity extends AppCompatActivity {
         for (int i = 0; i < llDots.getChildCount(); i++) {
             TextView dot = (TextView) llDots.getChildAt(i);
             if (i == currentImageIndex) {
-                dot.setTextColor(getResources().getColor(R.color.red)); // Active dot
+                dot.setTextColor(getResources().getColor(R.color.light_blue)); // Active dot
             } else {
                 dot.setTextColor(getResources().getColor(R.color.grey));
             }

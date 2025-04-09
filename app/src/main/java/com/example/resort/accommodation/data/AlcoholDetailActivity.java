@@ -47,7 +47,7 @@ import java.util.List;
 public class AlcoholDetailActivity extends AppCompatActivity {
 
 
-    // Swipe images list: holds either Integer (resource ID) or Bitmap (from album)
+    /// Swipe images list: holds either Integer (resource ID) or Bitmap (from album)
     private List<Object> swipeImages;
     private int currentImageIndex = 0;
     private ImageView ivImageSwipe; // This is your main image view (ivCottageImage)
@@ -80,7 +80,7 @@ public class AlcoholDetailActivity extends AppCompatActivity {
         for (int i = 0; i < swipeImages.size(); i++) {
             TextView dot = new TextView(this);
             dot.setText("●"); // Unicode bullet
-            dot.setTextSize(18);
+            dot.setTextSize(15);
             dot.setPadding(8, 0, 8, 0);
             dot.setTextColor(getResources().getColor(R.color.grey)); // Inactive color
             llDots.addView(dot);
@@ -92,7 +92,7 @@ public class AlcoholDetailActivity extends AppCompatActivity {
         for (int i = 0; i < llDots.getChildCount(); i++) {
             TextView dot = (TextView) llDots.getChildAt(i);
             if (i == currentImageIndex) {
-                dot.setTextColor(getResources().getColor(R.color.red)); // Active dot
+                dot.setTextColor(getResources().getColor(R.color.light_blue)); // Active dot
             } else {
                 dot.setTextColor(getResources().getColor(R.color.grey));
             }
@@ -478,6 +478,7 @@ public class AlcoholDetailActivity extends AppCompatActivity {
         fetchAlbumData(tvName.getText().toString());
     }
 }
+
 
 
 
