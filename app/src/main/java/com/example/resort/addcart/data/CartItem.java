@@ -8,14 +8,14 @@ public class CartItem {
     private Integer capacity; // Only for Cottage and Boat
     private String imageUrl;  // New field for item image
 
-    // Constructor for items that may have capacity (Cottage and Boat)
+    /// Constructor for items that may have capacity (Cottage and Boat)
     public CartItem(String name, double price, String category, Integer capacity, String imageUrl) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.quantity = 1; // Default quantity
         this.imageUrl = imageUrl;
-        // Assign capacity ONLY if it's a "Cottage" or "Boat"
+        /// Assign capacity ONLY if it's a "Cottage" or "Boat"
         this.capacity = ("Cottage".equals(category) || "Boat".equals(category)) ? capacity : null;
     }
 
@@ -34,7 +34,7 @@ public class CartItem {
         this(name, price, category, null, null);
     }
 
-    // Getters
+    /// Getters
     public String getName() {
         return name;
     }
@@ -59,7 +59,7 @@ public class CartItem {
         return imageUrl;
     }
 
-    // Setters
+    /// Setters
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
@@ -73,10 +73,13 @@ public class CartItem {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+
 }
 
 
-//package com.example.resort.addcart.data;
+
+///package com.example.resort.addcart.data;
 //
 //public class CartItem {
 //    private final String name;

@@ -132,7 +132,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return cartItems.size();
     }
 
-    // For resetting cart items after a successful booking
+    /// For resetting cart items after a successful booking
     public void updateCartItems(List<CartItem> newItems) {
         this.cartItems = newItems;
     }
@@ -158,7 +158,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
 
 
-//No Get Current User
+///No Get Current User
 //package com.example.resort.addcart.data;
 //
 //import android.annotation.SuppressLint;

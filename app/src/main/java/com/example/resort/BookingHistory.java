@@ -36,7 +36,12 @@ public class BookingHistory extends AppCompatActivity {
         setContentView(R.layout.activity_booking_history);
 
         recyclerView = findViewById(R.id.recyclerViewFeedback);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);     /// Reverse the order.
+        layoutManager.setStackFromEnd(true);      /// Stack items from the end.
+        recyclerView.setLayoutManager(layoutManager);
+
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         bookingList = new ArrayList<>();
         adapter = new BookingAdapter(this, bookingList);

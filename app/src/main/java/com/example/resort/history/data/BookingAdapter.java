@@ -53,7 +53,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
             holder.tvPaymentMethod.setText("");
         }
 
-// Display the refNo from bookingReview
+/// Display the refNo from bookingReview
 //        if (booking.getBookingReview() != null && booking.getBookingReview().refNo != null) {
 //            holder.tvRefNo.setText("Reference: " + booking.getBookingReview().refNo);
 //        } else {
@@ -65,7 +65,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
             holder.tvRefNo.setText(booking.getBookingReview().refNo); // Only display the refNo without "Reference:"
             holder.tvRefNo.setTextColor(context.getResources().getColor(R.color.red)); // Set the text color to red
         } else {
-            holder.tvRefNo.setText(""); // Set empty if no reference number is available
+            holder.tvRefNo.setText(""); /// Set empty if no reference number is available
         }
 
         // Check the payment transaction status and update the status and color
@@ -79,17 +79,17 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
                     holder.tvStatus.setText("Status: Completed");
                     holder.tvStatus.setTextColor(Color.GREEN); // Green for Approved
                     break;
-                case "cancelled":
+                case "Cancelled":
                     holder.tvStatus.setText("Status: Cancelled");
                     holder.tvStatus.setTextColor(Color.RED); // Red for Cancelled
                     break;
-                case "declined":
+                case "Declined":
                     holder.tvStatus.setText("Status: Declined");
                     holder.tvStatus.setTextColor(Color.YELLOW); // Yellow for Declined
                     break;
                 case "refund":
                     holder.tvStatus.setText("Status: Refunded");
-                    holder.tvStatus.setTextColor(Color.BLUE); // Blue for Refunded
+                    holder.tvStatus.setTextColor(Color.YELLOW); // Blue for Refunded
                     break;
                 default:
                     holder.tvStatus.setText("Status: Unknown");
@@ -99,6 +99,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
         } else {
             holder.tvStatus.setText("");
         }
+
 
         // When "View Details" is clicked, open the detail activity
         holder.btnViewDetails.setOnClickListener(v -> {

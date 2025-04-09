@@ -68,8 +68,6 @@ import java.util.Properties;
 
 public class BookingReceipt extends AppCompatActivity {
 
-
-
     private TextView detailBooking;
     private TextView totalPaymentText;
     private TextView downPaymentText;
@@ -120,16 +118,16 @@ public class BookingReceipt extends AppCompatActivity {
             dateTextView.setText("Date info not available");
         }
 
-        // Load user details from Firebase.
+        /// Load user details from Firebase.
         loadUserDetails();
 
-        // Load the cart details (receipt).
+        /// Load the cart details (receipt).
         loadCartDetails();
 
-        // Set up the SaveReceipt (print) button.
+        /// Set up the SaveReceipt (print) button.
         setupSaveReceiptFunction();
 
-        // Set up the submit button to show the custom confirmation dialog.
+        /// Set up the submit button to show the custom confirmation dialog.
         Button submitButton = findViewById(R.id.submit);
         submitButton.setOnClickListener(v -> submitBookingToFirebase());
     }
@@ -171,7 +169,7 @@ public class BookingReceipt extends AppCompatActivity {
 
                             final String originalMessage = messageTextView.getText().toString();
                             final Drawable[] originalDrawables = messageTextView.getCompoundDrawables();
-                            messageTextView.setText("Thank you for purchasing Sir/Ma'am 😊.");
+                            messageTextView.setText("Thank you for purchasing Sir/Ma'am.");
                             messageTextView.setCompoundDrawables(null, null, null, null);
 
                             View contentView = findViewById(android.R.id.content);
@@ -217,69 +215,6 @@ public class BookingReceipt extends AppCompatActivity {
         });
     }
 
-    
-///    private void setupSaveReceiptFunction() {
-//        ImageButton btnSaveReceipt = findViewById(R.id.SaveReceipt);
-//        btnSaveReceipt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                new AlertDialog.Builder(BookingReceipt.this)
-//                        .setTitle("Save Receipt")
-//                        .setMessage("Do you want to save the receipt?")
-//                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                final Button submitButton = findViewById(R.id.submit);
-//
-//                                // Hide the SaveReceipt and submit buttons temporarily.
-//                                btnSaveReceipt.setVisibility(View.INVISIBLE);
-//                                submitButton.setVisibility(View.INVISIBLE);
-//
-//                                btnSaveReceipt.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        // --- Temporarily update UI for the saved receipt ---
-//                                        final ImageView arrowView = findViewById(R.id.arrow);
-//                                        final int originalArrowVisibility = arrowView.getVisibility();
-//                                        arrowView.setVisibility(View.INVISIBLE);
-//
-//                                        final String originalMessage = messageTextView.getText().toString();
-//                                        final Drawable[] originalDrawables = messageTextView.getCompoundDrawables();
-//                                        messageTextView.setText("Thank you for purchasing Sir/Ma'am 😊.");
-//                                        messageTextView.setCompoundDrawables(null, null, null, null);
-//
-//                                        View contentView = findViewById(android.R.id.content);
-//                                        Bitmap screenshot = getScreenShot(contentView);
-//
-//                                        // --- Restore UI elements ---
-//                                        messageTextView.setText(originalMessage);
-//                                        messageTextView.setCompoundDrawables(
-//                                                originalDrawables[0],
-//                                                originalDrawables[1],
-//                                                originalDrawables[2],
-//                                                originalDrawables[3]);
-//                                        arrowView.setVisibility(originalArrowVisibility);
-//
-//                                        btnSaveReceipt.setVisibility(View.VISIBLE);
-//                                        btnSaveReceipt.setEnabled(true);
-//                                        submitButton.setVisibility(View.VISIBLE);
-//                                        submitButton.setEnabled(true);
-//
-//                                        boolean isSaved = saveReceiptImage(screenshot);
-//                                        if (isSaved) {
-//                                            Toast.makeText(BookingReceipt.this, "Receipt saved to gallery", Toast.LENGTH_SHORT).show();
-//                                        } else {
-//                                            Toast.makeText(BookingReceipt.this, "Error saving receipt", Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    }
-//                                }, 200); // 200ms delay to ensure UI update.
-//                            }
-//                        })
-//                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-//                        .show();
-//            }
-//        });
-//    }
 
     /// Helper method to capture a screenshot of a given view.
     private Bitmap getScreenShot(View view) {
@@ -361,6 +296,7 @@ public class BookingReceipt extends AppCompatActivity {
         }
     }
 
+
     @SuppressLint("SetTextI18n")
     private void loadCartDetails() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -403,7 +339,7 @@ public class BookingReceipt extends AppCompatActivity {
         }
 
         StringBuilder receipt = new StringBuilder();
-        String formatLine = "%-25s %10s\n";
+        String formatLine = "%-26s %10s\n";
 
         if (!accommodations.isEmpty()) {
             receipt.append("Accommodation\n");
@@ -503,6 +439,7 @@ public class BookingReceipt extends AppCompatActivity {
         List<CartItem> cartItems = CartManager.getInstance(BookingReceipt.this, userId).getCartItems();
         double totalAmount = cartItems.stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
 
+
             // Categorize cart items.
         List<CartItem> accommodations = new ArrayList<>();
         List<CartItem> foodAndDrinks = new ArrayList<>();
@@ -549,7 +486,7 @@ public class BookingReceipt extends AppCompatActivity {
         }
         bookingReview.put("orderItems", orderItems);
 
-        // Build paymentTransaction map.
+        /// Build paymentTransaction map.
         Map<String, Object> paymentTransaction = new HashMap<>();
         paymentTransaction.put("paymentStatus", paymentStatus);
         paymentTransaction.put("finalStatus", paymentStatus);
@@ -642,10 +579,10 @@ public class BookingReceipt extends AppCompatActivity {
                                                 notificationRef.removeValue();
 
 
-                                                // Copy orderItems to MyReview node with a default statusReview of "Pending".
+                                                /// Copy orderItems to MyReview node with a default statusReview of "Pending".
                                                 Object orderItemsObj = bookingReview.get("orderItems");
                                                 if (orderItemsObj instanceof Map) {
-                                                    // Cast orderItemsObj to a Map
+                                                    /// Cast orderItemsObj to a Map
                                                     @SuppressWarnings("unchecked")
                                                     Map<String, Object> orderItemsMap = (Map<String, Object>) orderItemsObj;
 
@@ -723,8 +660,10 @@ public class BookingReceipt extends AppCompatActivity {
         Map<String, Object> map = new HashMap<>();
         map.put("name", item.getName());
         map.put("category", item.getCategory());
-        map.put("price", item.getPrice());
+        map.put("price", item.getPrice()* item.getQuantity());
         map.put("quantity", item.getQuantity());
+        /// NEW: Add totalPrice
+        //map.put("totalPrice", item.getPrice() * item.getQuantity());
         return map;
     }
 
@@ -798,6 +737,71 @@ public class BookingReceipt extends AppCompatActivity {
 
 
 
+
+
+
+///private void setupSaveReceiptFunction() {
+//        ImageButton btnSaveReceipt = findViewById(R.id.SaveReceipt);
+//        btnSaveReceipt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new AlertDialog.Builder(BookingReceipt.this)
+//                        .setTitle("Save Receipt")
+//                        .setMessage("Do you want to save the receipt?")
+//                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                final Button submitButton = findViewById(R.id.submit);
+//
+//                                // Hide the SaveReceipt and submit buttons temporarily.
+//                                btnSaveReceipt.setVisibility(View.INVISIBLE);
+//                                submitButton.setVisibility(View.INVISIBLE);
+//
+//                                btnSaveReceipt.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        // --- Temporarily update UI for the saved receipt ---
+//                                        final ImageView arrowView = findViewById(R.id.arrow);
+//                                        final int originalArrowVisibility = arrowView.getVisibility();
+//                                        arrowView.setVisibility(View.INVISIBLE);
+//
+//                                        final String originalMessage = messageTextView.getText().toString();
+//                                        final Drawable[] originalDrawables = messageTextView.getCompoundDrawables();
+//                                        messageTextView.setText("Thank you for purchasing Sir/Ma'am 😊.");
+//                                        messageTextView.setCompoundDrawables(null, null, null, null);
+//
+//                                        View contentView = findViewById(android.R.id.content);
+//                                        Bitmap screenshot = getScreenShot(contentView);
+//
+//                                        // --- Restore UI elements ---
+//                                        messageTextView.setText(originalMessage);
+//                                        messageTextView.setCompoundDrawables(
+//                                                originalDrawables[0],
+//                                                originalDrawables[1],
+//                                                originalDrawables[2],
+//                                                originalDrawables[3]);
+//                                        arrowView.setVisibility(originalArrowVisibility);
+//
+//                                        btnSaveReceipt.setVisibility(View.VISIBLE);
+//                                        btnSaveReceipt.setEnabled(true);
+//                                        submitButton.setVisibility(View.VISIBLE);
+//                                        submitButton.setEnabled(true);
+//
+//                                        boolean isSaved = saveReceiptImage(screenshot);
+//                                        if (isSaved) {
+//                                            Toast.makeText(BookingReceipt.this, "Receipt saved to gallery", Toast.LENGTH_SHORT).show();
+//                                        } else {
+//                                            Toast.makeText(BookingReceipt.this, "Error saving receipt", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    }
+//                                }, 200); // 200ms delay to ensure UI update.
+//                            }
+//                        })
+//                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+//                        .show();
+//            }
+//        });
+//    }
 
 
 /// Copy orderItems to MyReview node.

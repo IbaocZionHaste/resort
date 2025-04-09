@@ -60,8 +60,8 @@ public class Feedback extends AppCompatActivity {
         // Setup RecyclerView with reversed layout to show newest items on top.
         recyclerView = findViewById(R.id.recyclerViewFeedback);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setReverseLayout(true);    // Reverse the order.
-        layoutManager.setStackFromEnd(true);       // Stack items from the end.
+        layoutManager.setReverseLayout(true);    /// Reverse the order.
+        layoutManager.setStackFromEnd(true);     /// Stack items from the end.
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new MyRatingAdapter(ratingItemList);
