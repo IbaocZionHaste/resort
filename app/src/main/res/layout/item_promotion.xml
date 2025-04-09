@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="#E0E5EC"
-        android:padding="15dp">
+        android:padding="10dp">
 
         <!-- CardView to round the promo image -->
         <androidx.cardview.widget.CardView
@@ -52,7 +52,7 @@
                         android:id="@+id/promoDiscount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/holo_red_dark"/>
 
@@ -61,7 +61,7 @@
                         android:id="@+id/promoDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textColor="@color/whiteSmoke"/>
 
                     <!-- Promo Start Date -->
@@ -69,7 +69,7 @@
                         android:id="@+id/promoStartDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textColor="@color/whiteSmoke"/>
 
                 </LinearLayout>

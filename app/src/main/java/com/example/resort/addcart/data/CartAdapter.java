@@ -14,12 +14,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.example.resort.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 import java.util.Map;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
@@ -104,10 +109,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             });
         }
 
+
+
         // Load image using Glide from Base64 string using a data URI
         String base64Image = item.getImageUrl();
         if (base64Image != null && !base64Image.trim().isEmpty()) {
             String imageData = "data:image/png;base64," + base64Image;
+
             Glide.with(context)
                     .load(imageData)
                     .placeholder(R.drawable.ic_profile_about)
@@ -155,6 +163,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
     }
 }
+
 
 
 
@@ -407,7 +416,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 //    }
 //}
 
-// no store data cart if exit
+/// no store data cart if exit
 //package com.example.resort.addcart.data;
 //
 //
@@ -512,7 +521,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 //
 //
 
-// this no limit in the cart increase
+/// this no limit in the cart increase
 //    @Override
 //    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
 //        CartItem item = cartItems.get(position);
@@ -546,7 +555,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 //        });
 //    }
 
-// sucess but no increase and decrease price also total
+/// success but no increase and decrease price also total
 //import android.content.Context;
 //import android.view.LayoutInflater;
 //import android.view.View;

@@ -6,6 +6,7 @@
     card_view:cardCornerRadius="14dp"
     android:id="@+id/Card"
     android:focusable="true"
+    android:layout_margin="4dp"
     android:backgroundTint="#E0E5EC">
 
 <!--    card_view:cardCornerRadius="14dp"-->
@@ -79,6 +80,7 @@
                 android:paddingStart="20dp"
                 android:textStyle="bold"
                 android:padding="3.5dp"
+                android:layout_marginTop="1dp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/arial_th"
                 android:textAlignment="center" />
@@ -86,12 +88,13 @@
             <ImageView
                 android:id="@+id/plus"
                 android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_height="26dp"
                 android:src="@drawable/ic_plus_cart"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="5dp"
+                android:layout_marginTop="2dp"
                 android:focusableInTouchMode="true"
                 card_view:tint="@color/black" />
         </LinearLayout>
