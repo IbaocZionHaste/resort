@@ -13,7 +13,6 @@
         android:resizeable="true"
         android:smallScreens="true" />
 
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,19 +25,26 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
-
     <application
-        android:hardwareAccelerated="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/image"
         android:label="@string/app_name"
         android:roundIcon="@drawable/image"
         android:supportsRtl="true"
         android:theme="@style/Theme.Resort"
         tools:targetApi="31">
+        <activity
+            android:name=".history.data.ViewDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".history.data.BookingDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BookingHistory"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -129,9 +135,10 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
+
 </manifest>

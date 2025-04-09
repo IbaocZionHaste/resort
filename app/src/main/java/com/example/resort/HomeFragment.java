@@ -277,6 +277,12 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), AboutUs.class);
             startActivity(intent);
         });
+
+        LinearLayout history = view.findViewById(R.id.history);
+        history.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), BookingHistory.class);
+            startActivity(intent);
+        });
     }
     //Shortcut Button End
 

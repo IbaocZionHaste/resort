@@ -90,6 +90,7 @@ public class ProfileFragment extends Fragment {
         Button next1 = view.findViewById(R.id.button6);
         Button next2 = view.findViewById(R.id.button9);
         Button next3 = view.findViewById(R.id.button10);
+        Button next4 = view.findViewById(R.id.history);
         Button logoutButton = view.findViewById(R.id.button11);
 
         loadProfileData();
@@ -112,6 +113,7 @@ public class ProfileFragment extends Fragment {
             startActivity(new Intent(getActivity(), Feedback.class));
             requireActivity().overridePendingTransition(0, 0);
         });
+
 
         logoutButton.setOnClickListener(v -> showLogoutConfirmationDialog());
 

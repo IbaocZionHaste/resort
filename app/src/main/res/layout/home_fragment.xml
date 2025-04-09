@@ -30,7 +30,7 @@
         app:layout_constraintHorizontal_bias="0.038"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.038"
+        app:layout_constraintVertical_bias="0.034"
         app:srcCompat="@drawable/image2" />
 
     <FrameLayout
@@ -346,6 +346,40 @@
                     tools:layout_editor_absoluteX="308dp"
                     tools:layout_editor_absoluteY="230dp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/history"
+                android:layout_width="80dp"
+                android:layout_height="59dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/border_rounded"
+                android:orientation="vertical"
+                android:padding="8dp"
+                tools:layout_editor_absoluteX="396dp"
+                tools:layout_editor_absoluteY="193dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="5dp"
+                    android:src="@drawable/ic_history"
+                    tools:layout_editor_absoluteX="404dp"
+                    tools:layout_editor_absoluteY="201dp" /> <!-- Replace with your actual drawable -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="9dp"
+                    android:text="My History"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="404dp"
+                    tools:layout_editor_absoluteY="230dp" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/about"

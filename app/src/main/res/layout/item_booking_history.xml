@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="10dp">
+
+        <!-- Booking Date (from bookingReview.bookingDate) -->
+
+        <!-- Payment Transaction Status (Top Right) -->
+        <TextView
+            android:id="@+id/tvBookingDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Booking Date: --"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Payment Method (Below Booking Date): using PaymentMethod.Payment -->
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status: --"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnViewDetails"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tvPaymentMethod"
+            app:layout_constraintTop_toBottomOf="@+id/tvRefNo"
+            app:layout_constraintVertical_bias="0.846" />
+
+        <TextView
+            android:id="@+id/tvPaymentMethod"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Payment Method: --"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/tvBookingDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Reference Number (Below Payment Method): using bookingReview.refNo -->
+        <TextView
+            android:id="@+id/tvRefNo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Reference: --"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/btnViewDetails"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvPaymentMethod" />
+
+        <!-- View Details Button -->
+        <Button
+            android:id="@+id/btnViewDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Details"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/light_blue"
+            app:layout_constraintTop_toBottomOf="@id/tvPaymentMethod"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
