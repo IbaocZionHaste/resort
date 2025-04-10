@@ -129,17 +129,15 @@ public class BookingStatusService extends Service {
                                     approvalProcessed = true;
                                     showLocalNotification("Booking has been Reviewed",
                                             "Proceed to payment!", 2);
+                                    clearNotification(4);
+                                    clearNotification(5);
+                                    clearNotification(6);
+                                    clearNotification(7);
                                     Log.d(TAG, "Booking approved; notification shown");
                                     shouldStopPolling = true;
                                     break;
                                 } else if (statusReview.equalsIgnoreCase("Declined") && !declineProcessed) {
                                     declineProcessed = true;
-                                    clearNotification();
-                                    ///clearNotification(4);
-                                    ///clearNotification(5);
-                                    ///clearNotification(6);
-                                    ///clearNotification(7);
-
                                     showLocalNotification("Booking Declined!",
                                             "Your booking has been declined.", 5);
                                     stopForeground(true);
@@ -164,7 +162,6 @@ public class BookingStatusService extends Service {
         };
         handler.post(pollTask[0]);
     }
-
 
     ///Payment Admin Approval
     private void listenForPaymentTransactionApproval() {
@@ -191,7 +188,7 @@ public class BookingStatusService extends Service {
                                         paymentStatus.equalsIgnoreCase("Approved") &&
                                         !paymentApprovedProcessed) {
                                     paymentApprovedProcessed = true;
-                                    ///clearNotification(2);
+                                    clearNotification(2);
                                     showLocalNotification("Payment Approved",
                                             "Payment has been approved. Awaiting final approval.", 3);
                                 }
@@ -283,7 +280,7 @@ public class BookingStatusService extends Service {
                                     .getValue(String.class);
                             // If Approved: clear UI, copy review, and then stop the foreground service.
                             if (finalStatus != null && finalStatus.equalsIgnoreCase("Approved") && !finalProcessed) {
-                                ///clearNotification(3);
+                                clearNotification(3);
                                 showLocalNotification("Congratulations!", "Your booking has been finally approved.", 4);
                                 finalProcessed = true;
 
@@ -391,13 +388,8 @@ public class BookingStatusService extends Service {
      * Builds and displays a local notification.
      */
     private void showLocalNotification(String title, String message, int notificationId) {
-        ///NotificationManager notificationManager =
-                ///(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); ///This code not replace the old notification
         NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.cancel(notificationId);
-        }
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); ///This code not replace the old notification
 
         // Check if notification already exists (avoid duplicates)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && notificationManager != null) {
@@ -436,13 +428,14 @@ public class BookingStatusService extends Service {
         }
     }
 
-    private void clearNotification() {
+    private void clearNotification(int notificationId) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
-            ///notificationManager.cancel(notificationId); /// Removes only the specified notification
-            notificationManager.cancelAll(); /// Clears all active notifications
+            notificationManager.cancel(notificationId); /// Removes only the specified notification
+            ///notificationManager.cancelAll(); /// Clears all active notifications
         }
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
