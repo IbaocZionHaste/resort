@@ -24,6 +24,8 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Add this permission -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -39,16 +41,14 @@
         <activity
             android:name=".history.data.ViewDetailsActivity"
             android:exported="false" />
-        <activity
-            android:name=".history.data.BookingDetailActivity"
-            android:exported="false" />
+
         <activity
             android:name=".BookingHistory"
             android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBmR1p6AFBkS3GcuL9nabMTc39bztQnwgU" />
+            android:value="AIzaSyBmR1p6AFBkS3GcuL9nabMTc39bztQnwgU" /> Api Google Map
 
         <activity
             android:name=".Comment"
@@ -139,6 +139,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".BookingStatusService"
+            android:foregroundServiceType="location|dataSync" />
+
     </application>
 
 </manifest>

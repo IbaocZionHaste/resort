@@ -139,7 +139,7 @@ public class BookingStatus extends AppCompatActivity {
 
 
 
-        // Adjust layout for system insets.
+        /// Adjust layout for system insets.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             v.setPadding(insets.getInsets(WindowInsetsCompat.Type.systemBars()).left,
                     insets.getInsets(WindowInsetsCompat.Type.systemBars()).top,
@@ -442,9 +442,9 @@ public class BookingStatus extends AppCompatActivity {
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime );
         messageText.setText(Html.fromHtml(submissionMessage + redTime));
         sendNotificationToFirebase(messageText.getText().toString(), "dot1");
-        clearNotification(3);
-        clearNotification(4);
-        clearNotification(5);
+        ///clearNotification(3);
+        ///clearNotification(4);
+        ///clearNotification(5);
     }
 
     ///  Message view if the booking is payment Not use
@@ -499,7 +499,6 @@ public class BookingStatus extends AppCompatActivity {
         sendNotificationToFirebase(messageText4.getText().toString(), "dot4");
     }
 
-
     private void showDot5Message() {
         messageFramedot5.setVisibility(View.VISIBLE);
         messageText5.setVisibility(View.VISIBLE);
@@ -511,8 +510,6 @@ public class BookingStatus extends AppCompatActivity {
         prefs.edit().putString("bookingStatus", "finalApproved").apply();
         sendNotificationToFirebase(messageText5.getText().toString(), "dot5");
     }
-
-
 
 
     /// Booking submitted
@@ -653,8 +650,8 @@ public class BookingStatus extends AppCompatActivity {
                                     progress = 2;
                                     updateDots();
                                     showApprovalMessage();
-                                    showLocalNotification("Booking has been Reviewed",
-                                            "Please proceed to the payment by clicking the Pay Now button!", 1);
+                                    ///showLocalNotification("Booking has been Reviewed",
+                                            ///"Please proceed to the payment by clicking the Pay Now button!", 1);
                                     // Stop polling
                                     shouldStopPolling = true;
                                     break;
@@ -687,8 +684,8 @@ public class BookingStatus extends AppCompatActivity {
                                             String msg = "Sorry, your booking has been declined by the admin. <br>";
                                             String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
                                             messageText2.setText(Html.fromHtml(msg + redTime));
-                                            showLocalNotification("Booking Declined!",
-                                                    "Sorry, your booking has been declined by the admin.", 4);
+                                            ///showLocalNotification("Booking Declined!",
+                                                    ///"Sorry, your booking has been declined by the admin.", 4);
                                             sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
                                             moveAllBookingsToHistory();
                                             clearBookingMessageUI();
@@ -732,7 +729,6 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 
-
     ///Payment Admin Approval
     private void listenForPaymentTransactionApproval() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -761,8 +757,8 @@ public class BookingStatus extends AppCompatActivity {
                                     progress = Math.max(progress, 4);  // Set progress directly to 4
                                     updateDots();  // Ensure this method updates your progress UI elements
                                     showDot4Message();
-                                    showLocalNotification("Payment Approved",
-                                            "Payment has been approved. Awaiting final approval.", 2);
+                                    ///showLocalNotification("Payment Approved",
+                                            ///"Payment has been approved. Awaiting final approval.", 2);
                                 }
                                 // Handle Refund branch if needed.
                                 else if (paymentStatus != null &&
@@ -788,8 +784,8 @@ public class BookingStatus extends AppCompatActivity {
                                             String msg = "Your payment has been reversed and refunded by the admin. <br>";
                                             String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
                                             messageText2.setText(Html.fromHtml(msg + redTime));
-                                            showLocalNotification("Payment Declined!",
-                                                    "Your payment has been reversed and refunded by the admin.", 5);
+                                            ///showLocalNotification("Payment Declined!",
+                                                    ///"Your payment has been reversed and refunded by the admin.", 5);
                                             sendNotificationToFirebase(messageText2.getText().toString(), "PaymentRefunded");
                                             moveAllBookingsToHistory();
                                             clearBookingMessageUI();
@@ -856,8 +852,8 @@ public class BookingStatus extends AppCompatActivity {
                                 clearBookingPreferences();
                                 moveAllBookingsToHistory();
 
-                                clearNotification(1);
-                                clearNotification(2);
+                                ///clearNotification(1);
+                                ///clearNotification(2);
                             }, 1000);
                             return;
                         }
@@ -871,10 +867,9 @@ public class BookingStatus extends AppCompatActivity {
                                 finalProcessed = true;
                                 progress = Math.max(progress, 5);
                                 updateDots();
-                                showLocalNotification("Congratulations!", "Your booking has been finally approved.", 3);
+                                ///showLocalNotification("Congratulations!", "Your booking has been finally approved.", 3);
                                 showDot5Message();
                                 stopPolling();
-
 
 
                                 ///This code the my review is change to my review done after the booking is done
@@ -913,7 +908,7 @@ public class BookingStatus extends AppCompatActivity {
                                                 }
                                             }
 
-                                            // After copying, delete the original MyReview data
+                                            /// After copying, delete the original MyReview data
                                             myReviewRef.removeValue()
                                                     .addOnCompleteListener(deleteTask -> {
                                                         if (deleteTask.isSuccessful()) {
@@ -938,8 +933,8 @@ public class BookingStatus extends AppCompatActivity {
                                     clearBookingMessageUI();
                                     clearBookingPreferences();
                                     moveAllBookingsToHistory();
-                                    clearNotification(1);
-                                    clearNotification(2);
+                                    ///clearNotification(1);
+                                    ///clearNotification(2);
                                 }, 1000);
                                 break; // Exit loop after processing one booking.
                             }
@@ -948,14 +943,14 @@ public class BookingStatus extends AppCompatActivity {
                                 finalProcessed = true;
                                 progress = 0;
                                 updateDots();
-                                showLocalNotification("Booking Failed", "Your booking has failed. Please try again.", 6);
+                                ///showLocalNotification("Booking Failed", "Your booking has failed. Please try again.", 6);
                                 stopPolling();
                                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                                     clearBookingMessageUI();
                                     clearBookingPreferences();
                                     moveAllBookingsToHistory();
-                                    clearNotification(1);
-                                    clearNotification(2);
+                                    ///clearNotification(1);
+                                    ///clearNotification(2);
                                 }, 1000);
                                 break;
                             }
@@ -1020,60 +1015,61 @@ public class BookingStatus extends AppCompatActivity {
         });
     }
 
+    ///Show device notification not use this code
+//    @SuppressLint("ObsoleteSdkInt")
+//    private void showLocalNotification(String title, String message, int notificationId) {
+//        // Get the NotificationManager service.
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        // Check if a notification with the same ID is already active to avoid duplicate notifications.
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            StatusBarNotification[] activeNotifications = notificationManager.getActiveNotifications();
+//            for (StatusBarNotification sbn : activeNotifications) {
+//                if (sbn.getId() == notificationId) {
+//                    // Already active; do not post a duplicate.
+//                    return;
+//                }
+//            }
+//        }
+//
+//        // For Android Oreo and above, create a notification channel.
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(
+//                    "booking_channel",
+//                    "Booking Notifications",
+//                    NotificationManager.IMPORTANCE_DEFAULT);
+//            channel.setDescription("Channel for booking notifications");
+//            channel.enableLights(true);
+//            channel.enableVibration(true);
+//            channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
+//                    new AudioAttributes.Builder()
+//                            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+//                            .build());
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//
+//        // Build the notification.
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "booking_channel")
+//                .setSmallIcon(R.drawable.ic_profile_notification) // Ensure this icon exists.
+//                .setContentTitle(title)
+//                .setContentText(message)
+//                .setAutoCancel(true)
+//                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+//
+//        // Post the notification.
+//        notificationManager.notify(notificationId, builder.build());
+//    }
+//
+//
+//    private void clearNotification(int notificationId) {
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        if (notificationManager != null) {
+//            notificationManager.cancel(notificationId); // Removes only the specified notification
+//            //notificationManager.cancelAll(); // Clears all active notifications
+//        }
+//    }
 
-    ///Show device notification
-    @SuppressLint("ObsoleteSdkInt")
-    private void showLocalNotification(String title, String message, int notificationId) {
-        // Get the NotificationManager service.
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Check if a notification with the same ID is already active to avoid duplicate notifications.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StatusBarNotification[] activeNotifications = notificationManager.getActiveNotifications();
-            for (StatusBarNotification sbn : activeNotifications) {
-                if (sbn.getId() == notificationId) {
-                    // Already active; do not post a duplicate.
-                    return;
-                }
-            }
-        }
-
-        // For Android Oreo and above, create a notification channel.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    "booking_channel",
-                    "Booking Notifications",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("Channel for booking notifications");
-            channel.enableLights(true);
-            channel.enableVibration(true);
-            channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
-                    new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                            .build());
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        // Build the notification.
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "booking_channel")
-                .setSmallIcon(R.drawable.ic_profile_notification) // Ensure this icon exists.
-                .setContentTitle(title)
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-
-        // Post the notification.
-        notificationManager.notify(notificationId, builder.build());
-    }
-
-
-    private void clearNotification(int notificationId) {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.cancel(notificationId); // Removes only the specified notification
-            //notificationManager.cancelAll(); // Clears all active notifications
-        }
-    }
 
     /**
      * Moves all booking data from "MyBooking" to "MyHistory".
@@ -1153,13 +1149,17 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 
-
     /// Get the current time.
     private String getCurrentTime() {
         return new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
     }
 
 }
+
+
+
+
+
 
 
 ///This is original

@@ -620,6 +620,14 @@ public class BookingReceipt extends AppCompatActivity {
                                                 editor.apply();
 
 
+                                                /// ******************* Start Foreground Service *******************
+                                                // This will start your BookingStatusService as a foreground service.
+                                                Intent serviceIntent = new Intent(BookingReceipt.this, BookingStatusService.class);
+                                                androidx.core.content.ContextCompat.startForegroundService(BookingReceipt.this, serviceIntent);
+                                                Log.d("BookingReceipt", "Foreground service started");
+                                                /// ******************* End Foreground Service *******************
+
+
                                                 // Navigate to BookingStatus, which reads the saved state.
                                                 Intent intent = new Intent(BookingReceipt.this, BookingStatus.class);
                                                 intent.putExtra("bookingSubmitted", true);
@@ -644,7 +652,6 @@ public class BookingReceipt extends AppCompatActivity {
                     }
                 });
     }
-
 
 
 
@@ -816,7 +823,6 @@ public class BookingReceipt extends AppCompatActivity {
 //                                                        myReviewRef.child(reviewId).setValue(orderItemsObj);
 //                                                    }
 //                                                }
-
 
 
 ///Booking Submitted

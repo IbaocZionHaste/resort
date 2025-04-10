@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
             showNoInternetDialog();
             return;
         }
+        ///Foreground
+        //Intent serviceIntent = new Intent(MainActivity.this, BookingStatusService.class);
+        //androidx.core.content.ContextCompat.startForegroundService(MainActivity.this, serviceIntent);
+        //android.util.Log.d("Booking Status", "Foreground service started");
 
         /// Show the custom loading screen (only the progress spinner and message, tinted light blue)
         showLoading();
