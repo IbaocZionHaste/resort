@@ -404,11 +404,11 @@ public class BookingStatus extends AppCompatActivity {
                         // Create a new top-level cancellation record.
                         DatabaseReference cancelBookingRef = FirebaseDatabase.getInstance().getReference("cancelBooking");
                         Map<String, Object> cancelData = new HashMap<>();
-                        cancelData.put("cancelledBy", bookingCancelledBy);
-                        cancelData.put("userId", userId);
-                        cancelData.put("cancelTime", cancelTime);
+                        cancelData.put("message", bookingCancelledBy);
+                        cancelData.put("date", cancelTime);
                         cancelBookingRef.push().setValue(cancelData);
                     }
+                        ///cancelData.put("userId", userId);
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -431,7 +431,6 @@ public class BookingStatus extends AppCompatActivity {
             }
         });
     }
-
 
 
     /// Message view if the booking is submit Not use
@@ -1184,7 +1183,7 @@ public class BookingStatus extends AppCompatActivity {
 
 
 
-///Pogress refs for payment
+///Progress refs for payment
 //
 //        if (prefs.contains("paymentSubmitted") && prefs.getBoolean("paymentSubmitted", false)) {
 //            progress = Math.max(progress, 3);
