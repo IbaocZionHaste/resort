@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:background="@color/white"
+    android:background="@color/whiteSmoke"
     android:layout_height="match_parent"
     tools:context=".BookingHistory">
 
@@ -43,7 +43,7 @@
         android:id="@+id/recyclerViewFeedback"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="8dp"
+        android:padding="4dp"
         android:layout_marginTop="15dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"

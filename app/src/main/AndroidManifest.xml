@@ -26,6 +26,8 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!-- Add this permission -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
         android:allowBackup="true"
@@ -48,7 +50,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBmR1p6AFBkS3GcuL9nabMTc39bztQnwgU" /> Api Google Map
+            android:value="AIzaSyBmR1p6AFBkS3GcuL9nabMTc39bztQnwgU" />
 
         <activity
             android:name=".Comment"
@@ -142,7 +144,7 @@
 
         <service
             android:name=".BookingStatusService"
-            android:foregroundServiceType="location|dataSync" />
+            android:foregroundServiceType="location|dataSync"/>
 
     </application>
 

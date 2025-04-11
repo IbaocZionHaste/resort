@@ -185,7 +185,7 @@ public class BookingStatus extends AppCompatActivity {
 
          updateDots();
 
-        // Restore persisted booking state.
+        /// Restore persisted booking state.
         if (prefs.contains("bookingSubmitted") && prefs.getBoolean("bookingSubmitted", false)) {
             progress = 1;
             updateDots();
@@ -237,7 +237,7 @@ public class BookingStatus extends AppCompatActivity {
         backButton.setOnClickListener(v -> onBackPressed());
         cancelButton.setOnClickListener(view -> cancelBooking());
 
-        // Set up Firebase listeners for dynamic updates.
+        /// Set up Firebase listeners for dynamic updates.
         listenForPaymentMethodStatus();
         listenForMyBooking();
         listenForApproval();
@@ -442,9 +442,10 @@ public class BookingStatus extends AppCompatActivity {
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime );
         messageText.setText(Html.fromHtml(submissionMessage + redTime));
         sendNotificationToFirebase(messageText.getText().toString(), "dot1");
-        ///clearNotification(3);
-        ///clearNotification(4);
-        ///clearNotification(5);
+        clearNotification(4);
+        clearNotification(5);
+        clearNotification(6);
+        clearNotification(6);
     }
 
     ///  Message view if the booking is payment Not use
@@ -595,6 +596,7 @@ public class BookingStatus extends AppCompatActivity {
                                         bookingPayProcessed = false;
                                         updateDots();
                                         showPaymentSubmittedMessage();
+                                        stopPolling();
                                         break;
                                     }
                                 }
@@ -757,6 +759,7 @@ public class BookingStatus extends AppCompatActivity {
                                     progress = Math.max(progress, 4);  // Set progress directly to 4
                                     updateDots();  // Ensure this method updates your progress UI elements
                                     showDot4Message();
+                                    stopPolling();
                                     ///showLocalNotification("Payment Approved",
                                             ///"Payment has been approved. Awaiting final approval.", 2);
                                 }
@@ -895,7 +898,7 @@ public class BookingStatus extends AppCompatActivity {
                                                 if (reviewData != null) {
                                                     reviewData.remove("statusReview");
 
-                                                    // Generate a unique key for each review
+                                                    /// Generate a unique key for each review
                                                     DatabaseReference newReviewRef = myReviewDoneRef.push();
                                                     newReviewRef.setValue(reviewData)
                                                             .addOnCompleteListener(task -> {
@@ -1061,13 +1064,14 @@ public class BookingStatus extends AppCompatActivity {
 //    }
 //
 //
-//    private void clearNotification(int notificationId) {
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        if (notificationManager != null) {
-//            notificationManager.cancel(notificationId); // Removes only the specified notification
-//            //notificationManager.cancelAll(); // Clears all active notifications
-//        }
-//    }
+
+    private void clearNotification(int notificationId) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancel(notificationId); // Removes only the specified notification
+            //notificationManager.cancelAll(); // Clears all active notifications
+        }
+    }
 
 
 

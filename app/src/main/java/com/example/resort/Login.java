@@ -101,7 +101,7 @@ public class Login extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 final int DRAWABLE_RIGHT = 2;
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    // Check if the touch event was within the bounds of the right drawable
+                    /// Check if the touch event was within the bounds of the right drawable
                     if (etPassword.getCompoundDrawables()[DRAWABLE_RIGHT] != null) {
                         int drawableWidth = etPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
                         if (event.getRawX() >= (etPassword.getRight() - drawableWidth)) {
@@ -165,14 +165,14 @@ public class Login extends AppCompatActivity {
 
     }
 
-    ///Icon drwable color tint
+    ///Icon drawable color tint
     private Drawable tintDrawable(Drawable drawable, int color) {
         if (drawable != null) {
             Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
             DrawableCompat.setTint(wrappedDrawable, color);
             return wrappedDrawable;
         }
-        return drawable;
+        return null;
     }
 
     private void loginUser() {
@@ -253,7 +253,7 @@ public class Login extends AppCompatActivity {
                                                         intent.putExtra("phoneNumber", phoneNumber);
                                                         startActivity(intent);
                                                         overridePendingTransition(0, 0); // Instant transition (blink effect)
-                                                        finish();
+                                                        ///finish();
                                                     }
                                                 } else {
                                                     Intent intent = new Intent(Login.this, BottomNavigation.class);
@@ -276,6 +276,5 @@ public class Login extends AppCompatActivity {
                     }
                 });
     }
-
 
 }

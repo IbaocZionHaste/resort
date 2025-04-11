@@ -2,6 +2,7 @@ package com.example.resort.history.data;
 
 
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -90,7 +91,8 @@ public class ViewDetailsActivity extends AppCompatActivity {
 
             tvPayment.setText("Payment: " + pm.Payment);
             tvAmount.setText("Amount: " + pm.Amount);
-            tvDates.setText("Date: " + pm.Date);
+            ///tvDates.setText("Date: " + pm.Date);
+            tvDates.setText("Date: " + (TextUtils.isEmpty(pm.Date) ? "N/A" : pm.Date));
             tvFirstname.setText("Firstname: " + pm.Firstname);
             tvLastname.setText("Lastname: " + pm.Lastname);
             tvPhones.setText("Phone: " + pm.Phone);

@@ -41,7 +41,7 @@ public class BookingHistory extends AppCompatActivity {
         layoutManager.setStackFromEnd(true);      /// Stack items from the end.
         recyclerView.setLayoutManager(layoutManager);
 
-        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ///recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         bookingList = new ArrayList<>();
         adapter = new BookingAdapter(this, bookingList);
@@ -68,7 +68,7 @@ public class BookingHistory extends AppCompatActivity {
                 for (DataSnapshot historySnap : snapshot.getChildren()) {
                     BookingData booking = historySnap.getValue(BookingData.class);
                     if (booking != null) {
-                        // Optionally, set the Firebase key as the ID.
+                        /// Optionally, set the Firebase key as the ID.
                         booking.setId(historySnap.getKey());
                         bookingList.add(booking);
                     }

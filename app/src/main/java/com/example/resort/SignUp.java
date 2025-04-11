@@ -63,7 +63,7 @@ public class SignUp extends AppCompatActivity {
             finish();
         });
 
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+///        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 //            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 //            return insets;
@@ -146,17 +146,17 @@ public class SignUp extends AppCompatActivity {
                                             userData.put("gender", gender);
                                             userData.put("email", email);
                                             userData.put("username", username);
-                                            userData.put("imageUrl", "default_image_url"); // Default image
-                                            // Added registrationDate field.
+                                            userData.put("imageUrl", "default_image_url"); /// Default image
+                                            /// Added registrationDate field.
                                             userData.put("registrationDate", registrationDate);
 
                                             mDatabase.child("users").child(user.getUid())
                                                     .setValue(userData)
                                                     .addOnSuccessListener(aVoid -> {
                                                         Toast.makeText(SignUp.this, "Registration complete!", Toast.LENGTH_SHORT).show();
-                                                        // After registration, always navigate to Login Activity
+                                                        /// After registration, always navigate to Login Activity
                                                         navigateToLoginActivity();
-                                                        resetFields(); // Reset all fields
+                                                        resetFields(); /// Reset all fields
                                                     })
                                                     .addOnFailureListener(e -> {
                                                         Toast.makeText(SignUp.this, "Data saving failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -183,19 +183,20 @@ public class SignUp extends AppCompatActivity {
         termsCheckBox.setChecked(false);
     }
 
-    // Method to navigate to LoginActivity
+    /// Method to navigate to LoginActivity
     private void navigateToLoginActivity() {
         Intent intent = new Intent(SignUp.this, Login.class);
         startActivity(intent);
+        overridePendingTransition(0, 0);
         finish();
     }
 
-    // Method to validate email format
+    /// Method to validate email format
     private boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    // Method to show progress dialog
+    /// Method to show progress dialog
     private void showProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Registering...");
