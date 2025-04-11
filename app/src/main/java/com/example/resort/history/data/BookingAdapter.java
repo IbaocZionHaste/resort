@@ -48,7 +48,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
         // Display the payment method and set the text color to blue
         if (booking.getPaymentMethod() != null) {
             holder.tvPaymentMethod.setText("Payment Method: " + booking.getPaymentMethod().Payment);
-            holder.tvPaymentMethod.setTextColor(Color.BLUE); // Set color to blue
+            holder.tvPaymentMethod.setTextColor(Color.BLACK); // Set color to blue
         } else {
             holder.tvPaymentMethod.setText("");
         }
@@ -62,7 +62,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
 
         // Display the refNo (without "Reference:") in red color
         if (booking.getBookingReview() != null && booking.getBookingReview().refNo != null) {
-            holder.tvRefNo.setText(booking.getBookingReview().refNo); // Only display the refNo without "Reference:"
+            holder.tvRefNo.setText("Ref.No" + booking.getBookingReview().refNo); // Only display the refNo without "Reference:"
             holder.tvRefNo.setTextColor(context.getResources().getColor(R.color.red)); // Set the text color to red
         } else {
             holder.tvRefNo.setText(""); /// Set empty if no reference number is available
