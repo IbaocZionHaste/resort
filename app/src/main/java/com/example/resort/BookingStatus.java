@@ -418,6 +418,11 @@ public class BookingStatus extends AppCompatActivity {
 
                 // Reset state after a delay.
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    /// Stop the foreground service
+                    Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+                    stopService(stopIntent);
+                    Log.d("BookingStatus", "Foreground service stopped after cancellation.");
+
                     progress = 0;
                     updateDots();
                     clearBookingMessageUI();
@@ -553,7 +558,6 @@ public class BookingStatus extends AppCompatActivity {
 
         handler.post(pollTask[0]);
     }
-
 
 
 

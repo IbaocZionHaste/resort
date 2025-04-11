@@ -477,6 +477,9 @@ public class BookingReceipt extends AppCompatActivity {
         bookingReview.put("refNo", referenceNo);
         bookingReview.put("email", email);
         bookingReview.put("phone", phone);
+        ///New Data Add
+        bookingReview.put("downPayment", totalAmount * 0.50);
+        bookingReview.put("amount", totalAmount);
 
         Map<String, Object> orderItems = new HashMap<>();
         orderItems.put("accommodations", cartItemsToMapList(accommodations));
@@ -524,25 +527,42 @@ public class BookingReceipt extends AppCompatActivity {
             return;
         }
 
-
         /// Update userId from the current user.
-        userId = currentUser.getUid();
-        DatabaseReference bookingRef = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child(userId)
-                .child("MyBooking");
+//        userId = currentUser.getUid();
+//        DatabaseReference bookingRef = FirebaseDatabase.getInstance()
+//                .getReference("users")
+//                .child(userId)
+//                .child("MyBooking");
+//
+//            /// Check if a pending booking already exists.
+//        String finalUserId = userId;
+//        bookingRef.orderByChild("bookingReview/statusReview")
+//                .equalTo("Pending")
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        if (snapshot.exists()) {
+//                            /// A pending booking exists. Abort new submission.
+//                            Toast.makeText(BookingReceipt.this, "Sorry, your first booking is not done.", Toast.LENGTH_SHORT).show();
+//                        } else {
 
-            /// Check if a pending booking already exists.
-        String finalUserId = userId;
-        bookingRef.orderByChild("bookingReview/statusReview")
-                .equalTo("Pending")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            /// A pending booking exists. Abort new submission.
-                            Toast.makeText(BookingReceipt.this, "Sorry, your first booking is not done.", Toast.LENGTH_SHORT).show();
-                        } else {
+            /// Update userId from the current user.
+            userId = currentUser.getUid();
+            DatabaseReference bookingRef = FirebaseDatabase.getInstance()
+                    .getReference("users")
+                    .child(userId)
+                    .child("MyBooking");
+
+            /// Check if any booking data exists in MyBooking.
+            String finalUserId = userId;
+            bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        // If any booking exists, abort the submission.
+                        Toast.makeText(BookingReceipt.this,
+                                "Sorry, you already have an active booking.", Toast.LENGTH_SHORT).show();
+                    } else {
                             /// No pending booking exists; proceed with submission.
                             String bookingId = bookingRef.push().getKey();
                             if (bookingId != null) {

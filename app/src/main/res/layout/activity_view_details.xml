@@ -118,6 +118,23 @@
                 android:textColor="@color/black" />
 
             <TextView
+                android:id="@+id/tvDownPayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Down Payment:"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/tvAmountTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Amount:"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black" />
+
+            <TextView
                 android:id="@+id/tvStatusReview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -227,6 +244,16 @@
                     android:textSize="16sp"
                     android:textColor="@color/black"
                     android:layout_marginTop="8dp" />
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tvPaymentDate"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Pay Date: "-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:layout_marginTop="8dp" />-->
+
 
                 <TextView
                     android:id="@+id/tvStatus"

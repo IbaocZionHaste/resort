@@ -15,7 +15,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.resort.R;
-import com.example.resort.history.data.BookingData;
+import com.example.resort.history.data.BookingData.PaymentTransaction;
 import com.example.resort.history.data.BookingData.BookingReview;
 import com.example.resort.history.data.BookingData.PaymentMethod;
 import com.google.gson.Gson;
@@ -24,7 +24,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ViewDetailsActivity extends AppCompatActivity {
-    private TextView tvDate, tvEmail, tvName, tvPhone, tvRefNo, tvStatusReview;
+    private TextView tvDate;
+    private TextView tvEmail;
+    private TextView tvName;
+    private TextView tvPhone;
+    private TextView tvRefNo;
+    private TextView tvStatusReview;
     private LinearLayout layoutOrderItems;
 
     @Override
@@ -76,6 +81,25 @@ public class ViewDetailsActivity extends AppCompatActivity {
             }
         }
 
+
+        if (booking != null && booking.getPaymentTransaction() != null) {
+            PaymentTransaction transaction = booking.getPaymentTransaction();
+
+            ///TextView tvPaymentDate= findViewById(R.id.tvPaymentDate);
+            TextView tvDownPayment = findViewById(R.id.tvDownPayment);
+            TextView tvAmountTotal = findViewById(R.id.tvAmountTotal);
+
+            tvDownPayment.setText("Down Payment: " + transaction.downPayment);
+            tvAmountTotal.setText("Total Amount: " + transaction.amount);
+//            String paymentDate = transaction.PaymentDate;
+//            if (paymentDate == null || paymentDate.trim().isEmpty()) {
+//                tvPaymentDate.setText("Payment Date: N/A");
+//            } else {
+//                tvPaymentDate.setText("Payment Date: " + paymentDate);
+//            }
+
+        }
+
         if (booking != null && booking.getPaymentMethod() != null) {
             PaymentMethod pm = booking.getPaymentMethod();
 
@@ -87,6 +111,7 @@ public class ViewDetailsActivity extends AppCompatActivity {
             TextView tvLastname = findViewById(R.id.tvLastname);
             TextView tvPhones = findViewById(R.id.tvPhones);
             TextView tvReference = findViewById(R.id.tvReference);
+
             TextView tvStatus = findViewById(R.id.tvStatus);
 
             tvPayment.setText("Payment: " + pm.Payment);
@@ -97,6 +122,7 @@ public class ViewDetailsActivity extends AppCompatActivity {
             tvLastname.setText("Lastname: " + pm.Lastname);
             tvPhones.setText("Phone: " + pm.Phone);
             tvReference.setText("Reference: " + pm.Reference);
+
             tvStatus.setText("Status: " + pm.Status);
         }
     }

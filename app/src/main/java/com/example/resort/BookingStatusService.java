@@ -19,6 +19,7 @@ import android.service.notification.StatusBarNotification;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -384,6 +385,7 @@ public class BookingStatusService extends Service {
         }
     }
 
+
     /**
      * Builds and displays a local notification.
      */
@@ -449,8 +451,8 @@ public class BookingStatusService extends Service {
     public void onDestroy() {
         Log.d(TAG, "onDestroy called – cleaning up service and resources");
         stopForeground(true);
-        // Optionally, you could schedule a restart of the service here if needed using an Alarm/WorkManager,
-        // but START_STICKY should do the job in most cases.
+        /// Optionally, you could schedule a restart of the service here if needed using an Alarm/WorkManager,
+        /// but START_STICKY should do the job in most cases.
         super.onDestroy();
     }
 

@@ -40,7 +40,6 @@ public class BookingHistory extends AppCompatActivity {
         layoutManager.setReverseLayout(true);     /// Reverse the order.
         layoutManager.setStackFromEnd(true);      /// Stack items from the end.
         recyclerView.setLayoutManager(layoutManager);
-
         ///recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         bookingList = new ArrayList<>();
@@ -77,7 +76,7 @@ public class BookingHistory extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle errors here
+                /// Handle errors here
             }
         });
     }

@@ -21,7 +21,7 @@ public class BookingData implements Serializable {
     public void setPaymentTransaction(PaymentTransaction paymentTransaction) { this.paymentTransaction = paymentTransaction; }
 
     public static class BookingReview implements Serializable {
-        public String bookingDate, email, name, phone, refNo, statusReview;
+        public String bookingDate,  email, name, phone, refNo, statusReview;
         public Map<String, Object> orderItems;
         public BookingReview() {}
     }
