@@ -95,7 +95,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
                         }
                         if (images.isEmpty()) {
                             // No matching album or images, so add the default placeholder image
-                            Bitmap defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_no_image);
+                            Bitmap defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_home_about);
                             images.add(defaultBitmap);
                         }
                         // Set up the ViewPager adapter with the fetched images
@@ -107,7 +107,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
                     public void onCancelled(@NonNull DatabaseError error) {
                         // On error, show the default placeholder image
                         List<Bitmap> images = new ArrayList<>();
-                        Bitmap defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_no_image);
+                        Bitmap defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_home_about);
                         images.add(defaultBitmap);
                         PromotionImagesAdapter imagesAdapter = new PromotionImagesAdapter(images);
                         holder.promoViewPager.setAdapter(imagesAdapter);
@@ -148,7 +148,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
         @NonNull
         @Override
         public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            // Create an item layout for each image (item_promo_image.xml)
+            /// Create an item layout for each image (item_promo_image.xml)
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_promo_image, parent, false);
             return new ImageViewHolder(view);
         }
@@ -163,7 +163,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .override(800, 800)
                     .centerInside()
-                    .error(R.drawable.ic_no_image)
+                    ///.error(R.drawable.ic_home_about)
                     .transition(DrawableTransitionOptions.withCrossFade(500))
                     .into(holder.imageView);
         }
@@ -218,154 +218,14 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
     };
 }
 
-
-
-//public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.ViewHolder> implements Filterable {
-//
-//    private Context context;
-//    private List<Promotion> promotionList;
-//    private List<Promotion> promotionListFull; // Full list for filtering
-//
-//    public PromotionsAdapter(Context context, List<Promotion> promotionList) {
-//        this.context = context;
-//        this.promotionList = promotionList;
-//        // Create a copy of the list for filtering purposes
-//        this.promotionListFull = new ArrayList<>(promotionList);
-//    }
-//
-//    @NonNull
-//    @Override
-//    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(context).inflate(R.layout.item_promotion, parent, false);
-//        return new ViewHolder(view);
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-//        final Promotion promo = promotionList.get(position);
-//        holder.title.setText(promo.getTitle());
-//        holder.description.setText(promo.getDescription());
-//        holder.discount.setText(promo.getDiscount() + "% OFF");
-//        holder.duration.setText("Valid for: " + promo.getDuration() + " days");
-//        holder.startDate.setText("Starts on: " + promo.getStartDate());
-//
-//        // Query Firebase for the album where productName equals promotion title
-//        FirebaseDatabase.getInstance()
-//                .getReference("promoalbum")
-//                .orderByChild("productName")
-//                .equalTo(promo.getTitle())
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if (snapshot.exists()) {
-//                            // Assume there's only one album matching this productName
-//                            for (DataSnapshot albumSnapshot : snapshot.getChildren()) {
-//                                String base64Image = albumSnapshot.child("photo1").getValue(String.class);
-//                                if (base64Image != null && base64Image.contains(",")) {
-//                                    // Extract the Base64 portion after the comma
-//                                    String encodedImage = base64Image.split(",")[1];
-//                                    byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-//                                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//
-//                                    // Load image with Glide
-//                                    Glide.with(holder.promoImage.getContext())
-//                                            .load(decodedByte)
-//                                            .skipMemoryCache(true)
-//                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                                            .override(800, 800)
-//                                            .centerInside()
-//                                            .error(R.drawable.ic_profile_about) // error placeholder if needed
-//                                            .transition(DrawableTransitionOptions.withCrossFade(500))
-//                                            .into(holder.promoImage);
-//                                } else {
-//                                    // If the photo1 field is not valid, load default image
-//                                    Glide.with(holder.promoImage.getContext())
-//                                            .load(R.drawable.ic_no_image) // your default image resource
-//                                            .into(holder.promoImage);
-//                                }
-//                                // Break after the first matching album
-//                                break;
-//                            }
-//                        } else {
-//                            // No matching album found: load the default holder image
-//                            Glide.with(holder.promoImage.getContext())
-//                                    .load(R.drawable.ic_no_image)
-//                                    .into(holder.promoImage);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        // On error, load the default image
-//                        Glide.with(holder.promoImage.getContext())
-//                                .load(R.drawable.ic_no_image)
-//                                .into(holder.promoImage);
-//                    }
-//                });
-//    }
-//
-//
-//    @Override
-//    public int getItemCount() {
-//        return promotionList.size();
-//    }
-//
-//    public static class ViewHolder extends RecyclerView.ViewHolder {
-//        TextView title, description, discount, duration, startDate;
-//        ImageView promoImage;
-//
-//        public ViewHolder(@NonNull View itemView) {
-//            super(itemView);
-//            title = itemView.findViewById(R.id.promoTitle);
-//            description = itemView.findViewById(R.id.promoDescription);
-//            discount = itemView.findViewById(R.id.promoDiscount);
-//            duration = itemView.findViewById(R.id.promoDuration);
-//            startDate = itemView.findViewById(R.id.promoStartDate);
-//            promoImage = itemView.findViewById(R.id.promoImage);
-//        }
-//    }
-//
-//    // Implement Filterable to allow searching by product title
-//    @Override
-//    public Filter getFilter() {
-//        return promotionFilter;
-//    }
-//
-//    private Filter promotionFilter = new Filter() {
-//        @Override
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//            List<Promotion> filteredList = new ArrayList<>();
-//            if (constraint == null || constraint.length() == 0) {
-//                filteredList.addAll(promotionListFull);
-//            } else {
-//                String filterPattern = constraint.toString().toLowerCase().trim();
-//                for (Promotion item : promotionListFull) {
-//                    if (item.getTitle().toLowerCase().contains(filterPattern)) {
-//                        filteredList.add(item);
-//                    }
-//                }
-//            }
-//            FilterResults results = new FilterResults();
-//            results.values = filteredList;
-//            return results;
-//        }
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//            promotionList.clear();
-//            promotionList.addAll((List) results.values);
-//            notifyDataSetChanged();
-//        }
-//    };
-//}
-//
-//
-
-
+///Fix
 //package com.example.resort.home.data;
 //
 //import android.content.Context;
+//import android.content.Intent;
 //import android.graphics.Bitmap;
 //import android.graphics.BitmapFactory;
+//import android.net.Uri;
 //import android.util.Base64;
 //import android.view.LayoutInflater;
 //import android.view.View;
@@ -376,15 +236,25 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 //import android.widget.TextView;
 //
 //import androidx.annotation.NonNull;
+//import androidx.core.content.FileProvider;
 //import androidx.recyclerview.widget.RecyclerView;
+//import androidx.viewpager2.widget.ViewPager2;
 //
 //import com.bumptech.glide.Glide;
 //import com.bumptech.glide.load.engine.DiskCacheStrategy;
 //import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 //import com.example.resort.R;
+//import com.google.firebase.database.DataSnapshot;
+//import com.google.firebase.database.DatabaseError;
+//import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.database.ValueEventListener;
 //
+//import java.io.File;
+//import java.io.FileOutputStream;
+//import java.io.IOException;
 //import java.util.ArrayList;
 //import java.util.List;
+//
 //
 //public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.ViewHolder> implements Filterable {
 //
@@ -395,43 +265,75 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 //    public PromotionsAdapter(Context context, List<Promotion> promotionList) {
 //        this.context = context;
 //        this.promotionList = promotionList;
-//        // Create a copy of the list for filtering purposes
 //        this.promotionListFull = new ArrayList<>(promotionList);
 //    }
 //
 //    @NonNull
 //    @Override
 //    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//        // Make sure your item layout includes a ViewPager2 with id promoViewPager
 //        View view = LayoutInflater.from(context).inflate(R.layout.item_promotion, parent, false);
 //        return new ViewHolder(view);
 //    }
 //
 //    @Override
-//    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        Promotion promo = promotionList.get(position);
+//    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+//        final Promotion promo = promotionList.get(position);
 //
+//        // Set the textual data
 //        holder.title.setText(promo.getTitle());
 //        holder.description.setText(promo.getDescription());
 //        holder.discount.setText(promo.getDiscount() + "% OFF");
 //        holder.duration.setText("Valid for: " + promo.getDuration() + " days");
 //        holder.startDate.setText("Starts on: " + promo.getStartDate());
 //
-//        // Convert Base64 image to Bitmap (assuming the string starts with "data:image/jpeg;base64,")
-//        String base64Image = promo.getImageBase64().split(",")[1];
-//        byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
-//        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//        // Query Firebase for album data matching this promotion's title (productName)
+//        FirebaseDatabase.getInstance()
+//                .getReference("promoalbum")
+//                .orderByChild("productName")
+//                .equalTo(promo.getTitle())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        List<Bitmap> images = new ArrayList<>();
+//                        if (snapshot.exists()) {
+//                            // Assume one matching album; iterate over its photos (photo1, photo2, photo3)
+//                            for (DataSnapshot albumSnapshot : snapshot.getChildren()) {
+//                                for (int i = 1; i <= 3; i++) {
+//                                    String photoKey = "photo" + i;
+//                                    String base64Image = albumSnapshot.child(photoKey).getValue(String.class);
+//                                    if (base64Image != null && base64Image.contains(",")) {
+//                                        // Extract the Base64 part after the comma
+//                                        String encodedImage = base64Image.split(",")[1];
+//                                        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+//                                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//                                        images.add(decodedByte);
+//                                    }
+//                                }
+//                                // Stop after the first album found
+//                                break;
+//                            }
+//                        }
+//                        if (images.isEmpty()) {
+//                            // No matching album or images, so add the default placeholder image
+//                            Bitmap defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_no_image);
+//                            images.add(defaultBitmap);
+//                        }
+//                        // Set up the ViewPager adapter with the fetched images
+//                        PromotionImagesAdapter imagesAdapter = new PromotionImagesAdapter(images);
+//                        holder.promoViewPager.setAdapter(imagesAdapter);
+//                    }
 //
-//        // Load the image with Glide
-//        Glide.with(holder.promoImage.getContext())
-//                .load(decodedByte)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .override(800, 800)
-//                .centerInside()
-//                //.placeholder(R.drawable.loading_screen)
-//                .error(R.drawable.ic_profile_about)
-//                .transition(DrawableTransitionOptions.withCrossFade(500))
-//                .into(holder.promoImage);
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        // On error, show the default placeholder image
+//                        List<Bitmap> images = new ArrayList<>();
+//                        Bitmap defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_no_image);
+//                        images.add(defaultBitmap);
+//                        PromotionImagesAdapter imagesAdapter = new PromotionImagesAdapter(images);
+//                        holder.promoViewPager.setAdapter(imagesAdapter);
+//                    }
+//                });
 //    }
 //
 //    @Override
@@ -439,9 +341,10 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 //        return promotionList.size();
 //    }
 //
+//    // ViewHolder with ViewPager2 for the swipe gallery
 //    public static class ViewHolder extends RecyclerView.ViewHolder {
 //        TextView title, description, discount, duration, startDate;
-//        ImageView promoImage;
+//        ViewPager2 promoViewPager; // This replaces or complements your ImageView
 //
 //        public ViewHolder(@NonNull View itemView) {
 //            super(itemView);
@@ -450,11 +353,59 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 //            discount = itemView.findViewById(R.id.promoDiscount);
 //            duration = itemView.findViewById(R.id.promoDuration);
 //            startDate = itemView.findViewById(R.id.promoStartDate);
-//            promoImage = itemView.findViewById(R.id.promoImage);
+//            promoViewPager = itemView.findViewById(R.id.promoViewPager);
 //        }
 //    }
 //
-//    // Implement Filterable to allow searching by product title
+//    // Nested adapter for the swipeable images in the ViewPager2
+//    public class PromotionImagesAdapter extends RecyclerView.Adapter<PromotionImagesAdapter.ImageViewHolder> {
+//
+//        private List<Bitmap> images;
+//
+//        public PromotionImagesAdapter(List<Bitmap> images) {
+//            this.images = images;
+//        }
+//
+//        @NonNull
+//        @Override
+//        public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//            // Create an item layout for each image (item_promo_image.xml)
+//            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_promo_image, parent, false);
+//            return new ImageViewHolder(view);
+//        }
+//
+//        /** @noinspection ClassEscapesDefinedScope*/
+//        @Override
+//        public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+//            Bitmap image = images.get(position);
+//            Glide.with(holder.imageView.getContext())
+//                    .load(image)
+//                    .skipMemoryCache(true)
+//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                    .override(800, 800)
+//                    .centerInside()
+//                    .error(R.drawable.ic_no_image)
+//                    .transition(DrawableTransitionOptions.withCrossFade(500))
+//                    .into(holder.imageView);
+//        }
+//
+//
+//        @Override
+//        public int getItemCount() {
+//            return images.size();
+//        }
+//
+//        class ImageViewHolder extends RecyclerView.ViewHolder {
+//            ImageView imageView;
+//
+//            public ImageViewHolder(@NonNull View itemView) {
+//                super(itemView);
+//                imageView = itemView.findViewById(R.id.imageView);
+//            }
+//        }
+//    }
+//
+//    // Filter implementation remains the same...
 //    @Override
 //    public Filter getFilter() {
 //        return promotionFilter;
@@ -478,6 +429,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 //            results.values = filteredList;
 //            return results;
 //        }
+//
 //        @Override
 //        protected void publishResults(CharSequence constraint, FilterResults results) {
 //            promotionList.clear();
@@ -487,94 +439,3 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 //    };
 //}
 //
-
-
-
-///this function no search name product
-//package com.example.resort.home.data;
-//
-//import android.content.Context;
-//import android.graphics.Bitmap;
-//import android.graphics.BitmapFactory;
-//import android.util.Base64;
-//import android.view.LayoutInflater;
-//import android.view.View;
-//import android.view.ViewGroup;
-//import android.widget.ImageView;
-//import android.widget.TextView;
-//
-//import androidx.annotation.NonNull;
-//import androidx.recyclerview.widget.RecyclerView;
-//
-//import com.bumptech.glide.Glide;
-//import com.bumptech.glide.load.engine.DiskCacheStrategy;
-//import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-//import com.example.resort.R;
-//
-//import java.util.List;
-//
-//public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.ViewHolder> {
-//    private Context context;
-//    private List<Promotion> promotionList;
-//
-//    public PromotionsAdapter(Context context, List<Promotion> promotionList) {
-//        this.context = context;
-//        this.promotionList = promotionList;
-//    }
-//
-//    @NonNull
-//    @Override
-//    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(context).inflate(R.layout.item_promotion, parent, false);
-//        return new ViewHolder(view);
-//    }
-//
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        Promotion promo = promotionList.get(position);
-//
-//        holder.title.setText(promo.getTitle());
-//        holder.description.setText(promo.getDescription());
-//        holder.discount.setText(promo.getDiscount() + "% OFF");
-//        holder.duration.setText("Valid for: " + promo.getDuration() + " days");
-//        holder.startDate.setText("Starts on: " + promo.getStartDate());
-//
-//        // Convert Base64 image to URL format for Glide (if not already)
-//        String base64Image = promo.getImageBase64().split(",")[1]; // Remove "data:image/jpeg;base64,"
-//        byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
-//        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//
-//        // Glide for async image loading with rounded corners and smooth transition
-//        Glide.with(holder.promoImage.getContext())
-//                .load(decodedByte)  // Load the decoded bitmap
-//                .skipMemoryCache(true)  // Skip memory cache to avoid reusing cached images
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)  // Skip disk caching
-//                .override(800, 800)  // Resize to avoid unnecessarily large images
-//                .centerInside()  // Ensure the image stays within bounds of the ImageView
-//                //.placeholder(R.drawable.loading_screen)  // Placeholder image while loading
-//                .error(R.drawable.ic_profile_about)  // Error image if loading fails
-//                .transition(DrawableTransitionOptions.withCrossFade(500))  // Apply smooth fade-in transition (500 ms duration)
-//                .into(holder.promoImage);  // Bind the image to the ImageView
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return promotionList.size();
-//    }
-//
-//    public static class ViewHolder extends RecyclerView.ViewHolder {
-//        TextView title, description, discount, duration, startDate;
-//        ImageView promoImage;
-//
-//        public ViewHolder(@NonNull View itemView) {
-//            super(itemView);
-//            title = itemView.findViewById(R.id.promoTitle);
-//            description = itemView.findViewById(R.id.promoDescription);
-//            discount = itemView.findViewById(R.id.promoDiscount);
-//            duration = itemView.findViewById(R.id.promoDuration);
-//            startDate = itemView.findViewById(R.id.promoStartDate);
-//            promoImage = itemView.findViewById(R.id.promoImage);
-//        }
-//    }
-//}

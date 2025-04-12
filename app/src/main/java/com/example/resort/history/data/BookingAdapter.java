@@ -60,10 +60,11 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
 //            holder.tvRefNo.setText(""); // Set empty if no reference number is available
 //        }
 
+
         // Display the refNo (without "Reference:") in red color
         if (booking.getBookingReview() != null && booking.getBookingReview().refNo != null) {
-            holder.tvRefNo.setText("Ref.No" + booking.getBookingReview().refNo); // Only display the refNo without "Reference:"
-            holder.tvRefNo.setTextColor(context.getResources().getColor(R.color.red)); // Set the text color to red
+            holder.tvRefNo.setText("Ref.No" + booking.getBookingReview().refNo);
+            holder.tvRefNo.setTextColor(context.getResources().getColor(R.color.black));
         } else {
             holder.tvRefNo.setText(""); /// Set empty if no reference number is available
         }

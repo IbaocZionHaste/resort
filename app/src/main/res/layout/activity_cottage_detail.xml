@@ -201,7 +201,6 @@
                         android:layout_height="wrap_content"
                         android:text="Description"
                         android:textSize="20sp"
-                        android:textColor="@color/grey"
                         android:fontFamily="@font/arial_th"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"

@@ -93,7 +93,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                                                     .into(holder.productImageView);
                                         } else {
                                             // No valid photo detected; load default "no image" drawable.
-                                            ///holder.productImageView.setImageResource(R.drawable.ic_no_image);
+                                            holder.productImageView.setImageResource(R.drawable.ic_no_image);
                                         }
                                         break;
                                     }
@@ -101,14 +101,14 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                             }
                             if (!albumFound) {
                                 // No album found: load default "no image" drawable.
-                                ///holder.productImageView.setImageResource(R.drawable.ic_no_image);
+                                holder.productImageView.setImageResource(R.drawable.ic_no_image);
                             }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                             // On error, also load the default drawable.
-                            ///holder.productImageView.setImageResource(R.drawable.ic_no_image);
+                            holder.productImageView.setImageResource(R.drawable.ic_no_image);
                         }
                     });
         } else {

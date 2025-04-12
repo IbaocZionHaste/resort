@@ -185,7 +185,6 @@
                         android:text="Description"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
-                        android:textColor="@color/grey"
                         android:textSize="20sp" />
 
                     <TextView
@@ -267,59 +266,3 @@
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <!--    <ScrollView-->
-    <!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:padding="16dp">-->
-
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:orientation="vertical">-->
-
-    <!--            <TextView-->
-    <!--                android:id="@+id/tvAlcoholName"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:text="Alcohol Name"-->
-    <!--                android:textSize="24sp"-->
-    <!--                android:textStyle="bold"/>-->
-
-    <!--            <ImageView-->
-    <!--                android:id="@+id/ivAlcoholImage"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="200dp"-->
-    <!--                android:layout_marginTop="8dp"-->
-    <!--                android:scaleType="centerCrop"/>-->
-
-    <!--            <TextView-->
-    <!--                android:id="@+id/tvAlcoholDescription"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginTop="8dp"-->
-    <!--                android:text="Description"/>-->
-
-    <!--            <TextView-->
-    <!--                android:id="@+id/tvAlcoholContent"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginTop="8dp"-->
-    <!--                android:text="Alcohol Content:"/>-->
-
-    <!--            <TextView-->
-    <!--                android:id="@+id/tvAlcoholType"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginTop="8dp"-->
-    <!--                android:text="Type:"/>-->
-
-    <!--            <TextView-->
-    <!--                android:id="@+id/tvAlcoholPrice"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginTop="8dp"-->
-    <!--                android:text="Price:"/>-->
-    <!--        </LinearLayout>-->
-    <!--    </ScrollView>-->

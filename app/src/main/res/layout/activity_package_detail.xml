@@ -195,7 +195,6 @@
                         android:textSize="20sp"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
-                        android:textColor="@color/grey"
                         android:fontFamily="@font/arial_th"
                         android:layout_marginTop="4dp" />
 
