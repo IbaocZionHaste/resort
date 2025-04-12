@@ -161,6 +161,9 @@ public class Account extends AppCompatActivity {
 }
 
 
+
+
+///No Current User
 //package com.example.resort;
 //
 //import android.content.SharedPreferences;
@@ -221,12 +224,21 @@ public class Account extends AppCompatActivity {
 //        // Get the current user
 //        FirebaseUser currentUser = mAuth.getCurrentUser();
 //        if (currentUser != null) {
-//            String userId = currentUser.getUid();
+//            String currentUserId = currentUser.getUid();
+//            String cachedUserId = sharedPreferences.getString("userId", null);
 //
-//            // Try loading cached data first
-//            if (!loadCachedData()) {
-//                // If no cached data, retrieve from Firebase
-//                mDatabase.child("users").child(userId)
+//            // If cached data belongs to the current user, load it
+//            if (cachedUserId != null && cachedUserId.equals(currentUserId) && loadCachedData()) {
+//                // Cached data loaded successfully.
+//            } else {
+//                // Cached data is missing or belongs to a different user.
+//                // Clear cached data.
+//                SharedPreferences.Editor clearEditor = sharedPreferences.edit();
+//                clearEditor.clear();
+//                clearEditor.apply();
+//
+//                // Retrieve from Firebase
+//                mDatabase.child("users").child(currentUserId)
 //                        .addListenerForSingleValueEvent(new ValueEventListener() {
 //                            @Override
 //                            public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -258,8 +270,9 @@ public class Account extends AppCompatActivity {
 //                                    etEmail.setText(email);
 //                                    etPhone.setText(phone);
 //
-//                                    // Cache the data in SharedPreferences
+//                                    // Cache the data in SharedPreferences along with the current user id
 //                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                                    editor.putString("userId", currentUserId);
 //                                    editor.putString("firstName", firstName);
 //                                    editor.putString("lastName", lastName);
 //                                    editor.putString("middleInitial", middleInitial);
@@ -312,4 +325,5 @@ public class Account extends AppCompatActivity {
 //        return dataFound;
 //    }
 //}
+//
 //

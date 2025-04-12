@@ -33,14 +33,13 @@ public class FragmentTwo extends Fragment {
             startActivity(intent);
         });
 
-        // Set a click listener on the button
+        /// Set a click listener on the button
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /// Start SignUp activity without showing a Toast
-                ///Toast.makeText(getActivity(), "Button clicked!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
+
             }
         });
 

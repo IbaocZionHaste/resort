@@ -31,6 +31,6 @@ public class ViewPagerLanding extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 4; // Number of fragments
+        return 4; /// Number of fragments
     }
 }

@@ -70,8 +70,6 @@ public class BottomNavigation extends AppCompatActivity {
     }
 
 
-
-
     boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
