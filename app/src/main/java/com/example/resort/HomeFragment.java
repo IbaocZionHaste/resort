@@ -174,7 +174,7 @@ public class HomeFragment extends Fragment {
         /// Initialize ProgressBar
         progressBar = view.findViewById(R.id.progressBar);
 
-        // Fetch promotions from the database
+        /// Fetch promotions from the database
         DatabaseHelper databaseHelper = new DatabaseHelper();
         databaseHelper.fetchPromotions(new DatabaseHelper.DataStatus() {
             @Override
