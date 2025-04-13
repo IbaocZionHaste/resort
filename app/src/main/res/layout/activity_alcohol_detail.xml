@@ -206,27 +206,27 @@
                         android:justificationMode="inter_word"
                         android:textSize="20sp"/>
 
-                    <!-- Alcohol Content -->
-                    <TextView
-                        android:id="@+id/tvAlcoholContent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Content:"
-                        android:textSize="20sp"
-                        android:textAlignment="viewStart"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp" />
+<!--                    &lt;!&ndash; Alcohol Content &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvAlcoholContent"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Content:"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textAlignment="viewStart"-->
+<!--                        android:justificationMode="inter_word"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="4dp" />-->
 
-                    <!-- Alcohol Type -->
-                    <TextView
-                        android:id="@+id/tvAlcoholType"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Type:"
-                        android:textAlignment="viewStart"
-                        android:justificationMode="inter_word"
-                        android:textSize="20sp" />
+<!--                    &lt;!&ndash; Alcohol Type &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvAlcoholType"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Type:"-->
+<!--                        android:textAlignment="viewStart"-->
+<!--                        android:justificationMode="inter_word"-->
+<!--                        android:textSize="20sp" />-->
 
                     <!-- Review Section -->
                     <TextView

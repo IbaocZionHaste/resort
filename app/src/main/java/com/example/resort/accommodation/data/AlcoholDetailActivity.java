@@ -206,8 +206,8 @@ public class AlcoholDetailActivity extends AppCompatActivity {
 
         TextView tvName = findViewById(R.id.tvAlcoholName);
         TextView tvDescription = findViewById(R.id.tvAlcoholDescription);
-        TextView tvContent = findViewById(R.id.tvAlcoholContent);
-        TextView tvType = findViewById(R.id.tvAlcoholType);
+        ///TextView tvContent = findViewById(R.id.tvAlcoholContent);
+        ///TextView tvType = findViewById(R.id.tvAlcoholType);
         TextView tvSize = findViewById(R.id.tvAlcoholSize);
         TextView tvPrice = findViewById(R.id.tvAlcoholPrice);
         TextView tvStatus = findViewById(R.id.tvAlcoholStatus);
@@ -331,8 +331,9 @@ public class AlcoholDetailActivity extends AppCompatActivity {
         tvName.setText(name);
         tvSize.setText("Size: " + alcoholSize);
         tvDescription.setText(description);
-        tvContent.setText("Alcohol Content: " + alcoholContent);
-        tvType.setText("Type: " + alcoholType);
+
+        ///tvContent.setText("Alcohol Content: " + alcoholContent);
+        ///tvType.setText("Type: " + alcoholType);
 
         // --- NEW CODE: Initialize RecyclerView for Reviews ---
         RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);

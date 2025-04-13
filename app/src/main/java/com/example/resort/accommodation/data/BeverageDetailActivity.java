@@ -202,10 +202,10 @@ public class BeverageDetailActivity extends AppCompatActivity {
 
         TextView tvName = findViewById(R.id.tvBeverageName);
         TextView tvDescription = findViewById(R.id.tvBeverageDescription);
-        TextView tvFlavor = findViewById(R.id.tvBeverageFlavor);
+        ///TextView tvFlavor = findViewById(R.id.tvBeverageFlavor);
         TextView tvSize = findViewById(R.id.tvBeverageSize);
-        TextView tvOccasions = findViewById(R.id.tvBeverageOccasions);
-        TextView tvServing = findViewById(R.id.tvBeverageServing);
+        ///TextView tvOccasions = findViewById(R.id.tvBeverageOccasions);
+        ///TextView tvServing = findViewById(R.id.tvBeverageServing);
         TextView tvPrice = findViewById(R.id.tvBeveragePrice);
         TextView tvStatus = findViewById(R.id.tvBeverageStatus);
         ivImageSwipe = findViewById(R.id.ivBeverageImage);
@@ -332,9 +332,9 @@ public class BeverageDetailActivity extends AppCompatActivity {
         tvName.setText(name);
         tvSize.setText("Size: " + beverageSize);
         tvDescription.setText(description);
-        tvFlavor.setText("Flavor: " + flavor);
-        tvOccasions.setText("Occasions: " + occasions);
-        tvServing.setText("Serving: " + serving);
+        ///tvFlavor.setText("Flavor: " + flavor);
+        ///tvOccasions.setText("Occasions: " + occasions);
+        ///tvServing.setText("Serving: " + serving);
 
 
 

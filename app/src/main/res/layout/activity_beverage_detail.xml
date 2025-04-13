@@ -207,39 +207,39 @@
                         android:textSize="20sp" />
 
 
-                    <!-- Beverage Flavor -->
-                    <TextView
-                        android:id="@+id/tvBeverageFlavor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Flavor:"
-                        android:textSize="20sp"
-                        android:textAlignment="viewStart"
-                        android:justificationMode="inter_word"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp" />
+<!--                    &lt;!&ndash; Beverage Flavor &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvBeverageFlavor"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Flavor:"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textAlignment="viewStart"-->
+<!--                        android:justificationMode="inter_word"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="4dp" />-->
 
-                    <!-- Beverage Occasions -->
-                    <TextView
-                        android:id="@+id/tvBeverageOccasions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Occasion:"
-                        android:textSize="20sp"
-                        android:textAlignment="viewStart"
-                        android:justificationMode="inter_word"
-                        android:layout_marginBottom="4dp" />
+<!--                    &lt;!&ndash; Beverage Occasions &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvBeverageOccasions"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Occasion:"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textAlignment="viewStart"-->
+<!--                        android:justificationMode="inter_word"-->
+<!--                        android:layout_marginBottom="4dp" />-->
 
-                    <!-- Beverage Serving -->
-                    <TextView
-                        android:id="@+id/tvBeverageServing"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Serving:"
-                        android:textSize="20sp"
-                        android:textAlignment="viewStart"
-                        android:justificationMode="inter_word"
-                        android:layout_marginBottom="4dp"/>
+<!--                    &lt;!&ndash; Beverage Serving &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvBeverageServing"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Serving:"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textAlignment="viewStart"-->
+<!--                        android:justificationMode="inter_word"-->
+<!--                        android:layout_marginBottom="4dp"/>-->
 
                     <!-- Review Section -->
                     <TextView
