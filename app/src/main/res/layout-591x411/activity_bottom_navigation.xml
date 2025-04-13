@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="TODO"
             app:backgroundTint="@color/light_blue"
-            app:fabCustomSize="54dp"
+            app:fabCustomSize="55dp"
             app:layout_anchor="@+id/bottomAppbar"
             app:layout_anchorGravity="top|center"
             app:maxImageSize="30dp"
