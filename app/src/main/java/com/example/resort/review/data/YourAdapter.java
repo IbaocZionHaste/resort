@@ -1,3 +1,4 @@
+///Payment Information
 package com.example.resort.review.data;
 
 import android.content.ClipData;
@@ -34,17 +35,17 @@ public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
         String item = dataList.get(position);
         holder.textView.setText(item);
 
-        // Enable text selection for copying
+        /// Enable text selection for copying
         holder.textView.setTextIsSelectable(true);
 
-        // Set click listener to copy the text when clicked
+        /// Set click listener to copy the text when clicked
         holder.textView.setOnClickListener(v -> {
             // Get the selected text and copy it to the clipboard
             ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("Copied Text", item);
             clipboard.setPrimaryClip(clip);
 
-            // Optionally, show a toast to notify the user
+            /// Optionally, show a toast to notify the user
             Toast.makeText(v.getContext(), "Text copied to clipboard", Toast.LENGTH_SHORT).show();
         });
     }

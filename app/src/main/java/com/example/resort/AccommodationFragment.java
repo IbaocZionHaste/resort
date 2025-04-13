@@ -34,7 +34,7 @@ public class AccommodationFragment extends Fragment {
     private ProgressBar progressBar;
     private EditText searchEditText;
 
-    // Track the currently selected category
+    /// Track the currently selected category
     private String currentCategory = "Cottage";
 
     @SuppressLint("ClickableViewAccessibility")
@@ -89,10 +89,10 @@ public class AccommodationFragment extends Fragment {
             public void afterTextChanged(Editable editable) { }
         });
 
-        // Clear search text when search bar is clicked
+        /// Clear search text when search bar is clicked
         searchEditText.setOnClickListener(v -> searchEditText.setText(""));
 
-        // Category button initializations
+        /// Category button initializations
         LinearLayout cottageLayout = view.findViewById(R.id.cottage);
         LinearLayout boatLayout = view.findViewById(R.id.boat);
         LinearLayout foodLayout = view.findViewById(R.id.food);
@@ -148,7 +148,7 @@ public class AccommodationFragment extends Fragment {
     }
 
     private void fetchProductsByCategory(String category) {
-        // Update current category for search filtering
+        /// Update current category for search filtering
         currentCategory = category;
         progressBar.setVisibility(View.VISIBLE);
         DatabaseHelper1 databaseHelper = new DatabaseHelper1();

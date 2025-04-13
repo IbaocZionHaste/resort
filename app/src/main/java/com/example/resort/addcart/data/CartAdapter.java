@@ -37,12 +37,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.context = context;
         this.cartItems = cartItems;
         this.updateListener = updateListener;
-        // Retrieve the current user once and store the userId
+        /// Retrieve the current user once and store the userId
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             this.userId = currentUser.getUid();
         } else {
-            // Handle case where user is not logged in as needed
+            /// Handle case where user is not logged in as needed
             this.userId = "";
             Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show();
         }
@@ -59,14 +59,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         CartItem item = cartItems.get(position);
-        // Set item name and category
+        /// Set item name and category
         holder.nameText.setText(item.getName());
         holder.category.setText(item.getCategory());
-        // Set price (unit price * quantity)
+        /// Set price (unit price * quantity)
         holder.priceText.setText("₱" + String.format("%.0f", (item.getPrice() * item.getQuantity())));
         holder.quantityText.setText(String.valueOf(item.getQuantity()));
 
-        // Display capacity if the item is a Cottage or Boat and capacity is not null
+        /// Display capacity if the item is a Cottage or Boat and capacity is not null
         if (("Cottage".equals(item.getCategory()) || "Boat".equals(item.getCategory()))
                 && item.getCapacity() != null) {
             holder.capacity.setText("Capacity: " + item.getCapacity());
@@ -75,22 +75,22 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             holder.capacity.setVisibility(View.GONE);
         }
 
-        // Check category: hide plus/minus and quantity for Boat, Cottage, and Package items
+        /// Check category: hide plus/minus and quantity for Boat, Cottage, and Package items
         if ("Boat".equals(item.getCategory()) || "Cottage".equals(item.getCategory()) || "Package".equals(item.getCategory())) {
             holder.plusButton.setVisibility(View.GONE);
             holder.minusButton.setVisibility(View.GONE);
             holder.quantityText.setVisibility(View.GONE);
         } else {
-            // For other items, show the buttons and quantity
+            /// For other items, show the buttons and quantity
             holder.plusButton.setVisibility(View.VISIBLE);
             holder.minusButton.setVisibility(View.VISIBLE);
             holder.quantityText.setVisibility(View.VISIBLE);
 
-            // Plus button: increase quantity if below 10
+            /// Plus button: increase quantity if below 10
             holder.plusButton.setOnClickListener(v -> {
                 if (item.getQuantity() < 10) {
                     item.setQuantity(item.getQuantity() + 1);
-                    CartManager.getInstance(context, userId).persistCart();  // Pass the proper userId
+                    CartManager.getInstance(context, userId).persistCart();  /// Pass the proper userId
                     notifyItemChanged(position);
                     updateListener.onCartUpdated();
                 } else {
@@ -109,22 +109,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             });
         }
 
-
-
-       /// Load image using Glide from Base64 string using a data URI
-//        String base64Image = item.getImageUrl();
-//        if (base64Image != null && !base64Image.trim().isEmpty()) {
-//            String imageData = "data:image/png;base64," + base64Image;
-//
-//            Glide.with(context)
-//                    .load(imageData)
-//                    .placeholder(R.drawable.ic_profile_about)
-//                    .into(holder.itemImage);
-//        } else {
-//            Glide.with(context)
-//                    .load(R.drawable.ic_profile_about)
-//                    .into(holder.itemImage);
-//        }
 
         /// Load image directly from the Firebase Storage URL
         String firebaseImageUrl = item.getImageUrl();

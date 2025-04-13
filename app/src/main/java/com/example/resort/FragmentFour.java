@@ -1,32 +1,3 @@
-//package com.example.resort;
-//
-//import android.os.Bundle;
-//import android.view.LayoutInflater;
-//import android.view.View;
-//import android.view.ViewGroup;
-//
-//import androidx.activity.EdgeToEdge;
-//import androidx.annotation.NonNull;
-//import androidx.annotation.Nullable;
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.core.graphics.Insets;
-//import androidx.core.view.ViewCompat;
-//import androidx.core.view.WindowInsetsCompat;
-//import androidx.fragment.app.Fragment;
-//
-//
-//public class FragmentFour extends Fragment {
-//
-//    @Nullable
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-//                             @Nullable Bundle savedInstanceState) {
-//        return inflater.inflate(R.layout.activity_fragment_four, container, false);
-//    }
-//}
-//
-//
-
 package com.example.resort;
 
 import android.graphics.Bitmap;
@@ -56,7 +27,7 @@ public class FragmentFour extends Fragment {
 
     private ImageView photoImageView;
     private ProgressBar progressBar;
-    // Simple cache for storing decoded byte arrays keyed by the Base64 data string.
+    /// Simple cache for storing decoded byte arrays keyed by the Base64 data string.
     private static final Map<String, byte[]> base64Cache = new HashMap<>();
 
     @Override

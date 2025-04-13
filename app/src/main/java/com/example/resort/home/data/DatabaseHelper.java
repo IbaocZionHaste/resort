@@ -33,7 +33,6 @@ public class DatabaseHelper {
                 }
                 dataStatus.DataLoaded(promotionsList);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 dataStatus.Error(error.getMessage());

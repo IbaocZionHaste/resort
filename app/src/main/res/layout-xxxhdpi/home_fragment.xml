@@ -8,7 +8,6 @@
     android:background="@color/whiteSmoke"
     tools:layout_editor_absoluteY="-28dp">
 
-
     <View
         android:id="@+id/view4"
         android:layout_width="wrap_content"
