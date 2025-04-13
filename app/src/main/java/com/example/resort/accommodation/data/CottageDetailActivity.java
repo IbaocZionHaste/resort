@@ -1,402 +1,3 @@
-//package com.example.resort.accommodation.data;
-//
-//import android.annotation.SuppressLint;
-//import android.content.Intent;
-//import android.graphics.Bitmap;
-//import android.graphics.drawable.BitmapDrawable;
-//import android.os.Bundle;
-//import android.os.Handler;
-//import android.util.Base64;
-//import android.view.View;
-//import android.widget.Button;
-//import android.widget.ImageView;
-//import android.widget.TextView;
-//import android.widget.Toast;
-//
-//import androidx.activity.EdgeToEdge;
-//import androidx.annotation.NonNull;
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.core.graphics.Insets;
-//import androidx.core.view.ViewCompat;
-//import androidx.core.view.WindowInsetsCompat;
-//import androidx.recyclerview.widget.LinearLayoutManager;
-//import androidx.recyclerview.widget.RecyclerView;
-//
-//import com.bumptech.glide.Glide;
-//import com.bumptech.glide.load.engine.DiskCacheStrategy;
-//import com.example.resort.R;
-//import com.example.resort.addcart.data.CartItem;
-//import com.example.resort.addcart.data.CartManager;
-//import com.example.resort.review.data.Review;
-//import com.example.resort.review.data.ReviewAdapter;
-//import com.google.firebase.auth.FirebaseAuth;
-//import com.google.firebase.auth.FirebaseUser;
-//import com.google.firebase.database.DataSnapshot;
-//import com.google.firebase.database.DatabaseError;
-//import com.google.firebase.database.DatabaseReference;
-//import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.database.ValueEventListener;
-//
-//import java.io.ByteArrayOutputStream;
-//import java.text.ParseException;
-//import java.text.SimpleDateFormat;
-//import java.util.ArrayList;
-//import java.util.Calendar;
-//import java.util.Date;
-//import java.util.List;
-//import java.util.Locale;
-//
-//public class CottageDetailActivity extends AppCompatActivity {
-//
-//    // Hold the raw price from the Intent extra.
-//    private String rawPrice;
-//    // Optional available date from extras (if provided from a previous booking).
-//    private String availableDate;
-//
-//    private void updateAverageRating(List<Review> reviews) {
-//        float total = 0;
-//        for (Review review : reviews) {
-//            total += review.getRate();
-//        }
-//        float average = reviews.size() > 0 ? total / reviews.size() : 0.0f;
-//        TextView tvRating = findViewById(R.id.rating);
-//        String newRating = String.format("%.1f", average);
-//
-//        // Optional: animate rating update.
-//        tvRating.setAlpha(0f);
-//        tvRating.setText(newRating);
-//        tvRating.animate().alpha(1f).setDuration(500).start();
-//    }
-//
-//    @SuppressLint("SetTextI18n")
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
-//        setContentView(R.layout.activity_cottage_detail);
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
-//
-//        Intent intent = getIntent();
-//        String productId = intent.getStringExtra("productId");
-//        String name = intent.getStringExtra("accommodationName");
-//        String description = intent.getStringExtra("accommodationDesc");
-//        String capacity = intent.getStringExtra("accommodationCapacity");
-//        String status = intent.getStringExtra("accommodationStat");
-//        String design = intent.getStringExtra("accommodationDesign");
-//        String location = intent.getStringExtra("accommodationLocation");
-//        String amenities = intent.getStringExtra("accommodationAmenities");
-//        rawPrice = intent.getStringExtra("accommodationPrice"); // Raw price value.
-//        String imageUrl = intent.getStringExtra("accommodationImage");
-//        // Get the available date extra (if provided).
-//        availableDate = intent.getStringExtra("accommodationAvailableDate");
-//
-//        // Find views in the layout.
-//        TextView tvName = findViewById(R.id.tvCottageName);
-//        TextView tvDescription = findViewById(R.id.tvCottageDescription);
-//        TextView tvCapacity = findViewById(R.id.tvCottageCapacity);
-//        TextView tvDesign = findViewById(R.id.tvCottageDesign);
-//        TextView tvLocation = findViewById(R.id.tvCottageLocation);
-//        TextView tvStatus = findViewById(R.id.tvCottageStatus);
-//        TextView tvAmenities = findViewById(R.id.tvCottageAmenities);
-//        TextView tvPrice = findViewById(R.id.tvCottagePrice);
-//        // NEW: TextView to display the available date.
-//        TextView tvAvailableDate = findViewById(R.id.tvAvailableDate);
-//        ImageView ivImage = findViewById(R.id.ivCottageImage);
-//        ImageView btnBack = findViewById(R.id.btn);
-//        Button btnAddToCart = findViewById(R.id.btn_add_to_cart);
-//
-//        btnBack.setOnClickListener(v -> onBackPressed());
-//
-//
-//        // Use the item name passed via the Intent as the favorite key.
-//        final String favoriteKey = getIntent().getStringExtra("accommodationName");
-//
-//       // Find the heart icon view.
-//        ImageView heartIcon = findViewById(R.id.heart);
-//        final boolean[] isFavorite = {false}; // This holds the mutable favorite state for this item
-//
-//      // Retrieve the current Firebase user.
-//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if (currentUser != null) {
-//            // Reference the current user's favorites using the item name as key.
-//            DatabaseReference userFavoritesRef = FirebaseDatabase.getInstance()
-//                    .getReference("users")
-//                    .child(currentUser.getUid())
-//                    .child("favorites");
-//
-//            // Check if this specific item (by name) is already in favorites.
-//            userFavoritesRef.child(favoriteKey).addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    if (snapshot.exists()) {
-//                        isFavorite[0] = true;
-//                        // Set heart icon to red if it is already marked as favorite.
-//                        heartIcon.setColorFilter(getResources().getColor(R.color.red));
-//                    } else {
-//                        isFavorite[0] = false;
-//                        heartIcon.clearColorFilter();
-//                    }
-//                }
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//                    // Handle errors if needed.
-//                }
-//            });
-//
-//            // Toggle the favorite state when the heart icon is clicked.
-//            heartIcon.setOnClickListener(v -> {
-//                if (isFavorite[0]) {
-//                    // Remove this item from favorites.
-//                    userFavoritesRef.child(favoriteKey).removeValue();
-//                    heartIcon.clearColorFilter();  // Revert to the default icon color.
-//                    isFavorite[0] = false;
-//                    Toast.makeText(CottageDetailActivity.this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    // Add this item to favorites. Only this item's name is stored.
-//                    userFavoritesRef.child(favoriteKey).setValue(true);
-//                    heartIcon.setColorFilter(getResources().getColor(R.color.red));
-//                    isFavorite[0] = true;
-//                    Toast.makeText(CottageDetailActivity.this, "Added to Favorites", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//
-//
-//
-//        // Update status UI based on the passed "status" string.
-//        if ("Available".equalsIgnoreCase(status)) {
-//            tvStatus.setText("Available");
-//            tvStatus.setTextColor(getResources().getColor(R.color.green));
-//            btnAddToCart.setEnabled(true);
-//            btnAddToCart.setText("Book Now");
-//        } else if ("Unavailable".equalsIgnoreCase(status)) {
-//            tvStatus.setText("Sold Out");
-//            tvStatus.setTextColor(getResources().getColor(R.color.red));
-//            btnAddToCart.setEnabled(false);
-//            btnAddToCart.setText("Sold Out");
-//        }
-//
-//        if ("Available".equalsIgnoreCase(status)) {
-//            tvStatus.setText("Available");
-//            tvStatus.setTextColor(getResources().getColor(R.color.green));
-//            btnAddToCart.setEnabled(true);
-//            btnAddToCart.setText("Book Now");
-//
-//            // Hide the availableDate in the UI.
-//            tvAvailableDate.setText("");
-//            tvAvailableDate.setVisibility(View.GONE);
-//
-//            // Update status in Firebase without removing availableDate.
-//            if (productId != null && !productId.trim().isEmpty()) {
-//                DatabaseReference productRef = FirebaseDatabase.getInstance()
-//                        .getReference("products").child("Cottage").child(productId);
-//                productRef.child("status").setValue("Available");
-//            }
-//        } else if ("Unavailable".equalsIgnoreCase(status)) {
-//            tvStatus.setText("Sold Out");
-//            tvStatus.setTextColor(getResources().getColor(R.color.red));
-//            btnAddToCart.setEnabled(false);
-//            btnAddToCart.setText("Sold Out");
-//
-//            // Process if availableDate exists.
-//            if (availableDate != null && !availableDate.trim().isEmpty()) {
-//                String extractedDate = availableDate;
-//                if (extractedDate.startsWith("Date:")) {
-//                    extractedDate = extractedDate.substring(5).trim();
-//                }
-//                int parenIndex = extractedDate.indexOf("(");
-//                if (parenIndex != -1) {
-//                    extractedDate = extractedDate.substring(0, parenIndex).trim();
-//                }
-//                final SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd yyyy", Locale.getDefault());
-//                try {
-//                    Date parsedDate = sdf.parse(extractedDate);
-//                    Calendar cal = Calendar.getInstance();
-//                    cal.setTime(parsedDate);
-//                    // Add one day.
-//                    cal.add(Calendar.DATE, 1);
-//                    final String adjustedDate = sdf.format(cal.getTime());
-//                    final Date availableDateObj = sdf.parse(adjustedDate);
-//
-//                    // Set up a Handler to check every second asynchronously.
-//                    final Handler handler = new Handler();
-//                    Runnable runnable = new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Date currentDateObj = new Date();
-//                            // Check if current date is after or equal to the adjusted available date.
-//                            if (currentDateObj.after(availableDateObj) || sdf.format(currentDateObj).equals(adjustedDate)) {
-//                                // Update Firebase status to Available and remove the availableDate data.
-//                                if (productId != null && !productId.trim().isEmpty()) {
-//                                    DatabaseReference productRef = FirebaseDatabase.getInstance()
-//                                            .getReference("products")
-//                                            .child("Cottage")
-//                                            .child(productId);
-//                                    productRef.child("status").setValue("Available");
-//                                    // Remove the availableDate field from Firebase.
-//                                    productRef.child("availableDate").removeValue();
-//                                }
-//                                // Hide the availableDate in the UI.
-//                                tvAvailableDate.setText("");
-//                                tvAvailableDate.setVisibility(View.GONE);
-//                            } else {
-//                                // Display the adjusted date in the UI while not expired.
-//                                tvAvailableDate.setText("Available Date: " + adjustedDate);
-//                                tvAvailableDate.setVisibility(View.VISIBLE);
-//                                handler.postDelayed(this, 1000); // check again every second.
-//                            }
-//                        }
-//                    };
-//                    // Start the periodic check.
-//                    handler.post(runnable);
-//
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                    tvAvailableDate.setText("");
-//                    tvAvailableDate.setVisibility(View.GONE);
-//                }
-//            } else {
-//                tvAvailableDate.setVisibility(View.GONE);
-//            }
-//        }
-//
-//        if (rawPrice != null && !rawPrice.trim().isEmpty() && capacity != null && !capacity.trim().isEmpty()) {
-//            tvPrice.setText("Price: ₱" + rawPrice + " / " + capacity + "Pax");
-//        } else if (rawPrice != null && !rawPrice.trim().isEmpty()) {
-//            tvPrice.setText("Price: ₱" + rawPrice);
-//        } else {
-//            tvPrice.setText("Price: ₱0.00");
-//        }
-//
-//        tvName.setText(name);
-//        tvDescription.setText(description);
-//        tvAmenities.setText("Amenities: " + amenities);
-//        tvCapacity.setText("Capacity: " + capacity);
-//        tvDesign.setText("Design: " + design);
-//        tvLocation.setText("Location: " + location);
-//
-//        // Load the image.
-//        Glide.with(this)
-//                .load(imageUrl)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .centerInside()
-//                .into(ivImage);
-//
-//        // --- NEW CODE: Initialize RecyclerView for Reviews ---
-//        RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
-//        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
-//        List<Review> reviewList = new ArrayList<>();
-//        ReviewAdapter reviewAdapter = new ReviewAdapter(reviewList);
-//        recyclerViewReviews.setAdapter(reviewAdapter);
-//        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//
-//        // Fetch reviews for the current cottage (match by itemName).
-//        final String cottageName = tvName.getText().toString();
-//        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-//        usersRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                List<Review> reviews = new ArrayList<>();
-//                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-//                    DataSnapshot ratingsSnapshot = userSnapshot.child("MyRating");
-//                    if (ratingsSnapshot.exists()) {
-//                        for (DataSnapshot ratingSnapshot : ratingsSnapshot.getChildren()) {
-//                            String itemName = ratingSnapshot.child("itemName").getValue(String.class);
-//                            if (cottageName.equals(itemName)) {
-//                                String comment = ratingSnapshot.child("comment").getValue(String.class);
-//                                String date = ratingSnapshot.child("date").getValue(String.class);
-//                                Integer rate = ratingSnapshot.child("rate").getValue(Integer.class);
-//                                String user = ratingSnapshot.child("user").getValue(String.class);
-//                                String category = ratingSnapshot.child("category").getValue(String.class);
-//
-//                                // Create a Review object.
-//                                Review review = new Review(user, rate, comment, date, category, itemName);
-//                                reviews.add(review);
-//                            }
-//                        }
-//                    }
-//                }
-//                reviewAdapter.updateReviews(reviews);
-//                updateAverageRating(reviews); // Update the average rating view.
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Toast.makeText(CottageDetailActivity.this, "Failed to load reviews", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        // --- END NEW CODE ---
-//
-//        // Add to Cart functionality.
-//        btnAddToCart.setOnClickListener(v -> {
-//            // Retrieve the current Firebase user and get its UID.
-//            FirebaseUser currentUserForCart = FirebaseAuth.getInstance().getCurrentUser();
-//            if (currentUserForCart == null) {
-//                Toast.makeText(CottageDetailActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//            String uid = currentUserForCart.getUid();
-//
-//            // Check if an item with the same name already exists in the cart.
-//            boolean productExists = false;
-//            for (CartItem cartItem : CartManager.getInstance(this, uid).getCartItems()) {
-//                if (cartItem.getName().equals(name)) {
-//                    productExists = true;
-//                    break;
-//                }
-//            }
-//            if (productExists) {
-//                Toast.makeText(CottageDetailActivity.this, "Sorry, only 1 item of this product can be booked.", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            // Check product availability.
-//            if (!"Available".equalsIgnoreCase(status)) {
-//                String msg = "This item is sold out";
-//                if (availableDate != null && !availableDate.trim().isEmpty()) {
-//                    msg += " until " + availableDate;
-//                }
-//                Toast.makeText(CottageDetailActivity.this, msg, Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            double itemPrice = 0.0;
-//            try {
-//                itemPrice = Double.parseDouble(rawPrice.trim());
-//            } catch (NumberFormatException e) {
-//                e.printStackTrace();
-//            }
-//
-//            int itemCapacity = 0;
-//            try {
-//                itemCapacity = Integer.parseInt(tvCapacity.getText().toString().replace("Capacity: ", "").trim());
-//            } catch (NumberFormatException e) {
-//                e.printStackTrace();
-//            }
-//
-//            String base64Image = "";
-//            if (ivImage.getDrawable() instanceof BitmapDrawable) {
-//                Bitmap bitmap = ((BitmapDrawable) ivImage.getDrawable()).getBitmap();
-//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-//                byte[] imageBytes = baos.toByteArray();
-//                base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-//            }
-//
-//            // Create the CartItem with category "Cottage" and add it to the user-specific cart.
-//            CartItem item = new CartItem(name, itemPrice, "Cottage", itemCapacity, base64Image);
-//            CartManager.getInstance(this, uid).addItem(item);
-//            Toast.makeText(CottageDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
-//        });
-//    }
-//}
-
-///This new data after the gallery is done
 package com.example.resort.accommodation.data;
 
 import android.annotation.SuppressLint;
@@ -406,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -456,7 +56,7 @@ public class CottageDetailActivity extends AppCompatActivity {
     private String rawPrice;
     private String availableDate;
 
-    // Swipe images list: holds either Integer (resource ID) or Bitmap (from album)
+    // Swipe images list: holds either Integer (resource ID), Bitmap (from album), or String (Firebase Storage URL)
     private List<Object> swipeImages;
     private int currentImageIndex = 0;
     private ImageView ivImageSwipe; // This is your main image view (ivCottageImage)
@@ -478,8 +78,6 @@ public class CottageDetailActivity extends AppCompatActivity {
         tvRating.setText(newRating);
         tvRating.animate().alpha(1f).setDuration(500).start();
     }
-
-
 
     // ----- Helper Methods for Dot Indicators -----
     private void setupDots() {
@@ -513,6 +111,12 @@ public class CottageDetailActivity extends AppCompatActivity {
             ivImageSwipe.setImageResource((Integer) item);
         } else if (item instanceof Bitmap) {
             ivImageSwipe.setImageBitmap((Bitmap) item);
+        } else if (item instanceof String) {
+            // Use Glide to load the image URL (Firebase Storage URL)
+            Glide.with(this)
+                    .load((String) item)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ivImageSwipe);
         }
     }
 
@@ -525,6 +129,7 @@ public class CottageDetailActivity extends AppCompatActivity {
         }
     }
 
+
     private void onSwipeRight() {
         if (currentImageIndex > 0) {
             currentImageIndex--;
@@ -535,7 +140,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 
     // ----- Asynchronous Album Data Fetching -----
     // Fetches album data from Firebase. If an album's productName matches the cottage name,
-    // then its photo1, photo2, and photo3 (Base64 strings) are decoded to Bitmaps and replace the default images.
+    // then its photo1, photo2, and photo3 are assumed to be Firebase Storage URLs and replace the default images.
     private void fetchAlbumData(final String cottageName) {
         DatabaseReference albumRef = FirebaseDatabase.getInstance().getReference("albums");
         albumRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -549,7 +154,7 @@ public class CottageDetailActivity extends AppCompatActivity {
                         String photo1Str = albumSnapshot.child("photo1").getValue(String.class);
                         String photo2Str = albumSnapshot.child("photo2").getValue(String.class);
                         String photo3Str = albumSnapshot.child("photo3").getValue(String.class);
-                        // Remove prefix if present (e.g., "data:image/png;base64,")
+                        // Remove prefix if present (e.g., "data:image/png;base64,") if any, though not needed for URLs.
                         if (photo1Str != null && photo1Str.contains(",")) {
                             photo1Str = photo1Str.substring(photo1Str.indexOf(",") + 1);
                         }
@@ -559,14 +164,11 @@ public class CottageDetailActivity extends AppCompatActivity {
                         if (photo3Str != null && photo3Str.contains(",")) {
                             photo3Str = photo3Str.substring(photo3Str.indexOf(",") + 1);
                         }
-                        Bitmap bitmap1 = decodeBase64(photo1Str);
-                        Bitmap bitmap2 = decodeBase64(photo2Str);
-                        Bitmap bitmap3 = decodeBase64(photo3Str);
-                        // Replace default images with album Bitmaps
+                        // Instead of decoding Base64, we assume these are now Firebase Storage URLs.
                         swipeImages.clear();
-                        swipeImages.add(bitmap1);
-                        swipeImages.add(bitmap2);
-                        swipeImages.add(bitmap3);
+                        swipeImages.add(photo1Str);
+                        swipeImages.add(photo2Str);
+                        swipeImages.add(photo3Str);
                         currentImageIndex = 0;
                         displayCurrentImage();
                         updateDots();
@@ -582,19 +184,6 @@ public class CottageDetailActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    // Decode a Base64 string to a Bitmap.
-    private Bitmap decodeBase64(String input) {
-        try {
-            byte[] decodedBytes = Base64.decode(input, Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
 
     // ----- onCreate() -----
     @Override
@@ -619,9 +208,7 @@ public class CottageDetailActivity extends AppCompatActivity {
         String location = intent.getStringExtra("accommodationLocation");
         String amenities = intent.getStringExtra("accommodationAmenities");
         rawPrice = intent.getStringExtra("accommodationPrice");
-//        String imageUrl = intent.getStringExtra("accommodationImage");
         availableDate = intent.getStringExtra("accommodationAvailableDate");
-
 
         // Find views in the layout
         TextView tvName = findViewById(R.id.tvCottageName);
@@ -823,13 +410,6 @@ public class CottageDetailActivity extends AppCompatActivity {
         tvDesign.setText("Design: " + design);
         tvLocation.setText("Location: " + location);
 
-//        Glide.with(this)
-//                .load(imageUrl)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .centerInside()
-//                .into(ivImageSwipe);
-
         RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
         List<Review> reviewList = new ArrayList<>();
@@ -913,29 +493,25 @@ public class CottageDetailActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            // --- Revised: Always use the first image (photo1) for the cart ---
-            Bitmap cartBitmap = null;
+            /// --- Revised: Always use the first image (photo1) for the cart ---
+            /// Instead of converting a Bitmap to Base64, we check if the first image is a URL.
+            String photoForCart = "";
             Object firstImage = swipeImages.get(0);
-            if (firstImage instanceof Bitmap) {
-                cartBitmap = (Bitmap) firstImage;
+            if (firstImage instanceof String) {
+                photoForCart = (String) firstImage;
+            } else if (firstImage instanceof Bitmap) {
+                // Optionally, if still a Bitmap, you might want to save it locally or use a fallback.
+                photoForCart = "";
             } else if (firstImage instanceof Integer) {
-                cartBitmap = BitmapFactory.decodeResource(getResources(), (Integer) firstImage);
-            }
-
-            String base64Image = "";
-            if (cartBitmap != null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                cartBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] imageBytes = baos.toByteArray();
-                base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                // If it's a resource, you can choose to leave it as an empty string or a default URL.
+                photoForCart = "";
             }
             // --- End revised section ---
 
-            CartItem item = new CartItem(name, itemPrice, "Cottage", itemCapacity, base64Image);
+            CartItem item = new CartItem(name, itemPrice, "Cottage", itemCapacity, photoForCart);
             CartManager.getInstance(CottageDetailActivity.this, uid).addItem(item);
             Toast.makeText(CottageDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
         });
-
 
         // ----- Fetch Album Data Asynchronously -----
         fetchAlbumData(tvName.getText().toString());
@@ -947,25 +523,23 @@ public class CottageDetailActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
+///This new data after the gallery is done Base 64
 //package com.example.resort.accommodation.data;
 //
 //import android.annotation.SuppressLint;
 //import android.content.Intent;
 //import android.graphics.Bitmap;
+//import android.graphics.BitmapFactory;
 //import android.graphics.drawable.BitmapDrawable;
 //import android.os.Bundle;
 //import android.os.Handler;
 //import android.util.Base64;
+//import android.view.GestureDetector;
+//import android.view.MotionEvent;
 //import android.view.View;
 //import android.widget.Button;
 //import android.widget.ImageView;
+//import android.widget.LinearLayout; // For dot indicators
 //import android.widget.TextView;
 //import android.widget.Toast;
 //
@@ -985,6 +559,8 @@ public class CottageDetailActivity extends AppCompatActivity {
 //import com.example.resort.addcart.data.CartManager;
 //import com.example.resort.review.data.Review;
 //import com.example.resort.review.data.ReviewAdapter;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.auth.FirebaseUser;
 //import com.google.firebase.database.DataSnapshot;
 //import com.google.firebase.database.DatabaseError;
 //import com.google.firebase.database.DatabaseReference;
@@ -1000,12 +576,20 @@ public class CottageDetailActivity extends AppCompatActivity {
 //import java.util.List;
 //import java.util.Locale;
 //
+//@SuppressLint("SetTextI18n")
 //public class CottageDetailActivity extends AppCompatActivity {
 //
-//    // Hold the raw price from the Intent extra
+//    // Data from the Intent
 //    private String rawPrice;
-//    // Optional available date from extras (if provided from a previous booking)
 //    private String availableDate;
+//
+//    // Swipe images list: holds either Integer (resource ID) or Bitmap (from album)
+//    private List<Object> swipeImages;
+//    private int currentImageIndex = 0;
+//    private ImageView ivImageSwipe; // This is your main image view (ivCottageImage)
+//
+//    // Dot indicators container (ensure your XML has a LinearLayout with id "llDots")
+//    private LinearLayout llDots;
 //
 //    private void updateAverageRating(List<Review> reviews) {
 //        float total = 0;
@@ -1016,14 +600,130 @@ public class CottageDetailActivity extends AppCompatActivity {
 //        TextView tvRating = findViewById(R.id.rating);
 //        String newRating = String.format("%.1f", average);
 //
-//        // Optional: animate rating update
+//        // Optional: animate rating update.
 //        tvRating.setAlpha(0f);
 //        tvRating.setText(newRating);
 //        tvRating.animate().alpha(1f).setDuration(500).start();
 //    }
 //
 //
-//    @SuppressLint("SetTextI18n")
+//
+//    // ----- Helper Methods for Dot Indicators -----
+//    private void setupDots() {
+//        llDots.removeAllViews();
+//        for (int i = 0; i < swipeImages.size(); i++) {
+//            TextView dot = new TextView(this);
+//            dot.setText("●"); // Unicode bullet
+//            dot.setTextSize(15);
+//            dot.setPadding(8, 0, 8, 0);
+//            dot.setTextColor(getResources().getColor(R.color.grey)); // Inactive color
+//            llDots.addView(dot);
+//        }
+//        updateDots();
+//    }
+//
+//    private void updateDots() {
+//        for (int i = 0; i < llDots.getChildCount(); i++) {
+//            TextView dot = (TextView) llDots.getChildAt(i);
+//            if (i == currentImageIndex) {
+//                dot.setTextColor(getResources().getColor(R.color.light_blue)); // Active dot
+//            } else {
+//                dot.setTextColor(getResources().getColor(R.color.grey));
+//            }
+//        }
+//    }
+//
+//    // ----- Display the current image from swipeImages -----
+//    private void displayCurrentImage() {
+//        Object item = swipeImages.get(currentImageIndex);
+//        if (item instanceof Integer) {
+//            ivImageSwipe.setImageResource((Integer) item);
+//        } else if (item instanceof Bitmap) {
+//            ivImageSwipe.setImageBitmap((Bitmap) item);
+//        }
+//    }
+//
+//    // ----- Swipe Handlers -----
+//    private void onSwipeLeft() {
+//        if (currentImageIndex < swipeImages.size() - 1) {
+//            currentImageIndex++;
+//            displayCurrentImage();
+//            updateDots();
+//        }
+//    }
+//
+//    private void onSwipeRight() {
+//        if (currentImageIndex > 0) {
+//            currentImageIndex--;
+//            displayCurrentImage();
+//            updateDots();
+//        }
+//    }
+//
+//    // ----- Asynchronous Album Data Fetching -----
+//    // Fetches album data from Firebase. If an album's productName matches the cottage name,
+//    // then its photo1, photo2, and photo3 (Base64 strings) are decoded to Bitmaps and replace the default images.
+//    private void fetchAlbumData(final String cottageName) {
+//        DatabaseReference albumRef = FirebaseDatabase.getInstance().getReference("albums");
+//        albumRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                boolean found = false;
+//                for (DataSnapshot albumSnapshot : dataSnapshot.getChildren()) {
+//                    String productName = albumSnapshot.child("productName").getValue(String.class);
+//                    if (productName != null && productName.equals(cottageName)) {
+//                        found = true;
+//                        String photo1Str = albumSnapshot.child("photo1").getValue(String.class);
+//                        String photo2Str = albumSnapshot.child("photo2").getValue(String.class);
+//                        String photo3Str = albumSnapshot.child("photo3").getValue(String.class);
+//                        // Remove prefix if present (e.g., "data:image/png;base64,")
+//                        if (photo1Str != null && photo1Str.contains(",")) {
+//                            photo1Str = photo1Str.substring(photo1Str.indexOf(",") + 1);
+//                        }
+//                        if (photo2Str != null && photo2Str.contains(",")) {
+//                            photo2Str = photo2Str.substring(photo2Str.indexOf(",") + 1);
+//                        }
+//                        if (photo3Str != null && photo3Str.contains(",")) {
+//                            photo3Str = photo3Str.substring(photo3Str.indexOf(",") + 1);
+//                        }
+//                        Bitmap bitmap1 = decodeBase64(photo1Str);
+//                        Bitmap bitmap2 = decodeBase64(photo2Str);
+//                        Bitmap bitmap3 = decodeBase64(photo3Str);
+//                        // Replace default images with album Bitmaps
+//                        swipeImages.clear();
+//                        swipeImages.add(bitmap1);
+//                        swipeImages.add(bitmap2);
+//                        swipeImages.add(bitmap3);
+//                        currentImageIndex = 0;
+//                        displayCurrentImage();
+//                        updateDots();
+//                        break;
+//                    }
+//                }
+//                // If no matching album is found, defaults remain.
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Handle potential errors here
+//            }
+//        });
+//    }
+//
+//
+//    // Decode a Base64 string to a Bitmap.
+//    private Bitmap decodeBase64(String input) {
+//        try {
+//            byte[] decodedBytes = Base64.decode(input, Base64.DEFAULT);
+//            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+//
+//
+//    // ----- onCreate() -----
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
@@ -1035,7 +735,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 //            return insets;
 //        });
 //
-//
+//        // Retrieve intent extras
 //        Intent intent = getIntent();
 //        String productId = intent.getStringExtra("productId");
 //        String name = intent.getStringExtra("accommodationName");
@@ -1045,11 +745,12 @@ public class CottageDetailActivity extends AppCompatActivity {
 //        String design = intent.getStringExtra("accommodationDesign");
 //        String location = intent.getStringExtra("accommodationLocation");
 //        String amenities = intent.getStringExtra("accommodationAmenities");
-//        rawPrice = intent.getStringExtra("accommodationPrice"); // Raw price value
-//        String imageUrl = intent.getStringExtra("accommodationImage");
-//        // Get the available date extra (if provided)
+//        rawPrice = intent.getStringExtra("accommodationPrice");
+////        String imageUrl = intent.getStringExtra("accommodationImage");
 //        availableDate = intent.getStringExtra("accommodationAvailableDate");
 //
+//
+//        // Find views in the layout
 //        TextView tvName = findViewById(R.id.tvCottageName);
 //        TextView tvDescription = findViewById(R.id.tvCottageDescription);
 //        TextView tvCapacity = findViewById(R.id.tvCottageCapacity);
@@ -1058,15 +759,97 @@ public class CottageDetailActivity extends AppCompatActivity {
 //        TextView tvStatus = findViewById(R.id.tvCottageStatus);
 //        TextView tvAmenities = findViewById(R.id.tvCottageAmenities);
 //        TextView tvPrice = findViewById(R.id.tvCottagePrice);
-//        // NEW: TextView to display the available date
 //        TextView tvAvailableDate = findViewById(R.id.tvAvailableDate);
-//        ImageView ivImage = findViewById(R.id.ivCottageImage);
+//        ivImageSwipe = findViewById(R.id.ivCottageImage);
 //        ImageView btnBack = findViewById(R.id.btn);
 //        Button btnAddToCart = findViewById(R.id.btn_add_to_cart);
 //
+//        // Dot indicators container (ensure you have this in your XML)
+//        llDots = findViewById(R.id.llDots);
+//
+//        // Set default swipe images (using your existing drawables)
+//        swipeImages = new ArrayList<>();
+//        swipeImages.add(R.drawable.ic_no_image);
+//        swipeImages.add(R.drawable.ic_no_image);
+//        swipeImages.add(R.drawable.ic_no_image);
+//        currentImageIndex = 0;
+//        displayCurrentImage();
+//        setupDots();
+//
+//        // Setup swipe gesture detection
+//        final GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+//            private static final int SWIPE_THRESHOLD = 100;
+//            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+//            @Override
+//            public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+//                float diffX = e2.getX() - e1.getX();
+//                float diffY = e2.getY() - e1.getY();
+//                if (Math.abs(diffX) > Math.abs(diffY)) {
+//                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+//                        if (diffX > 0) {
+//                            onSwipeRight();
+//                        } else {
+//                            onSwipeLeft();
+//                        }
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
+//        ivImageSwipe.setClickable(true);
+//        ivImageSwipe.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                return gestureDetector.onTouchEvent(event);
+//            }
+//        });
+//
 //        btnBack.setOnClickListener(v -> onBackPressed());
 //
-//        // Update status UI based on the passed "status" string.
+//        // Favorite handling using accommodationName as key
+//        final String favoriteKey = name;
+//        ImageView heartIcon = findViewById(R.id.heart);
+//        final boolean[] isFavorite = {false};
+//
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (currentUser != null) {
+//            DatabaseReference userFavoritesRef = FirebaseDatabase.getInstance()
+//                    .getReference("users")
+//                    .child(currentUser.getUid())
+//                    .child("favorites");
+//
+//            userFavoritesRef.child(favoriteKey).addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    if (snapshot.exists()) {
+//                        isFavorite[0] = true;
+//                        heartIcon.setColorFilter(getResources().getColor(R.color.red));
+//                    } else {
+//                        isFavorite[0] = false;
+//                        heartIcon.clearColorFilter();
+//                    }
+//                }
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) { }
+//            });
+//
+//            heartIcon.setOnClickListener(v -> {
+//                if (isFavorite[0]) {
+//                    userFavoritesRef.child(favoriteKey).removeValue();
+//                    heartIcon.clearColorFilter();
+//                    isFavorite[0] = false;
+//                    Toast.makeText(CottageDetailActivity.this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    userFavoritesRef.child(favoriteKey).setValue(true);
+//                    heartIcon.setColorFilter(getResources().getColor(R.color.red));
+//                    isFavorite[0] = true;
+//                    Toast.makeText(CottageDetailActivity.this, "Added to Favorites", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+//
+//        // Update status and available date UI
 //        if ("Available".equalsIgnoreCase(status)) {
 //            tvStatus.setText("Available");
 //            tvStatus.setTextColor(getResources().getColor(R.color.green));
@@ -1085,24 +868,20 @@ public class CottageDetailActivity extends AppCompatActivity {
 //            btnAddToCart.setEnabled(true);
 //            btnAddToCart.setText("Book Now");
 //
-//            // Hide the availableDate in the UI
 //            tvAvailableDate.setText("");
 //            tvAvailableDate.setVisibility(View.GONE);
 //
-//            // Update status in Firebase without removing availableDate
 //            if (productId != null && !productId.trim().isEmpty()) {
 //                DatabaseReference productRef = FirebaseDatabase.getInstance()
 //                        .getReference("products").child("Cottage").child(productId);
 //                productRef.child("status").setValue("Available");
 //            }
-//
 //        } else if ("Unavailable".equalsIgnoreCase(status)) {
 //            tvStatus.setText("Sold Out");
 //            tvStatus.setTextColor(getResources().getColor(R.color.red));
 //            btnAddToCart.setEnabled(false);
 //            btnAddToCart.setText("Sold Out");
 //
-//            // Process if availableDate exists
 //            if (availableDate != null && !availableDate.trim().isEmpty()) {
 //                String extractedDate = availableDate;
 //                if (extractedDate.startsWith("Date:")) {
@@ -1117,41 +896,33 @@ public class CottageDetailActivity extends AppCompatActivity {
 //                    Date parsedDate = sdf.parse(extractedDate);
 //                    Calendar cal = Calendar.getInstance();
 //                    cal.setTime(parsedDate);
-//                    // Add one day
 //                    cal.add(Calendar.DATE, 1);
 //                    final String adjustedDate = sdf.format(cal.getTime());
 //                    final Date availableDateObj = sdf.parse(adjustedDate);
 //
-//                    // Set up a Handler to check every second asynchronously
 //                    final Handler handler = new Handler();
 //                    Runnable runnable = new Runnable() {
 //                        @Override
 //                        public void run() {
 //                            Date currentDateObj = new Date();
-//                            // Check if current date is after or equal to the adjusted available date
 //                            if (currentDateObj.after(availableDateObj) || sdf.format(currentDateObj).equals(adjustedDate)) {
-//                                // Update Firebase status to Available and remove the availableDate data
 //                                if (productId != null && !productId.trim().isEmpty()) {
 //                                    DatabaseReference productRef = FirebaseDatabase.getInstance()
 //                                            .getReference("products")
 //                                            .child("Cottage")
 //                                            .child(productId);
 //                                    productRef.child("status").setValue("Available");
-//                                    // Remove the availableDate field from Firebase
 //                                    productRef.child("availableDate").removeValue();
 //                                }
-//                                // Hide the availableDate in the UI
 //                                tvAvailableDate.setText("");
 //                                tvAvailableDate.setVisibility(View.GONE);
 //                            } else {
-//                                // Display the adjusted date in the UI while not expired
 //                                tvAvailableDate.setText("Available Date: " + adjustedDate);
 //                                tvAvailableDate.setVisibility(View.VISIBLE);
-//                                handler.postDelayed(this, 1000); // check again every second
+//                                handler.postDelayed(this, 1000);
 //                            }
 //                        }
 //                    };
-//                    // Start the periodic check
 //                    handler.post(runnable);
 //
 //                } catch (ParseException e) {
@@ -1179,16 +950,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 //        tvDesign.setText("Design: " + design);
 //        tvLocation.setText("Location: " + location);
 //
-//        Glide.with(this)
-//                .load(imageUrl)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .centerInside()
-//                .into(ivImage);
 //
-//
-//
-//        // --- NEW CODE: Initialize RecyclerView for Reviews ---
 //        RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
 //        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
 //        List<Review> reviewList = new ArrayList<>();
@@ -1196,8 +958,6 @@ public class CottageDetailActivity extends AppCompatActivity {
 //        recyclerViewReviews.setAdapter(reviewAdapter);
 //        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 //
-//
-//        // Fetch reviews for the current cottage (match by itemName)
 //        final String cottageName = tvName.getText().toString();
 //        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
 //        usersRef.addValueEventListener(new ValueEventListener() {
@@ -1215,9 +975,6 @@ public class CottageDetailActivity extends AppCompatActivity {
 //                                Integer rate = ratingSnapshot.child("rate").getValue(Integer.class);
 //                                String user = ratingSnapshot.child("user").getValue(String.class);
 //                                String category = ratingSnapshot.child("category").getValue(String.class);
-//
-//                                // Create a Review object (ensure your Review model is updated accordingly)
-//                                //noinspection DataFlowIssue
 //                                Review review = new Review(user, rate, comment, date, category, itemName);
 //                                reviews.add(review);
 //                            }
@@ -1225,7 +982,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 //                    }
 //                }
 //                reviewAdapter.updateReviews(reviews);
-//                updateAverageRating(reviews); // Update the average rating view here
+//                updateAverageRating(reviews);
 //            }
 //
 //            @Override
@@ -1233,13 +990,17 @@ public class CottageDetailActivity extends AppCompatActivity {
 //                Toast.makeText(CottageDetailActivity.this, "Failed to load reviews", Toast.LENGTH_SHORT).show();
 //            }
 //        });
-//        // --- END NEW CODE ---
 //
 //        btnAddToCart.setOnClickListener(v -> {
-//            // Check if an item with the same name already exists in the cart.
+//            FirebaseUser currentUserForCart = FirebaseAuth.getInstance().getCurrentUser();
+//            if (currentUserForCart == null) {
+//                Toast.makeText(CottageDetailActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            String uid = currentUserForCart.getUid();
+//
 //            boolean productExists = false;
-//            String userId = "";
-//            for (CartItem cartItem : CartManager.getInstance(this, userId).getCartItems()) {
+//            for (CartItem cartItem : CartManager.getInstance(CottageDetailActivity.this, uid).getCartItems()) {
 //                if (cartItem.getName().equals(name)) {
 //                    productExists = true;
 //                    break;
@@ -1250,7 +1011,6 @@ public class CottageDetailActivity extends AppCompatActivity {
 //                return;
 //            }
 //
-//            // Check product availability.
 //            if (!"Available".equalsIgnoreCase(status)) {
 //                String msg = "This item is sold out";
 //                if (availableDate != null && !availableDate.trim().isEmpty()) {
@@ -1274,99 +1034,32 @@ public class CottageDetailActivity extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
 //
+//            // --- Revised: Always use the first image (photo1) for the cart ---
+//            Bitmap cartBitmap = null;
+//            Object firstImage = swipeImages.get(0);
+//            if (firstImage instanceof Bitmap) {
+//                cartBitmap = (Bitmap) firstImage;
+//            } else if (firstImage instanceof Integer) {
+//                cartBitmap = BitmapFactory.decodeResource(getResources(), (Integer) firstImage);
+//            }
+//
 //            String base64Image = "";
-//            if (ivImage.getDrawable() instanceof BitmapDrawable) {
-//                Bitmap bitmap = ((BitmapDrawable) ivImage.getDrawable()).getBitmap();
+//            if (cartBitmap != null) {
 //                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                cartBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
 //                byte[] imageBytes = baos.toByteArray();
 //                base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 //            }
+//            // --- End revised section ---
 //
-//            // Create the CartItem (with category "Cottage") and add it to the cart.
 //            CartItem item = new CartItem(name, itemPrice, "Cottage", itemCapacity, base64Image);
-//            CartManager.getInstance(this, userId).addItem(item);
+//            CartManager.getInstance(CottageDetailActivity.this, uid).addItem(item);
 //            Toast.makeText(CottageDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
 //        });
+//
+//
+//        // ----- Fetch Album Data Asynchronously -----
+//        fetchAlbumData(tvName.getText().toString());
 //    }
 //}
-//
-
-//this is the default code work
-//        if ("Available".equalsIgnoreCase(status)) {
-//            tvStatus.setText("Available");
-//            tvStatus.setTextColor(getResources().getColor(R.color.green));
-//            btnAddToCart.setEnabled(true);
-//            btnAddToCart.setText("Book Now");
-//
-//            // Itago ang availableDate sa UI
-//            tvAvailableDate.setText("");
-//            tvAvailableDate.setVisibility(View.GONE);
-//
-//            // I-update ang status sa Firebase nang hindi tinatanggal ang availableDate
-//            if (productId != null && !productId.trim().isEmpty()) {
-//                DatabaseReference productRef = FirebaseDatabase.getInstance()
-//                        .getReference("products").child("Cottage").child(productId);
-//                productRef.child("status").setValue("Available");
-//            }
-//
-//        } else if ("Unavailable".equalsIgnoreCase(status)) {
-//            tvStatus.setText("Sold Out");
-//            tvStatus.setTextColor(getResources().getColor(R.color.red));
-//            btnAddToCart.setEnabled(false);
-//            btnAddToCart.setText("Sold Out");
-//
-//            // Proseso kung may availableDate
-//            if (availableDate != null && !availableDate.trim().isEmpty()) {
-//                String extractedDate = availableDate;
-//                if (extractedDate.startsWith("Date:")) {
-//                    extractedDate = extractedDate.substring(5).trim();
-//                }
-//                int parenIndex = extractedDate.indexOf("(");
-//                if (parenIndex != -1) {
-//                    extractedDate = extractedDate.substring(0, parenIndex).trim();
-//                }
-//                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd yyyy", Locale.getDefault());
-//                try {
-//                    Date parsedDate = sdf.parse(extractedDate);
-//                    Calendar cal = Calendar.getInstance();
-//                    cal.setTime(parsedDate);
-//                    // Dagdagan ng isang araw
-//                    cal.add(Calendar.DATE, 1);
-//                    extractedDate = sdf.format(cal.getTime());
-//
-//                    Date availableDateObj = sdf.parse(extractedDate);
-//                    Date currentDateObj = new Date();
-//
-//                    if (currentDateObj.after(availableDateObj)) {
-//                        // Kung nag-expire na, itago ang UI field
-//                        tvAvailableDate.setText("");
-//                        tvAvailableDate.setVisibility(View.GONE);
-//                    } else {
-//                        // Ipakita ang adjusted date sa UI
-//                        tvAvailableDate.setText("Available Date: " + extractedDate);
-//                        tvAvailableDate.setVisibility(View.VISIBLE);
-//
-//                        // Kapag eksaktong tugma ang current date sa adjusted date,
-//                        // i-update ang status sa Firebase at itago ang availableDate sa UI.
-//                        if (sdf.format(currentDateObj).equals(extractedDate)) {
-//                            if (productId != null && !productId.trim().isEmpty()) {
-//                                DatabaseReference productRef = FirebaseDatabase.getInstance()
-//                                        .getReference("products").child("Cottage").child(productId);
-//                                productRef.child("status").setValue("Available");
-//                                // Itago ang availableDate sa UI
-//                                tvAvailableDate.setText("");
-//                                tvAvailableDate.setVisibility(View.GONE);
-//                            }
-//                        }
-//                    }
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                    tvAvailableDate.setText("");
-//                    tvAvailableDate.setVisibility(View.GONE);
-//                }
-//            } else {
-//                tvAvailableDate.setVisibility(View.GONE);
-//            }
-//        }
 

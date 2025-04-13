@@ -102,8 +102,15 @@ public class FoodDetailActivity extends AppCompatActivity {
             ivImageSwipe.setImageResource((Integer) item);
         } else if (item instanceof Bitmap) {
             ivImageSwipe.setImageBitmap((Bitmap) item);
+        } else if (item instanceof String) {
+            // Use Glide to load the image URL (Firebase Storage URL)
+            Glide.with(this)
+                    .load((String) item)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ivImageSwipe);
         }
     }
+
 
     // ----- Swipe Handlers -----
     private void onSwipeLeft() {
@@ -125,7 +132,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     // ----- Asynchronous Album Data Fetching -----
     // Fetches album data from Firebase. If an album's productName matches the cottage name,
-    // then its photo1, photo2, and photo3 (Base64 strings) are decoded to Bitmaps and replace the default images.
+    // then its photo1, photo2, and photo3 are assumed to be Firebase Storage URLs and replace the default images.
     private void fetchAlbumData(final String cottageName) {
         DatabaseReference albumRef = FirebaseDatabase.getInstance().getReference("albums");
         albumRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -139,7 +146,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                         String photo1Str = albumSnapshot.child("photo1").getValue(String.class);
                         String photo2Str = albumSnapshot.child("photo2").getValue(String.class);
                         String photo3Str = albumSnapshot.child("photo3").getValue(String.class);
-                        // Remove prefix if present (e.g., "data:image/png;base64,")
+                        // Remove prefix if present (e.g., "data:image/png;base64,") if any, though not needed for URLs.
                         if (photo1Str != null && photo1Str.contains(",")) {
                             photo1Str = photo1Str.substring(photo1Str.indexOf(",") + 1);
                         }
@@ -149,14 +156,11 @@ public class FoodDetailActivity extends AppCompatActivity {
                         if (photo3Str != null && photo3Str.contains(",")) {
                             photo3Str = photo3Str.substring(photo3Str.indexOf(",") + 1);
                         }
-                        Bitmap bitmap1 = decodeBase64(photo1Str);
-                        Bitmap bitmap2 = decodeBase64(photo2Str);
-                        Bitmap bitmap3 = decodeBase64(photo3Str);
-                        // Replace default images with album Bitmaps
+                        // Instead of decoding Base64, we assume these are now Firebase Storage URLs.
                         swipeImages.clear();
-                        swipeImages.add(bitmap1);
-                        swipeImages.add(bitmap2);
-                        swipeImages.add(bitmap3);
+                        swipeImages.add(photo1Str);
+                        swipeImages.add(photo2Str);
+                        swipeImages.add(photo3Str);
                         currentImageIndex = 0;
                         displayCurrentImage();
                         updateDots();
@@ -173,17 +177,6 @@ public class FoodDetailActivity extends AppCompatActivity {
         });
     }
 
-
-    // Decode a Base64 string to a Bitmap.
-    private Bitmap decodeBase64(String input) {
-        try {
-            byte[] decodedBytes = Base64.decode(input, Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
 
     @SuppressLint("SetTextI18n")
@@ -345,13 +338,6 @@ public class FoodDetailActivity extends AppCompatActivity {
         tvDescription.setText(description);
         tvFoodItems.setText("Size: " + food1);
 
-        // Load image using Glide.
-//        Glide.with(this)
-//                .load(imageUrl)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .centerInside()
-//                .into(ivImage);
 
         // --- NEW CODE: Initialize RecyclerView for Reviews ---
         RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
@@ -438,35 +424,23 @@ public class FoodDetailActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-//                // Convert the image to a Base64 string.
-//                String base64Image = "";
-//                if (ivImage.getDrawable() instanceof BitmapDrawable) {
-//                    Bitmap bitmap = ((BitmapDrawable) ivImage.getDrawable()).getBitmap();
-//                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-//                    byte[] imageBytes = baos.toByteArray();
-//                    base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-//                }
-
-                // --- Revised: Always use the first image (photo1) for the cart ---
-                Bitmap cartBitmap = null;
+                /// --- Revised: Always use the first image (photo1) for the cart ---
+                /// Instead of converting a Bitmap to Base64, we check if the first image is a URL.
+                String photoForCart = "";
                 Object firstImage = swipeImages.get(0);
-                if (firstImage instanceof Bitmap) {
-                    cartBitmap = (Bitmap) firstImage;
+                if (firstImage instanceof String) {
+                    photoForCart = (String) firstImage;
+                } else if (firstImage instanceof Bitmap) {
+                    // Optionally, if still a Bitmap, you might want to save it locally or use a fallback.
+                    photoForCart = "";
                 } else if (firstImage instanceof Integer) {
-                    cartBitmap = BitmapFactory.decodeResource(getResources(), (Integer) firstImage);
+                    // If it's a resource, you can choose to leave it as an empty string or a default URL.
+                    photoForCart = "";
                 }
-
-                String base64Image = "";
-                if (cartBitmap != null) {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    cartBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    byte[] imageBytes = baos.toByteArray();
-                    base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-                }
+                // --- End revised section ---
 
                 // Create a CartItem and add it to the cart.
-                CartItem item = new CartItem(itemName, itemPrice, "Food", base64Image);
+                CartItem item = new CartItem(itemName, itemPrice, "Food",photoForCart);
                 CartManager.getInstance(this, uid).addItem(item);
                 Toast.makeText(FoodDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
             }

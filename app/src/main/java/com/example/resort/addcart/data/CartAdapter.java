@@ -111,20 +111,34 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
 
 
-        // Load image using Glide from Base64 string using a data URI
-        String base64Image = item.getImageUrl();
-        if (base64Image != null && !base64Image.trim().isEmpty()) {
-            String imageData = "data:image/png;base64," + base64Image;
+       /// Load image using Glide from Base64 string using a data URI
+//        String base64Image = item.getImageUrl();
+//        if (base64Image != null && !base64Image.trim().isEmpty()) {
+//            String imageData = "data:image/png;base64," + base64Image;
+//
+//            Glide.with(context)
+//                    .load(imageData)
+//                    .placeholder(R.drawable.ic_profile_about)
+//                    .into(holder.itemImage);
+//        } else {
+//            Glide.with(context)
+//                    .load(R.drawable.ic_profile_about)
+//                    .into(holder.itemImage);
+//        }
 
+        /// Load image directly from the Firebase Storage URL
+        String firebaseImageUrl = item.getImageUrl();
+        if (firebaseImageUrl != null && !firebaseImageUrl.trim().isEmpty()) {
             Glide.with(context)
-                    .load(imageData)
-                    .placeholder(R.drawable.ic_profile_about)
+                    .load(firebaseImageUrl)
+                    .placeholder(R.drawable.ic_no_image)
                     .into(holder.itemImage);
         } else {
             Glide.with(context)
-                    .load(R.drawable.ic_profile_about)
+                    .load(R.drawable.ic_no_image)
                     .into(holder.itemImage);
         }
+
 
         // Delete button: remove the item from the cart
         holder.deleteButton.setOnClickListener(v -> {
