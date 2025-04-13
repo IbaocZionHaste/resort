@@ -293,7 +293,6 @@ public class VerificationCode extends AppCompatActivity {
             Intent intent = new Intent(VerificationCode.this, Login.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            overridePendingTransition(0, 0);
             finish();
         });
 
