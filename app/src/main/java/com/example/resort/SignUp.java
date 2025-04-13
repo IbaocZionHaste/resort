@@ -2,8 +2,12 @@ package com.example.resort;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -15,6 +19,7 @@ import java.util.Locale;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.WindowInsetsCompat;
@@ -69,7 +74,101 @@ public class SignUp extends AppCompatActivity {
 //            return insets;
 //        });
 
+        ///This code is eye to hide and unhide the password view password
+        etPassword.setOnTouchListener(new View.OnTouchListener() {
+            boolean isPasswordVisible = false;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    /// Check if the touch event was within the bounds of the right drawable
+                    if (etPassword.getCompoundDrawables()[DRAWABLE_RIGHT] != null) {
+                        int drawableWidth = etPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+                        if (event.getRawX() >= (etPassword.getRight() - drawableWidth)) {
+                            if (isPasswordVisible) {
+                                // Hide password and reset eye icon color (black)
+                                etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                etPassword.setCompoundDrawablesWithIntrinsicBounds(
+                                        etPassword.getCompoundDrawables()[0],
+                                        etPassword.getCompoundDrawables()[1],
+                                        tintDrawable(etPassword.getCompoundDrawables()[DRAWABLE_RIGHT], 0xFF000000),
+                                        etPassword.getCompoundDrawables()[3]
+                                );
+                                isPasswordVisible = false;
+                            } else {
+                                // Show password and tint the eye icon red
+                                etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                                etPassword.setCompoundDrawablesWithIntrinsicBounds(
+                                        etPassword.getCompoundDrawables()[0],
+                                        etPassword.getCompoundDrawables()[1],
+                                        tintDrawable(etPassword.getCompoundDrawables()[DRAWABLE_RIGHT], 0xFFFF0000),
+                                        etPassword.getCompoundDrawables()[3]
+                                );
+                                isPasswordVisible = true;
+                            }
+                            // Move cursor to end
+                            etPassword.setSelection(etPassword.getText().length());
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+
+        ///This code is eye to hide and unhide the password view confirm password
+        etConfirmPassword .setOnTouchListener(new View.OnTouchListener() {
+            boolean isPasswordVisible = false;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    /// Check if the touch event was within the bounds of the right drawable
+                    if ( etConfirmPassword .getCompoundDrawables()[DRAWABLE_RIGHT] != null) {
+                        int drawableWidth =  etConfirmPassword .getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+                        if (event.getRawX() >= ( etConfirmPassword .getRight() - drawableWidth)) {
+                            if (isPasswordVisible) {
+                                // Hide password and reset eye icon color (black)
+                                etConfirmPassword .setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                etConfirmPassword .setCompoundDrawablesWithIntrinsicBounds(
+                                        etConfirmPassword .getCompoundDrawables()[0],
+                                        etConfirmPassword .getCompoundDrawables()[1],
+                                        tintDrawable( etConfirmPassword .getCompoundDrawables()[DRAWABLE_RIGHT], 0xFF000000),
+                                        etConfirmPassword .getCompoundDrawables()[3]
+                                );
+                                isPasswordVisible = false;
+                            } else {
+                                // Show password and tint the eye icon red
+                                etConfirmPassword .setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                                etConfirmPassword .setCompoundDrawablesWithIntrinsicBounds(
+                                        etConfirmPassword .getCompoundDrawables()[0],
+                                        etConfirmPassword .getCompoundDrawables()[1],
+                                        tintDrawable( etConfirmPassword .getCompoundDrawables()[DRAWABLE_RIGHT], 0xFFFF0000),
+                                        etConfirmPassword .getCompoundDrawables()[3]
+                                );
+                                isPasswordVisible = true;
+                            }
+                            // Move cursor to end
+                            etConfirmPassword .setSelection(etConfirmPassword .getText().length());
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
         btnSignUp.setOnClickListener(v -> registerUser());
+    }
+
+
+    ///Icon drawable color tint
+    private Drawable tintDrawable(Drawable drawable, int color) {
+        if (drawable != null) {
+            Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(wrappedDrawable, color);
+            return wrappedDrawable;
+        }
+        return null;
     }
 
     private void registerUser() {

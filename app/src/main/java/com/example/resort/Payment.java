@@ -124,7 +124,7 @@ public class Payment extends AppCompatActivity {
                             badge.setVisibility(View.VISIBLE); // Show badge
                         }
                     } else {
-                        dataList.add("No refund info available.");
+                        dataList.add("No info available.");
                         adapter.notifyDataSetChanged();
                         badge.setVisibility(View.GONE); // Hide badge if no description is found
                     }
@@ -132,7 +132,7 @@ public class Payment extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    dataList.add("Error loading refund info.");
+                    dataList.add("Error loading no info.");
                     adapter.notifyDataSetChanged();
                     badge.setVisibility(View.GONE); // Hide badge in case of an error
                 }

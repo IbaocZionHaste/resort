@@ -479,8 +479,18 @@ public class BookingStatusService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand invoked. Service is active.");
-        // Returning START_STICKY ensures that if the service is terminated, the system
-        // will try to re-create it as soon as possible.
+
+        // Check if the intent has an action to stop the foreground service.
+        if (intent != null && "STOP_FOREGROUND_SERVICE".equals(intent.getAction())) {
+            Log.d(TAG, "Stop action received. Stopping the foreground service.");
+            // Remove the persistent notification and stop the service.
+            stopForeground(true);
+            stopSelf();
+            return START_NOT_STICKY;
+        }
+
+        /// Returning START_STICKY ensures that if the service is terminated, the system
+        /// will try to re-create it as soon as possible.
         return START_STICKY;
     }
 
