@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +44,7 @@ public class BookingStatusService extends Service {
     private static final String TAG = "BookingStatusService";
     private static final String CHANNEL_ID = "booking_channel";
 
-    // Flags to ensure that we only process once for each event, as in your code.
+    /// Flags to ensure that we only process once for each event, as in your code.
     private boolean approvalProcessed = false;
     private boolean paymentApprovedProcessed = false;
     private boolean finalProcessed = false;
@@ -64,14 +65,14 @@ public class BookingStatusService extends Service {
      *
      *
      */
+
     private void startEnhancedForegroundService() {
-        // Create or update the notification channel for Android O and above.
+        /// Create or update the notification channel for Android O and above.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
                     "Booking Notifications",
                     NotificationManager.IMPORTANCE_DEFAULT);
-            // Optionally set description, sound, vibration, etc.
             channel.setDescription("Channel for booking notifications");
             NotificationManager manager = getSystemService(NotificationManager.class);
             if (manager != null) {
@@ -79,19 +80,55 @@ public class BookingStatusService extends Service {
             }
         }
 
-        // Build the notification ensuring it is persistent (ongoing).
+        /// Prepare an intent to stop the foreground service.
+        Intent stopIntent = new Intent(this, BookingStatusService.class);
+        stopIntent.setAction("STOP_FOREGROUND_SERVICE");
+        PendingIntent stopPendingIntent = PendingIntent.getService(
+                this, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        /// Build the persistent notification with the stop action.
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Island Front View Beach Resort Booking App")
-                .setContentText("Running......")
-                .setSmallIcon(R.drawable.ic_profile_notification) // Ensure this icon exists
-                .setOngoing(true)     // This prevents the user from swiping it away easily.
-                .setAutoCancel(false) // Prevent auto dismissal on tap.
+                .setContentText("Running...")
+                .setSmallIcon(R.drawable.ic_profile_notification)
+                .setOngoing(true)
+                .setAutoCancel(false)
+                .addAction(R.drawable.ic_launcher_foreground, "Stop", stopPendingIntent)
                 .build();
 
-        // Start the service in the foreground with the persistent notification.
+        /// Start the service in the foreground with the persistent notification.
         startForeground(1, notification);
         Log.d(TAG, "Foreground notification started with ID: 1");
     }
+
+///    private void startEnhancedForegroundService() {
+//        // Create or update the notification channel for Android O and above.
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(
+//                    CHANNEL_ID,
+//                    "Booking Notifications",
+//                    NotificationManager.IMPORTANCE_DEFAULT);
+//            // Optionally set description, sound, vibration, etc.
+//            channel.setDescription("Channel for booking notifications");
+//            NotificationManager manager = getSystemService(NotificationManager.class);
+//            if (manager != null) {
+//                manager.createNotificationChannel(channel);
+//            }
+//        }
+//
+//        // Build the notification ensuring it is persistent (ongoing).
+//        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+//                .setContentTitle("Island Front View Beach Resort Booking App")
+//                .setContentText("Running......")
+//                .setSmallIcon(R.drawable.ic_profile_notification) // Ensure this icon exists
+//                .setOngoing(true)     // This prevents the user from swiping it away easily.
+//                .setAutoCancel(false) // Prevent auto dismissal on tap.
+//                .build();
+//
+//        // Start the service in the foreground with the persistent notification.
+//        startForeground(1, notification);
+//        Log.d(TAG, "Foreground notification started with ID: 1");
+//    }
 
     private void listenForBookingUpdates() {
         // Your existing code to subscribe to Firebase updates.
