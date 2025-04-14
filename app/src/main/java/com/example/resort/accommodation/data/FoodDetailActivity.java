@@ -334,7 +334,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         // Set other text views.
         tvName.setText(name);
-        tvSize.setText("Serving: " + pieceNameFood);
+        tvSize.setText("Good For: " + pieceNameFood + " Person");
         tvDescription.setText(description);
         tvFoodItems.setText("Size: " + food1);
 

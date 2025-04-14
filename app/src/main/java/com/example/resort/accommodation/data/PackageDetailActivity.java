@@ -445,7 +445,7 @@ public class PackageDetailActivity extends AppCompatActivity {
         // Set remaining texts.
         tvName.setText(name);
         tvDescription.setText(description);
-        tvCapacity.setText("Cottage: " + capacityCottage);
+        tvCapacity.setText("Capacity: " + capacityCottage);
         tvPackageItems.setText("Food1: " + food1);
         tvPackageItems2.setText("Food2: " + food2);
         tvPackageItems3.setText("Food3: " + food3);

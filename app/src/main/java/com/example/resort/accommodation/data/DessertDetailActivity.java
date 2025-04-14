@@ -331,7 +331,7 @@ public class DessertDetailActivity extends AppCompatActivity {
         tvPiece.setText("Size: " + pieceNameDessert);
         tvDescription.setText(description);
         tvFlavor.setText("Flavor: " + flavorToppings);
-        tvPerfectFor.setText("Perfect For: " + perfectFor);
+        tvPerfectFor.setText("Perfect For: " + perfectFor + " Person");
 
 
 

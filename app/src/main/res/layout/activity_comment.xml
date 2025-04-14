@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/whiteSmoke"
@@ -12,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
-        android:background="@color/whiteSmoke"
+        android:background="@color/white"
         android:focusableInTouchMode="true"
         tools:context=".Login">
 
@@ -42,13 +43,10 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.514"
+            app:layout_constraintHorizontal_bias="0.564"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.054" />
-
-
-        <!-- Vertical LinearLayout for rating bars, centered horizontally -->
+            app:layout_constraintVertical_bias="0.044" />
 
         <TextView
             android:id="@+id/textView2"
@@ -58,14 +56,14 @@
             android:text="Please rate our accommodations"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="21dp"
+            android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.505"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.229" />
+            app:layout_constraintVertical_bias="0.233" />
+
 
         <TextView
             android:id="@+id/textView3"
@@ -76,15 +74,15 @@
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.154"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/Recent"
+            app:layout_constraintHorizontal_bias="0.574"
+            app:layout_constraintStart_toStartOf="@+id/back2"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.15" />
+            app:layout_constraintVertical_bias="0.151" />
 
         <EditText
             android:id="@+id/Recent"
-            android:layout_width="190dp"
+            android:layout_width="200dp"
             android:layout_height="40dp"
             android:background="@drawable/edittext_background"
             android:ems="10"
@@ -94,30 +92,35 @@
             android:textColor="@color/black"
             android:textColorHint="@color/grey"
             android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.772"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.141" />
+            android:textStyle="bold"
+            android:textAppearance="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintEnd_toEndOf="@+id/textView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintVertical_bias="0.586" />
+
+
+        <!-- Vertical LinearLayout for rating bars, centered horizontally -->
 
         <LinearLayout
             android:id="@+id/ratingsContainer"
-            android:layout_width="200dp"
+            android:layout_width="235dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/rate1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.137"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/rate5"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintVertical_bias="0.079">
 
             <!-- 5-star RatingBar -->
             <RatingBar
                 android:id="@+id/ratingBar5"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:isIndicator="true"
                 android:numStars="5"
@@ -187,7 +190,7 @@
             android:layout_height="wrap_content"
             android:text="Satisfactory"
             android:textColor="@color/black"
-            android:textSize="12dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/VeryGood"
@@ -202,7 +205,7 @@
             android:layout_height="wrap_content"
             android:text="Poor"
             android:textColor="@color/black"
-            android:textSize="12dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/Below"
@@ -217,12 +220,12 @@
             android:layout_height="wrap_content"
             android:text="Excellent"
             android:textColor="@color/black"
-            android:textSize="12dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.571"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintHorizontal_bias="0.593"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.326" />
 
@@ -232,11 +235,11 @@
             android:layout_height="wrap_content"
             android:text="Very Good"
             android:textColor="@color/black"
-            android:textSize="12dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/Excellent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.454"
             app:layout_constraintStart_toStartOf="@+id/Excellent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.4" />
@@ -247,7 +250,7 @@
             android:layout_height="wrap_content"
             android:text="Below"
             android:textColor="@color/black"
-            android:textSize="12dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/Satisfactory"
@@ -338,7 +341,7 @@
         <EditText
             android:id="@+id/Comment"
             android:layout_width="0dp"
-            android:layout_height="130dp"
+            android:layout_height="150dp"
             android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
             android:autofillHints=""
@@ -346,20 +349,20 @@
             android:gravity="top|start"
             android:hint="Comment:"
             android:inputType="textMultiLine"
-            android:justificationMode="inter_word"
             android:minLines="3"
             android:paddingStart="10dp"
             android:paddingTop="5dp"
-            android:textAlignment="viewStart"
+            android:textStyle="bold"
+            android:textAppearance="@color/black"
             android:textColor="@color/black"
             android:textColorHint="@color/grey"
-            android:textSize="15dp"
+            android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            app:layout_constraintVertical_bias="0.751" />
+            app:layout_constraintTop_toBottomOf="@+id/rate1"
+            app:layout_constraintVertical_bias="0.119" />
 
         <Button
             android:id="@+id/Submit"
@@ -381,14 +384,14 @@
             android:layout_height="wrap_content"
             android:text="5"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.08"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.33" />
+            app:layout_constraintVertical_bias="0.322" />
 
         <TextView
             android:id="@+id/number3"
@@ -396,7 +399,7 @@
             android:layout_height="wrap_content"
             android:text="3"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/number4"
@@ -411,14 +414,14 @@
             android:layout_height="wrap_content"
             android:text="2"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/number3"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.11"
             app:layout_constraintStart_toStartOf="@+id/number3"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.554" />
+            app:layout_constraintVertical_bias="0.562" />
 
         <TextView
             android:id="@+id/number1"
@@ -426,14 +429,14 @@
             android:layout_height="wrap_content"
             android:text="1"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/number2"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.11"
             app:layout_constraintStart_toStartOf="@+id/number2"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.63" />
+            app:layout_constraintVertical_bias="0.643" />
 
         <TextView
             android:id="@+id/number4"
@@ -441,14 +444,14 @@
             android:layout_height="wrap_content"
             android:text="4"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/number5"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.11"
             app:layout_constraintStart_toStartOf="@+id/number5"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.406" />
+            app:layout_constraintVertical_bias="0.401" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
