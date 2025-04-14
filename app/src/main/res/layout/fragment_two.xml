@@ -32,7 +32,7 @@
         android:fontFamily="@font/shrikhand"
         android:text="Welcomes You!"
         android:textColor="@color/black"
-        android:textSize="38sp"
+        android:textSize="37sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/button"
