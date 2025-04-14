@@ -94,7 +94,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="5dp"
+        android:padding="2dp"
         app:layout_constraintBottom_toTopOf="@+id/editTextTimeIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
