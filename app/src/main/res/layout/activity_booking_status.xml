@@ -18,8 +18,8 @@
         android:layout_width="0dp"
         android:layout_height="590dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
         android:background="@drawable/profile_booking_status_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -245,7 +245,7 @@
         android:fontFamily="@font/arial_th"
         android:text="Booking Status"
         android:textColor="@color/black"
-        android:textSize="23dp"
+        android:textSize="25dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -254,18 +254,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.043" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/back2"
-        android:layout_width="47dp"
-        android:layout_height="50dp"
-        android:backgroundTint="@color/light_blue"
-        android:drawableLeft="@drawable/ic_profile_arrow"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.043"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/back2"
+            android:layout_width="47dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/light_blue"
+            android:drawableLeft="@drawable/ic_profile_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.013"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.023" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button2"
@@ -281,10 +281,10 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/view"
-            app:layout_constraintHorizontal_bias="0.865"
+            app:layout_constraintHorizontal_bias="0.911"
             app:layout_constraintStart_toStartOf="@+id/timeline_container"
             app:layout_constraintTop_toBottomOf="@+id/view"
-            app:layout_constraintVertical_bias="0.976" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button"
@@ -299,12 +299,12 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/view"
-            app:layout_constraintHorizontal_bias="0.178"
+            app:layout_constraintHorizontal_bias="0.113"
             app:layout_constraintStart_toStartOf="@+id/view"
             app:layout_constraintTop_toBottomOf="@+id/view"
-            app:layout_constraintVertical_bias="0.976" />
+            app:layout_constraintVertical_bias="1.0" />
 
-    <FrameLayout
+        <FrameLayout
         android:id="@+id/messageFramedot2"
         android:layout_width="250dp"
         android:layout_height="75dp"
