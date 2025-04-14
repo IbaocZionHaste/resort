@@ -245,7 +245,7 @@
         android:fontFamily="@font/arial_th"
         android:text="Booking Status"
         android:textColor="@color/black"
-        android:textSize="25dp"
+        android:textSize="22dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
