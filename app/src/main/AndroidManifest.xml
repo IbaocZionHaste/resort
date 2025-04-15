@@ -145,6 +145,7 @@
 
         <service
             android:name=".BookingStatusService"
+            android:exported="false"
             android:foregroundServiceType="location|dataSync"/>
 
     </application>

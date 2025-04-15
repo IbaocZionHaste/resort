@@ -1,8 +1,6 @@
 package com.example.resort;
 
-import static android.content.ContentValues.TAG;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -65,7 +63,6 @@ public class BookingStatusService extends Service {
      *
      *
      */
-
     private void startEnhancedForegroundService() {
         /// Create or update the notification channel for Android O and above.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -101,44 +98,15 @@ public class BookingStatusService extends Service {
         Log.d(TAG, "Foreground notification started with ID: 1");
     }
 
-///    private void startEnhancedForegroundService() {
-//        // Create or update the notification channel for Android O and above.
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel channel = new NotificationChannel(
-//                    CHANNEL_ID,
-//                    "Booking Notifications",
-//                    NotificationManager.IMPORTANCE_DEFAULT);
-//            // Optionally set description, sound, vibration, etc.
-//            channel.setDescription("Channel for booking notifications");
-//            NotificationManager manager = getSystemService(NotificationManager.class);
-//            if (manager != null) {
-//                manager.createNotificationChannel(channel);
-//            }
-//        }
-//
-//        // Build the notification ensuring it is persistent (ongoing).
-//        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-//                .setContentTitle("Island Front View Beach Resort Booking App")
-//                .setContentText("Running......")
-//                .setSmallIcon(R.drawable.ic_profile_notification) // Ensure this icon exists
-//                .setOngoing(true)     // This prevents the user from swiping it away easily.
-//                .setAutoCancel(false) // Prevent auto dismissal on tap.
-//                .build();
-//
-//        // Start the service in the foreground with the persistent notification.
-//        startForeground(1, notification);
-//        Log.d(TAG, "Foreground notification started with ID: 1");
-//    }
-
     private void listenForBookingUpdates() {
-        // Your existing code to subscribe to Firebase updates.
-        // Consider adding logging inside each listener callback to monitor service activity.
+        /// Your existing code to subscribe to Firebase updates.
+        /// Consider adding logging inside each listener callback to monitor service activity.
         listenForApproval();
         listenForPaymentTransactionApproval();
         FinalForApproval();
     }
 
-    /// at key points, for example:
+    /// Booking Review Approval
     private void listenForApproval() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
@@ -509,6 +477,8 @@ public class BookingStatusService extends Service {
         return null; // No binding for this service.
     }
 }
+
+
 
 ///No Current User
 //package com.example.resort;

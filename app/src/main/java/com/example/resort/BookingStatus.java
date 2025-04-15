@@ -600,7 +600,6 @@ public class BookingStatus extends AppCompatActivity {
                                         bookingPayProcessed = false;
                                         updateDots();
                                         showPaymentSubmittedMessage();
-                                        stopPolling();
                                         break;
                                     }
                                 }
@@ -763,7 +762,6 @@ public class BookingStatus extends AppCompatActivity {
                                     progress = Math.max(progress, 4);  // Set progress directly to 4
                                     updateDots();  // Ensure this method updates your progress UI elements
                                     showDot4Message();
-                                    stopPolling();
                                     ///showLocalNotification("Payment Approved",
                                     ///"Payment has been approved. Awaiting final approval.", 2);
                                 }
@@ -833,6 +831,7 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 
+
     /// Final Approved by Admin
     private Handler pollingHandler;
     private Runnable pollTask;
@@ -858,7 +857,6 @@ public class BookingStatus extends AppCompatActivity {
                                 clearBookingMessageUI();
                                 clearBookingPreferences();
                                 moveAllBookingsToHistory();
-
                                 ///clearNotification(1);
                                 ///clearNotification(2);
                             }, 1000);
@@ -1069,6 +1067,7 @@ public class BookingStatus extends AppCompatActivity {
 //
 //
 
+
     private void clearNotification(int notificationId) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
@@ -1076,7 +1075,6 @@ public class BookingStatus extends AppCompatActivity {
             //notificationManager.cancelAll(); // Clears all active notifications
         }
     }
-
 
 
     /**
