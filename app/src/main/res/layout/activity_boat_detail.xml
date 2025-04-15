@@ -198,6 +198,8 @@
                         android:layout_height="wrap_content"
                         android:text="Description"
                         android:textSize="20sp"
+                        android:textAlignment="viewStart"
+                        android:justificationMode="inter_word"
                         android:fontFamily="@font/arial_th"
                         android:layout_marginTop="4dp" />
 
