@@ -76,7 +76,7 @@ public class AboutUs extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull StaffViewHolder holder, int position, @NonNull Staff model) {
                 /// Bind the staff data (without click functionality)
                 holder.staffNameTextView.setText(model.getStaffName());
-                holder.positionTextView.setText(model.getPosition());
+                holder.positionTextView.setText((position + 1) + ". " + model.getPosition() + ":");
             }
         };
         recyclerViewStaff.setAdapter(staffAdapter);
@@ -104,8 +104,8 @@ public class AboutUs extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull QuestionViewHolder holder, int position, @NonNull Question model) {
                 /// Bind the question data (without click functionality)
-                holder.questionTitleTextView.setText(model.getTitle());
-                holder.questionAnswerTextView.setText(model.getAnswer());
+                holder.questionTitleTextView.setText((position + 1) + ". " + model.getTitle());
+                holder.questionAnswerTextView.setText("Answer: " + model.getAnswer());
             }
         };
         recyclerViewQuestion.setAdapter(questionAdapter);
