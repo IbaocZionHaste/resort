@@ -306,7 +306,7 @@
 
         <FrameLayout
         android:id="@+id/messageFramedot2"
-        android:layout_width="250dp"
+            android:layout_width="0dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
         android:elevation="8dp"
@@ -319,19 +319,19 @@
 
         <TextView
             android:id="@+id/messageText2"
-            android:layout_width="250dp"
-            android:layout_height="75dp"
+            android:layout_width="245dp"
+            android:layout_height="76dp"
             android:textAlignment="textStart"
-            android:padding="5dp"
+            android:padding="8dp"
             android:text="Booking has been Reviewed. Plese proceed to the payment by clicking the Pay Now button."
             android:textColor="@color/black"
             android:visibility="gone"
-            android:textSize="14sp" />
+            android:textSize="12.8sp" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/messageFramedot3"
-        android:layout_width="250dp"
+        android:layout_width="0dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
         android:elevation="8dp"
@@ -344,19 +344,19 @@
 
         <TextView
             android:id="@+id/messageText3"
-            android:layout_width="250dp"
+            android:layout_width="245dp"
             android:layout_height="75dp"
             android:textAlignment="textStart"
-            android:padding="5dp"
+            android:padding="8dp"
             android:text="Booking has been Submitted. Please wait for it to be reviewed by the admin."
             android:textColor="@color/black"
             android:visibility="gone"
-            android:textSize="15sp" />
+            android:textSize="13sp"  />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/messageFramedot5"
-        android:layout_width="250dp"
+        android:layout_width="245dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
         android:elevation="8dp"
@@ -372,17 +372,17 @@
             android:layout_width="250dp"
             android:layout_height="75dp"
             android:textAlignment="textStart"
-            android:padding="5dp"
+            android:padding="8dp"
             android:text="Congratulation! Your Booking has been Approved."
             android:textColor="@color/black"
             android:visibility="gone"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
     </FrameLayout>
 
 
     <FrameLayout
         android:id="@+id/messageFramedot4"
-        android:layout_width="250dp"
+        android:layout_width="0dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
         android:elevation="8dp"
@@ -395,20 +395,20 @@
 
         <TextView
             android:id="@+id/messageText4"
-            android:layout_width="250dp"
+            android:layout_width="245dp"
             android:layout_height="75dp"
             android:textAlignment="textStart"
-            android:padding="5dp"
+            android:padding="8dp"
             android:text="Booking has been Approved. Please patiently wait for the admin to approved your booking."
             android:textColor="@color/black"
             android:visibility="gone"
-            android:textSize="14sp" />
+            android:textSize="13sp"  />
     </FrameLayout>
 
     <!--    //submitted ito-->
     <FrameLayout
         android:id="@+id/messageFramedot1"
-        android:layout_width="250dp"
+        android:layout_width="0dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
         android:elevation="8dp"
@@ -420,14 +420,14 @@
 
         <TextView
             android:id="@+id/messageText"
-            android:layout_width="250dp"
+            android:layout_width="245dp"
             android:layout_height="75dp"
             android:textAlignment="textStart"
-            android:padding="5dp"
+            android:padding="8dp"
             android:text="Booking has been Submitted. Please wait for it to be reviewed by the admin."
             android:textColor="@color/black"
             android:visibility="gone"
-            android:textSize="15sp" />
+            android:textSize="13sp"/>
     </FrameLayout>
 
 
