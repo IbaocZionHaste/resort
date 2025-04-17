@@ -39,7 +39,7 @@ public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
         /// Enable text selection for copying
         holder.textView.setTextIsSelectable(true);
         holder.textView.setTextColor(Color.BLACK);
-        holder.textView.setTextSize(15);
+        holder.textView.setTextSize(16);
 
         /// Set click listener to copy the text when clicked
         holder.textView.setOnClickListener(v -> {
@@ -110,7 +110,7 @@ public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
 //        /// Enable text selection for copying
 //        holder.textView.setTextIsSelectable(true);
 //        holder.textView.setTextColor(Color.BLACK);
-//        holder.textView.setTextSize(18);
+//        holder.textView.setTextSize(16);
 //
 //        /// Set click listener to copy the text when clicked
 //        holder.textView.setOnClickListener(v -> {
