@@ -4,6 +4,7 @@ package com.example.resort.review.data;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +34,11 @@ public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String item = dataList.get(position);
-        holder.textView.setText(item);
+        holder.textView.setText('"' + item + '"');
 
         /// Enable text selection for copying
         holder.textView.setTextIsSelectable(true);
+        holder.textView.setTextColor(Color.BLACK);
 
         /// Set click listener to copy the text when clicked
         holder.textView.setOnClickListener(v -> {

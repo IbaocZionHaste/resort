@@ -261,19 +261,19 @@ public class Comment extends AppCompatActivity {
                             switch (selectedReviewCategory) {
                                 case "boat":
                                 case "cottage":
-                                    messageTextView.setText("Please rate our accommodation");
+                                    messageTextView.setText("\"Please rate our accommodation\"");
                                     break;
                                 case "food":
                                 case "dessert":
                                 case "beverage":
                                 case "alcohol":
-                                    messageTextView.setText("Please rate our Food & Drink");
+                                    messageTextView.setText("\"Please rate our Food & Drink\"");
                                     break;
                                 case "package":
-                                    messageTextView.setText("Please rate our package");
+                                    messageTextView.setText("\"Please rate our package\"");
                                     break;
                                 default:
-                                    messageTextView.setText("Please rate our service");
+                                    messageTextView.setText("\"Please rate our service\"");
                                     break;
                             }
                         })
@@ -681,7 +681,7 @@ public class Comment extends AppCompatActivity {
 //                            switch (selectedReviewCategory) {
 //                                case "boat":
 //                                case "cottage":
-//                                    messageTextView.setText("Please rate our accommodation");
+//                                    messageTextView.setText("\"Please rate our accommodation\"");
 //                                    break;
 //                                case "food":
 //                                case "dessert":

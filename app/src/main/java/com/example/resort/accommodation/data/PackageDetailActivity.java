@@ -446,12 +446,12 @@ public class PackageDetailActivity extends AppCompatActivity {
         tvName.setText(name);
         tvDescription.setText(description);
         tvCapacity.setText("Capacity: " + capacityCottage);
-        tvPackageItems.setText("Food1: " + food1);
-        tvPackageItems2.setText("Food2: " + food2);
-        tvPackageItems3.setText("Food3: " + food3);
-        tvPackageItems4.setText("Food4: " + food4);
-        tvPackageItems5.setText("Food5: " + food5);
-        tvPackageItems6.setText("Food6: " + food6);
+        tvPackageItems.setText("Food 1: " + food1);
+        tvPackageItems2.setText("Food 2: " + food2);
+        tvPackageItems3.setText("Food 3: " + food3);
+        tvPackageItems4.setText("Food 4: " + food4);
+        tvPackageItems5.setText("Food 5: " + food5);
+        tvPackageItems6.setText("Food 6: " + food6);
         tvCottage.setText("Cottage: " + cottage);
         tvBeverage.setText("Beverage: " + beverage);
 

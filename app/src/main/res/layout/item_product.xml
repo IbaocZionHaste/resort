@@ -84,7 +84,7 @@
             <ImageView
                 android:id="@+id/plus"
                 android:layout_width="30dp"
-                android:layout_height="26dp"
+                android:layout_height="25dp"
                 android:src="@drawable/ic_plus_cart"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"

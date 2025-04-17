@@ -263,7 +263,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
                     android:paddingBottom="5dp"
-                    android:src="@drawable/ic_home_shortcut"
+                    android:src="@drawable/ic_home_book_shortcut"
                     tools:layout_editor_absoluteX="116dp"
                     tools:layout_editor_absoluteY="201dp" /> <!-- Replace with your actual drawable -->
 
@@ -363,7 +363,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
                     android:paddingBottom="5dp"
-                    android:src="@drawable/ic_history"
+                    android:src="@drawable/ic_home_history"
                     tools:layout_editor_absoluteX="404dp"
                     tools:layout_editor_absoluteY="201dp" /> <!-- Replace with your actual drawable -->
 

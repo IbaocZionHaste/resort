@@ -57,6 +57,7 @@ public class Payment extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_payment);
 
+
         /// Adjust layout for system insets.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -64,7 +65,7 @@ public class Payment extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize views.
+        /// Initialize views.
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
         reference = findViewById(R.id.reference);
@@ -87,7 +88,6 @@ public class Payment extends AppCompatActivity {
                 checkBoxGcash.setChecked(false);
             }
         });
-
 
         ///Payment Information
         ImageView messageIcon = findViewById(R.id.messageIcon);
@@ -151,10 +151,7 @@ public class Payment extends AppCompatActivity {
         });
 
 
-
-
-
-        // Fetch the current user
+        /// Fetch the current user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             Toast.makeText(Payment.this, "User not logged in!", Toast.LENGTH_SHORT).show();
@@ -299,6 +296,7 @@ public class Payment extends AppCompatActivity {
                 && (checkBoxGcash.isChecked() || checkBoxPalawan.isChecked());
     }
 }
+
 
 
 ///Current User

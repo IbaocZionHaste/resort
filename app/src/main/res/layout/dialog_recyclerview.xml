@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
+    android:backgroundTint="@color/whiteSmoke"
     android:background="@drawable/rounded_dialog_background"
     android:orientation="vertical">
 
@@ -12,11 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Payment Information"
-        android:textColor="@color/grey"
-        android:textSize="22sp"
+        android:textColor="@color/light_blue"
+        android:textSize="25sp"
         android:fontFamily="@font/arial_th"
         android:textStyle="bold"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/whiteSmoke"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="8dp"/>
 
@@ -24,7 +25,8 @@
         android:id="@+id/dialogRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_marginTop="10dp"
         android:scrollbars="vertical"
-        android:background="?android:attr/windowBackground" />
+        android:background="@color/whiteSmoke" />
 </LinearLayout>
 

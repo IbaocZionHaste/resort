@@ -18,8 +18,8 @@
         android:layout_width="0dp"
         android:layout_height="590dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/profile_booking_status_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -262,7 +262,7 @@
             android:drawableLeft="@drawable/ic_profile_arrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.013"
+            app:layout_constraintHorizontal_bias="0.027"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.023" />
@@ -277,6 +277,7 @@
             android:backgroundTint="@color/red"
             android:text="Cancel"
             android:textColor="@color/white"
+            android:fontFamily="@font/arial_th"
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -294,6 +295,7 @@
             android:layout_marginBottom="5dp"
             android:background="@drawable/booking_status_border_rounded"
             android:text="Pay Now"
+            android:fontFamily="@font/arial_th"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -319,7 +321,7 @@
 
         <TextView
             android:id="@+id/messageText2"
-            android:layout_width="245dp"
+            android:layout_width="240dp"
             android:layout_height="76dp"
             android:textAlignment="textStart"
             android:padding="8dp"
@@ -344,7 +346,7 @@
 
         <TextView
             android:id="@+id/messageText3"
-            android:layout_width="245dp"
+            android:layout_width="240dp"
             android:layout_height="75dp"
             android:textAlignment="textStart"
             android:padding="8dp"
@@ -356,7 +358,7 @@
 
     <FrameLayout
         android:id="@+id/messageFramedot5"
-        android:layout_width="245dp"
+        android:layout_width="240dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
         android:elevation="8dp"
@@ -369,7 +371,7 @@
 
         <TextView
             android:id="@+id/messageText5"
-            android:layout_width="250dp"
+            android:layout_width="240dp"
             android:layout_height="75dp"
             android:textAlignment="textStart"
             android:padding="8dp"
@@ -395,7 +397,7 @@
 
         <TextView
             android:id="@+id/messageText4"
-            android:layout_width="245dp"
+            android:layout_width="240dp"
             android:layout_height="75dp"
             android:textAlignment="textStart"
             android:padding="8dp"
@@ -420,7 +422,7 @@
 
         <TextView
             android:id="@+id/messageText"
-            android:layout_width="245dp"
+            android:layout_width="240dp"
             android:layout_height="75dp"
             android:textAlignment="textStart"
             android:padding="8dp"
