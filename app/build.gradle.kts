@@ -68,7 +68,6 @@ dependencies {
     implementation ("com.firebaseui:firebase-ui-database:7.2.0")
 
 
-
     // 🔥 Additional Dependencies
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
     implementation("com.google.firebase:firebase-appcheck-playintegrity")
@@ -87,10 +86,9 @@ dependencies {
     implementation ("com.github.Foysalofficial:NafisBottomNav:5.0")
     implementation ("com.google.android.gms:play-services-auth-api-phone:18.0.1")
     implementation ("com.github.chrisbanes:PhotoView:2.3.0")
-
     implementation("com.twilio.sdk:twilio:8.0.0")
     implementation ("com.google.firebase:firebase-functions:20.4.0")
-    implementation ("com.squareup.okhttp3:okhttp:4.9.0")  // Optional, for network operations if needed
+    implementation ("com.squareup.okhttp3:okhttp:4.9.0")
 
 
 }

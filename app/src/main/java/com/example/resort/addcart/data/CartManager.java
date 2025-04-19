@@ -107,8 +107,7 @@ public class CartManager {
 
 }
 
-
-///
+///Fix Current
 //package com.example.resort.addcart.data;
 //
 //import android.content.Context;
@@ -117,26 +116,31 @@ public class CartManager {
 //import com.google.gson.reflect.TypeToken;
 //import java.lang.reflect.Type;
 //import java.util.ArrayList;
+//import java.util.HashMap;
 //import java.util.List;
+//import java.util.Map;
 //
 //public class CartManager {
-//    private static CartManager instance;
+//    /// Map to store CartManager instances for each user.
+//    private static final Map<String, CartManager> instances = new HashMap<>();
 //    private final List<CartItem> cartItems;
 //    private final SharedPreferences sharedPreferences;
 //    private final Gson gson;
 //    private static final String CART_KEY = "CART_DATA";
 //
-//    private CartManager(Context context) {
-//        sharedPreferences = context.getSharedPreferences("CartPrefs", Context.MODE_PRIVATE);
+//    /// Private constructor that uses a user-specific SharedPreferences file.
+//    private CartManager(Context context, String userId) {
+//        sharedPreferences = context.getSharedPreferences("CartPrefs_" + userId, Context.MODE_PRIVATE);
 //        gson = new Gson();
 //        cartItems = loadCart();
 //    }
 //
+//    /// Get an instance of CartManager for a given user.
 //    public static synchronized CartManager getInstance(Context context, String userId) {
-//        if (instance == null) {
-//            instance = new CartManager(context.getApplicationContext());
+//        if (!instances.containsKey(userId)) {
+//            instances.put(userId, new CartManager(context.getApplicationContext(), userId));
 //        }
-//        return instance;
+//        return instances.get(userId);
 //    }
 //
 //    public void addItem(CartItem item) {
@@ -149,6 +153,17 @@ public class CartManager {
 //        }
 //        cartItems.add(item);
 //        saveCart();
+//    }
+//
+//
+//    /// Returns the CartItem that matches the given product name, or null if not found.
+//    public CartItem getCartItem(String productName) {
+//        for (CartItem item : cartItems) {
+//            if (item.getName().equals(productName)) {
+//                return item;
+//            }
+//        }
+//        return null;
 //    }
 //
 //    public List<CartItem> getCartItems() {
@@ -168,7 +183,7 @@ public class CartManager {
 //        return totalItemCount;
 //    }
 //
-//    // 🔥 Save cart data persistently
+//    /// Save cart data persistently in user-specific SharedPreferences.
 //    private void saveCart() {
 //        SharedPreferences.Editor editor = sharedPreferences.edit();
 //        String json = gson.toJson(cartItems);
@@ -176,7 +191,7 @@ public class CartManager {
 //        editor.apply();
 //    }
 //
-//    // 🔥 Load cart data from storage
+//    /// Load cart data from storage.
 //    private List<CartItem> loadCart() {
 //        String json = sharedPreferences.getString(CART_KEY, null);
 //        if (json == null) return new ArrayList<>();
@@ -192,5 +207,13 @@ public class CartManager {
 //        cartItems.clear();
 //        saveCart();
 //    }
+//
+//
+//    /// Updates an existing item (simply persists the changes).
+//    public void updateItem(CartItem item) {
+//        // As item is a reference, we simply save the cart.
+//        saveCart();
+//    }
+//
 //}
 //

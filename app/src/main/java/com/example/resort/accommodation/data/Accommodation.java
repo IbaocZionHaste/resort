@@ -178,7 +178,8 @@ public class Accommodation implements Serializable {
 
 
 
-///package com.example.resort.accommodation.data;
+///Fix
+//package com.example.resort.accommodation.data;
 //
 //import java.io.Serializable;
 //
@@ -192,15 +193,15 @@ public class Accommodation implements Serializable {
 //    private String specification;
 //    private String status;
 //    private String location;
-//
 //    private String amenities;
 //
-//    // Additional fields for specific categories
+//
+//    // Category-specific fields
 //    private String capacity; // Boats, Cottages
 //    private String design; // Boats, Cottages
 //    private String food1, food2, food3, food4, food5, pieceNameFood; // Food, Package
 //    private String beverageFlavor, beverageOccasions, beverageServing, beverageSize; // Beverages
-//    private String flavorToppings, perfectFor, pieceNameDessert; // Desserts (renamed flavorToppigs to flavorToppings)
+//    private String flavorToppings, perfectFor, pieceNameDessert; // Desserts
 //    private String alcoholContent, alcoholType, alcoholSize; // Alcohol
 //    private String capacityCottage; // Packages
 //
@@ -208,6 +209,9 @@ public class Accommodation implements Serializable {
 //    private String cottage;   // Additional cottage field
 //    private String food6;     // Additional food6 field
 //    private String beverage;  // Additional beverage field
+//
+//    // New field for available date (e.g., when the product becomes available again)
+//    private String availableDate;
 //
 //    // No-argument constructor (required for Firebase)
 //    public Accommodation() {
@@ -266,7 +270,6 @@ public class Accommodation implements Serializable {
 //    public String getFood5() { return food5; }
 //    public void setFood5(String food5) { this.food5 = food5; }
 //
-//    // New Getter and Setter for pieceNameFood
 //    public String getPieceNameFood() {
 //        return pieceNameFood;
 //    }
@@ -283,7 +286,6 @@ public class Accommodation implements Serializable {
 //    public String getBeverageServing() { return beverageServing; }
 //    public void setBeverageServing(String beverageServing) { this.beverageServing = beverageServing; }
 //
-//    // New Getter and Setter for beverageSize
 //    public String getBeverageSize() {
 //        return beverageSize;
 //    }
@@ -291,7 +293,6 @@ public class Accommodation implements Serializable {
 //        this.beverageSize = beverageSize;
 //    }
 //
-//    // Renamed for consistency: flavorToppings
 //    public String getFlavorToppings() {
 //        return flavorToppings;
 //    }
@@ -302,7 +303,6 @@ public class Accommodation implements Serializable {
 //    public String getPerfectFor() { return perfectFor; }
 //    public void setPerfectFor(String perfectFor) { this.perfectFor = perfectFor; }
 //
-//    // New Getter and Setter for pieceNameDessert
 //    public String getPieceNameDessert() {
 //        return pieceNameDessert;
 //    }
@@ -316,7 +316,6 @@ public class Accommodation implements Serializable {
 //    public String getAlcoholType() { return alcoholType; }
 //    public void setAlcoholType(String alcoholType) { this.alcoholType = alcoholType; }
 //
-//    // New Getter and Setter for alcoholSize
 //    public String getAlcoholSize() {
 //        return alcoholSize;
 //    }
@@ -326,8 +325,6 @@ public class Accommodation implements Serializable {
 //
 //    public String getCapacityCottage() { return capacityCottage; }
 //    public void setCapacityCottage(String capacityCottage) { this.capacityCottage = capacityCottage; }
-//
-//    // New Getters and Setters for added fields
 //
 //    public String getCottage() {
 //        return cottage;
@@ -349,5 +346,11 @@ public class Accommodation implements Serializable {
 //    public void setBeverage(String beverage) {
 //        this.beverage = beverage;
 //    }
+//
+//    public String getAvailableDate() {
+//        return availableDate;
+//    }
+//    public void setAvailableDate(String availableDate) {
+//        this.availableDate = availableDate;
+//    }
 //}
-

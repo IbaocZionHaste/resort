@@ -158,8 +158,7 @@ public class AboutUs extends AppCompatActivity {
     }
 }
 
-
-///Change Data
+///No Current
 //package com.example.resort;
 //
 //import android.os.Bundle;
@@ -189,12 +188,12 @@ public class AboutUs extends AppCompatActivity {
 //
 //public class AboutUs extends AppCompatActivity {
 //
-//    // Staff RecyclerView variables
+//    /// Staff RecyclerView variables
 //    private RecyclerView recyclerViewStaff;
 //    private DatabaseReference staffDatabaseReference;
 //    private FirebaseRecyclerAdapter<Staff, StaffViewHolder> staffAdapter;
 //
-//    // Question RecyclerView variables
+//    /// Question RecyclerView variables
 //    private RecyclerView recyclerViewQuestion;
 //    private DatabaseReference questionDatabaseReference;
 //    private FirebaseRecyclerAdapter<Question, QuestionViewHolder> questionAdapter;
@@ -218,7 +217,7 @@ public class AboutUs extends AppCompatActivity {
 //        recyclerViewStaff = findViewById(R.id.recyclerViewStaff);
 //        recyclerViewStaff.setLayoutManager(new LinearLayoutManager(this));
 //        staffDatabaseReference = FirebaseDatabase.getInstance().getReference().child("staff");
-//        // Optional: Order by timestamp if desired
+//        /// Optional: Order by timestamp if desired
 //        Query staffQuery = staffDatabaseReference.orderByChild("timestamp");
 //
 //        FirebaseRecyclerOptions<Staff> staffOptions = new FirebaseRecyclerOptions.Builder<Staff>()
@@ -236,18 +235,18 @@ public class AboutUs extends AppCompatActivity {
 //
 //            @Override
 //            protected void onBindViewHolder(@NonNull StaffViewHolder holder, int position, @NonNull Staff model) {
-//                // Bind the staff data (without click functionality)
+//                /// Bind the staff data (without click functionality)
 //                holder.staffNameTextView.setText(model.getStaffName());
-//                holder.positionTextView.setText(model.getPosition());
+//                holder.positionTextView.setText((position + 1) + ". " + model.getPosition() + ":");
 //            }
 //        };
 //        recyclerViewStaff.setAdapter(staffAdapter);
 //
-//        // === Set up Question RecyclerView ===
+//        /// === Set up Question RecyclerView ===
 //        recyclerViewQuestion = findViewById(R.id.recyclerViewQuestion);
 //        recyclerViewQuestion.setLayoutManager(new LinearLayoutManager(this));
 //        questionDatabaseReference = FirebaseDatabase.getInstance().getReference().child("question");
-//        // Optional: Order questions by timestamp if desired
+//        /// Optional: Order questions by timestamp if desired
 //        Query questionQuery = questionDatabaseReference.orderByChild("timestamp");
 //
 //        FirebaseRecyclerOptions<Question> questionOptions = new FirebaseRecyclerOptions.Builder<Question>()
@@ -265,9 +264,9 @@ public class AboutUs extends AppCompatActivity {
 //
 //            @Override
 //            protected void onBindViewHolder(@NonNull QuestionViewHolder holder, int position, @NonNull Question model) {
-//                // Bind the question data (without click functionality)
-//                holder.questionTitleTextView.setText(model.getTitle());
-//                holder.questionAnswerTextView.setText(model.getAnswer());
+//                /// Bind the question data (without click functionality)
+//                holder.questionTitleTextView.setText((position + 1) + ". " + model.getTitle());
+//                holder.questionAnswerTextView.setText("Answer: " + model.getAnswer());
 //            }
 //        };
 //        recyclerViewQuestion.setAdapter(questionAdapter);
@@ -319,4 +318,3 @@ public class AboutUs extends AppCompatActivity {
 //        }
 //    }
 //}
-//

@@ -58,9 +58,9 @@ public class MainActivity2 extends AppCompatActivity {
                 case 2:
                     selectedFragment = new AccommodationFragment();
                     break;
-//                    case 3:
-//                        selectedFragment = new BookingFragment();
-//                        break;
+///                    case 3:
+///                        selectedFragment = new BookingFragment();
+///                        break;
                 case 4:
                     selectedFragment = new ExploreFragment();
                     break;
@@ -85,7 +85,7 @@ public class MainActivity2 extends AppCompatActivity {
 
 }
 
-///Error
+///Fix Error
 //package com.example.resort;
 //
 //import androidx.activity.EdgeToEdge;

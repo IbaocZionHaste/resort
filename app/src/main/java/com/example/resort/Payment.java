@@ -27,7 +27,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.resort.review.data.YourAdapter;
+import com.example.resort.review.data.InformationAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -102,7 +102,7 @@ public class Payment extends AppCompatActivity {
 
             // Create the adapter and attach immediately (empty for now)
             List<String> dataList = new ArrayList<>();
-            YourAdapter adapter = new YourAdapter(dataList);
+            InformationAdapter adapter = new InformationAdapter(dataList);
             recyclerView.setAdapter(adapter);
 
             // Fetch data from Firebase Realtime Database

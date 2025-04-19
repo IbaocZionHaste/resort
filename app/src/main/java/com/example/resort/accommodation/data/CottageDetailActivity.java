@@ -519,11 +519,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 }
 
 
-
-
-
-
-///This new data after the gallery is done Base 64
+///Fix Current
 //package com.example.resort.accommodation.data;
 //
 //import android.annotation.SuppressLint;
@@ -533,7 +529,6 @@ public class CottageDetailActivity extends AppCompatActivity {
 //import android.graphics.drawable.BitmapDrawable;
 //import android.os.Bundle;
 //import android.os.Handler;
-//import android.util.Base64;
 //import android.view.GestureDetector;
 //import android.view.MotionEvent;
 //import android.view.View;
@@ -583,7 +578,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 //    private String rawPrice;
 //    private String availableDate;
 //
-//    // Swipe images list: holds either Integer (resource ID) or Bitmap (from album)
+//    // Swipe images list: holds either Integer (resource ID), Bitmap (from album), or String (Firebase Storage URL)
 //    private List<Object> swipeImages;
 //    private int currentImageIndex = 0;
 //    private ImageView ivImageSwipe; // This is your main image view (ivCottageImage)
@@ -605,8 +600,6 @@ public class CottageDetailActivity extends AppCompatActivity {
 //        tvRating.setText(newRating);
 //        tvRating.animate().alpha(1f).setDuration(500).start();
 //    }
-//
-//
 //
 //    // ----- Helper Methods for Dot Indicators -----
 //    private void setupDots() {
@@ -640,6 +633,12 @@ public class CottageDetailActivity extends AppCompatActivity {
 //            ivImageSwipe.setImageResource((Integer) item);
 //        } else if (item instanceof Bitmap) {
 //            ivImageSwipe.setImageBitmap((Bitmap) item);
+//        } else if (item instanceof String) {
+//            // Use Glide to load the image URL (Firebase Storage URL)
+//            Glide.with(this)
+//                    .load((String) item)
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .into(ivImageSwipe);
 //        }
 //    }
 //
@@ -652,6 +651,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 //        }
 //    }
 //
+//
 //    private void onSwipeRight() {
 //        if (currentImageIndex > 0) {
 //            currentImageIndex--;
@@ -662,7 +662,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 //
 //    // ----- Asynchronous Album Data Fetching -----
 //    // Fetches album data from Firebase. If an album's productName matches the cottage name,
-//    // then its photo1, photo2, and photo3 (Base64 strings) are decoded to Bitmaps and replace the default images.
+//    // then its photo1, photo2, and photo3 are assumed to be Firebase Storage URLs and replace the default images.
 //    private void fetchAlbumData(final String cottageName) {
 //        DatabaseReference albumRef = FirebaseDatabase.getInstance().getReference("albums");
 //        albumRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -676,7 +676,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 //                        String photo1Str = albumSnapshot.child("photo1").getValue(String.class);
 //                        String photo2Str = albumSnapshot.child("photo2").getValue(String.class);
 //                        String photo3Str = albumSnapshot.child("photo3").getValue(String.class);
-//                        // Remove prefix if present (e.g., "data:image/png;base64,")
+//                        // Remove prefix if present (e.g., "data:image/png;base64,") if any, though not needed for URLs.
 //                        if (photo1Str != null && photo1Str.contains(",")) {
 //                            photo1Str = photo1Str.substring(photo1Str.indexOf(",") + 1);
 //                        }
@@ -686,14 +686,11 @@ public class CottageDetailActivity extends AppCompatActivity {
 //                        if (photo3Str != null && photo3Str.contains(",")) {
 //                            photo3Str = photo3Str.substring(photo3Str.indexOf(",") + 1);
 //                        }
-//                        Bitmap bitmap1 = decodeBase64(photo1Str);
-//                        Bitmap bitmap2 = decodeBase64(photo2Str);
-//                        Bitmap bitmap3 = decodeBase64(photo3Str);
-//                        // Replace default images with album Bitmaps
+//                        // Instead of decoding Base64, we assume these are now Firebase Storage URLs.
 //                        swipeImages.clear();
-//                        swipeImages.add(bitmap1);
-//                        swipeImages.add(bitmap2);
-//                        swipeImages.add(bitmap3);
+//                        swipeImages.add(photo1Str);
+//                        swipeImages.add(photo2Str);
+//                        swipeImages.add(photo3Str);
 //                        currentImageIndex = 0;
 //                        displayCurrentImage();
 //                        updateDots();
@@ -709,19 +706,6 @@ public class CottageDetailActivity extends AppCompatActivity {
 //            }
 //        });
 //    }
-//
-//
-//    // Decode a Base64 string to a Bitmap.
-//    private Bitmap decodeBase64(String input) {
-//        try {
-//            byte[] decodedBytes = Base64.decode(input, Base64.DEFAULT);
-//            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
 //
 //    // ----- onCreate() -----
 //    @Override
@@ -746,9 +730,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 //        String location = intent.getStringExtra("accommodationLocation");
 //        String amenities = intent.getStringExtra("accommodationAmenities");
 //        rawPrice = intent.getStringExtra("accommodationPrice");
-////        String imageUrl = intent.getStringExtra("accommodationImage");
 //        availableDate = intent.getStringExtra("accommodationAvailableDate");
-//
 //
 //        // Find views in the layout
 //        TextView tvName = findViewById(R.id.tvCottageName);
@@ -950,7 +932,6 @@ public class CottageDetailActivity extends AppCompatActivity {
 //        tvDesign.setText("Design: " + design);
 //        tvLocation.setText("Location: " + location);
 //
-//
 //        RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
 //        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
 //        List<Review> reviewList = new ArrayList<>();
@@ -1034,32 +1015,28 @@ public class CottageDetailActivity extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
 //
-//            // --- Revised: Always use the first image (photo1) for the cart ---
-//            Bitmap cartBitmap = null;
+//            /// --- Revised: Always use the first image (photo1) for the cart ---
+//            /// Instead of converting a Bitmap to Base64, we check if the first image is a URL.
+//            String photoForCart = "";
 //            Object firstImage = swipeImages.get(0);
-//            if (firstImage instanceof Bitmap) {
-//                cartBitmap = (Bitmap) firstImage;
+//            if (firstImage instanceof String) {
+//                photoForCart = (String) firstImage;
+//            } else if (firstImage instanceof Bitmap) {
+//                // Optionally, if still a Bitmap, you might want to save it locally or use a fallback.
+//                photoForCart = "";
 //            } else if (firstImage instanceof Integer) {
-//                cartBitmap = BitmapFactory.decodeResource(getResources(), (Integer) firstImage);
-//            }
-//
-//            String base64Image = "";
-//            if (cartBitmap != null) {
-//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//                cartBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-//                byte[] imageBytes = baos.toByteArray();
-//                base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+//                // If it's a resource, you can choose to leave it as an empty string or a default URL.
+//                photoForCart = "";
 //            }
 //            // --- End revised section ---
 //
-//            CartItem item = new CartItem(name, itemPrice, "Cottage", itemCapacity, base64Image);
+//            CartItem item = new CartItem(name, itemPrice, "Cottage", itemCapacity, photoForCart);
 //            CartManager.getInstance(CottageDetailActivity.this, uid).addItem(item);
 //            Toast.makeText(CottageDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
 //        });
-//
 //
 //        // ----- Fetch Album Data Asynchronously -----
 //        fetchAlbumData(tvName.getText().toString());
 //    }
 //}
-
+//

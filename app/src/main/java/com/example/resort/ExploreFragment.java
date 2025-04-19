@@ -412,12 +412,7 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
     private boolean isMarkerVisible = true;
     private boolean isBlinking = false;
 
-    /// For destination (resort) marker blinking.
-    private final Handler destBlinkHandler = new Handler();
-    private boolean isDestMarkerVisible = true;
-    private boolean isDestBlinking = false;
-
-    // Runnable that toggles marker visibility.
+    /// Runnable that toggles marker visibility.
     private final Runnable blinkRunnable = new Runnable() {
         @Override
         public void run() {
@@ -437,7 +432,7 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    // Stop blinking effect.
+    /// Stop blinking effect.
     private void stopBlinking() {
         isBlinking = false;
         blinkHandler.removeCallbacks(blinkRunnable);
@@ -452,10 +447,7 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
 
 
 
-
-
-
-///No Accurate locate
+///Fix Not Accurate
 //package com.example.resort;
 //
 //import android.Manifest;
@@ -907,7 +899,5 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
 //
 //
 //}
-//
-//
-//
-//
+
+

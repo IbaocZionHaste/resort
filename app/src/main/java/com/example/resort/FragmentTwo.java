@@ -22,13 +22,11 @@ public class FragmentTwo extends Fragment {
         View view = inflater.inflate(R.layout.fragment_two, container, false);
 
         /// Find the button by its ID
-        Button myButton = view.findViewById(R.id.button); // Replace with your button's ID
-       TextView login = view.findViewById(R.id.loginview); // Replace with your button's ID
+        Button myButton = view.findViewById(R.id.button);
+        TextView login = view.findViewById(R.id.loginview);
 
         /// Set a click listener on the button
         myButton.setOnClickListener(v -> {
-            /// Start SignUp activity without showing a Toast
-           ///Toast.makeText(getActivity(), "Button clicked!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getActivity(), SignUpNext.class);
             startActivity(intent);
         });

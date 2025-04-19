@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
+public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.ViewHolder> {
     private final List<String> dataList;
 
-    public YourAdapter(List<String> dataList) {
+    public InformationAdapter(List<String> dataList) {
         this.dataList = dataList;
     }
 
@@ -68,8 +68,10 @@ public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
     }
 }
 
-///Fix Current
-//Payment Information
+
+
+
+/// Fix Error
 //package com.example.resort.review.data;
 //
 //import android.content.ClipData;
@@ -87,10 +89,10 @@ public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
 //
 //import java.util.List;
 //
-//public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
+//public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.ViewHolder> {
 //    private final List<String> dataList;
 //
-//    public YourAdapter(List<String> dataList) {
+//    public InformationAdapter(List<String> dataList) {
 //        this.dataList = dataList;
 //    }
 //
@@ -138,3 +140,4 @@ public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
 //        }
 //    }
 //}
+//
