@@ -49,6 +49,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,6 +61,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -406,9 +411,26 @@ public class BookingStatus extends AppCompatActivity {
                         Map<String, Object> cancelData = new HashMap<>();
                         cancelData.put("message", bookingCancelledBy);
                         cancelData.put("date", cancelTime);
-                        cancelBookingRef.push().setValue(cancelData);
+                        ///cancelData.put("userId", userId);
+                        ///cancelBookingRef.push().setValue(cancelData);
+
+
+                        DatabaseReference newReqRef = cancelBookingRef.push();
+                        newReqRef.setValue(cancelData)
+                                .addOnSuccessListener(aVoid -> {
+                                    /// Simplified Telegram message without technical IDs
+                                    String telegramMsg = "🔔 New Cancel Request 🔔\n"
+                                            + "👤 Name: " + firstName + " " + lastName + "\n"
+                                            + "📅 Date: " + cancelTime + "\n"
+                                            + "❌ Status: " + "Cancel";
+
+                                    sendTelegramNotification(telegramMsg);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firebase", "BookingRequest failed", e);
+                                });
                     }
-                    ///cancelData.put("userId", userId);
+
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -437,6 +459,41 @@ public class BookingStatus extends AppCompatActivity {
         });
     }
 
+    ///Telegram Api don't touch this
+    private void sendTelegramNotification(String message) {
+        new Thread(() -> {
+            try {
+                String botToken = "7263113934:AAHIz9CRO-7zgvkK_75b9BCFcaN3lrRXGqo";
+                String chatId = "7259957866";
+
+                String urlString = "https://api.telegram.org/bot" + botToken
+                        + "/sendMessage?chat_id=" + chatId
+                        + "&text=" + URLEncoder.encode(message, "UTF-8");
+
+                URL url = new URL(urlString);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                /// Log the full URL (for debugging)
+                Log.d("Telegram", "Request URL: " + urlString);
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == 200) {
+                    Log.i("Telegram", "Message sent successfully");
+                } else {
+                    /// Read error response
+                    InputStream errorStream = conn.getErrorStream();
+                    if (errorStream != null) {
+                        String error = new Scanner(errorStream).useDelimiter("\\A").next();
+                        Log.e("Telegram", "API Error: " + error);
+                    }
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                Log.e("Telegram", "Error: ", e);
+            }
+        }).start();
+    }
 
     /// Message view if the booking is submit Not use
     private void showSubmissionMessage() {

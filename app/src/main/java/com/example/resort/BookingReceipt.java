@@ -32,6 +32,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Response;
 import com.example.resort.addcart.data.CartItem;
 import com.example.resort.addcart.data.CartManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +42,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Request;
 import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Call;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
@@ -51,6 +55,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -64,6 +69,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
+
+import okhttp3.OkHttpClient;
 
 
 public class BookingReceipt extends AppCompatActivity {
@@ -555,23 +563,32 @@ public class BookingReceipt extends AppCompatActivity {
 
 
                                         /// ******************* New Code Start *******************
-                                        /// Create a new node at the top level called "bookingRequest"
-
                                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
                                         String formattedDate = sdf.format(new Date());
 
                                         DatabaseReference bookingRequestRef = FirebaseDatabase.getInstance()
                                                 .getReference("bookingRequest");
 
-                                        /// Build a new map for the booking request with a custom message and the date.
                                         Map<String, Object> bookingRequest = new HashMap<>();
                                         bookingRequest.put("message", "Booking request by " + name);
                                         bookingRequest.put("date", formattedDate);
 
-                                        // Push the booking request to a new node.
-                                        bookingRequestRef.push().setValue(bookingRequest);
-                                        /// ******************* New Code End *******************
+                                        DatabaseReference newReqRef = bookingRequestRef.push();
+                                        newReqRef.setValue(bookingRequest)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    /// Simplified Telegram message without technical IDs
+                                                    String telegramMsg = "🔔 New Booking Request 🔔\n"
+                                                            + "👤 Name: " + name + "\n"
+                                                            + "📅 Date: " + formattedDate + "\n"
+                                                            + "⏳ Status: " + "Pending";
 
+                                                    sendTelegramNotification(telegramMsg);
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Log.e("Firebase", "BookingRequest failed", e);
+                                                });
+
+                                        /// ******************* New Code End *******************
 
                                         /// Clean up previous notifications.
                                         DatabaseReference notificationRef = FirebaseDatabase.getInstance()
@@ -580,7 +597,6 @@ public class BookingReceipt extends AppCompatActivity {
                                                 .child("notifications");
                                         notificationRef.removeValue();
 
-
                                         /// Copy orderItems to MyReview node with a default statusReview of "Pending".
                                         Object orderItemsObj = bookingReview.get("orderItems");
                                         if (orderItemsObj instanceof Map) {
@@ -588,7 +604,7 @@ public class BookingReceipt extends AppCompatActivity {
                                             @SuppressWarnings("unchecked")
                                             Map<String, Object> orderItemsMap = (Map<String, Object>) orderItemsObj;
 
-                                            // Add default statusReview
+                                            /// Add default statusReview
                                             orderItemsMap.put("statusReview", "Pending");
 
                                             /// Get a reference to the MyReview node
@@ -597,33 +613,31 @@ public class BookingReceipt extends AppCompatActivity {
                                                     .child(finalUserId)
                                                     .child("MyReview");
 
-                                            // Generate a unique key for the new review
+                                            /// Generate a unique key for the new review
                                             String reviewId = myReviewRef.push().getKey();
                                             if (reviewId != null) {
-                                                // Set the value of the new review to orderItemsMap
+                                                /// Set the value of the new review to orderItemsMap
                                                 myReviewRef.child(reviewId).setValue(orderItemsMap);
                                             }
                                         }
 
-                                        // Append available date to booked items.
+                                        /// Append available date to booked items.
                                         if (orderItemsObj instanceof Map) {
-                                            //noinspection unchecked
+                                            ///noinspection unchecked
                                             updateBookedItemsStatus((Map<String, Object>) orderItemsObj, bookingDate);
                                         }
 
-                                        // Permanently delete cart items.
+                                        /// Permanently delete cart items.
                                         CartManager.getInstance(BookingReceipt.this, finalUserId).clearCartItems();
 
-                                        // Save booking state persistently.
+                                        /// Save booking state persistently.
                                         SharedPreferences preferences = getSharedPreferences("BookingPref_" + finalUserId,  MODE_PRIVATE);
                                         SharedPreferences.Editor editor = preferences.edit();
                                         editor.putBoolean("bookingSubmitted", true);
-                                        ///editor.putString("bookingId", bookingId);
                                         editor.apply();
 
-
                                         /// ******************* Start Foreground Service *******************
-                                        // This will start your BookingStatusService as a foreground service.
+                                        /// This will start your BookingStatusService as a foreground service.
                                         Intent serviceIntent = new Intent(BookingReceipt.this, BookingStatusService.class);
                                         androidx.core.content.ContextCompat.startForegroundService(BookingReceipt.this, serviceIntent);
                                         Log.d("BookingReceipt", "Foreground service started");
@@ -633,8 +647,6 @@ public class BookingReceipt extends AppCompatActivity {
                                         // Navigate to BookingStatus, which reads the saved state.
                                         Intent intent = new Intent(BookingReceipt.this, BookingStatus.class);
                                         intent.putExtra("bookingSubmitted", true);
-                                        ///intent.putExtra("bookingId", bookingId);
-
                                         startActivity(intent);
                                         overridePendingTransition(0, 0);
                                         finish();
@@ -655,7 +667,40 @@ public class BookingReceipt extends AppCompatActivity {
         });
     }
 
+    private void sendTelegramNotification(String message) {
+        new Thread(() -> {
+            try {
+                String botToken = "7263113934:AAHIz9CRO-7zgvkK_75b9BCFcaN3lrRXGqo";
+                String chatId = "7259957866";
 
+                String urlString = "https://api.telegram.org/bot" + botToken
+                        + "/sendMessage?chat_id=" + chatId
+                        + "&text=" + URLEncoder.encode(message, "UTF-8");
+
+                URL url = new URL(urlString);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                /// Log the full URL (for debugging)
+                Log.d("Telegram", "Request URL: " + urlString);
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == 200) {
+                    Log.i("Telegram", "Message sent successfully");
+                } else {
+                    /// Read error response
+                    InputStream errorStream = conn.getErrorStream();
+                    if (errorStream != null) {
+                        String error = new Scanner(errorStream).useDelimiter("\\A").next();
+                        Log.e("Telegram", "API Error: " + error);
+                    }
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                Log.e("Telegram", "Error: ", e);
+            }
+        }).start();
+    }
 
     /// --------------------- Helper Methods ---------------------
 
@@ -746,9 +791,7 @@ public class BookingReceipt extends AppCompatActivity {
 
 
 
-
-
-///No Current User
+///Fix Current
 //package com.example.resort;
 //
 //import android.annotation.SuppressLint;
@@ -783,6 +826,7 @@ public class BookingReceipt extends AppCompatActivity {
 //import androidx.core.view.ViewCompat;
 //import androidx.core.view.WindowInsetsCompat;
 //
+//import com.android.volley.Response;
 //import com.example.resort.addcart.data.CartItem;
 //import com.example.resort.addcart.data.CartManager;
 //import com.google.firebase.auth.FirebaseAuth;
@@ -792,7 +836,10 @@ public class BookingReceipt extends AppCompatActivity {
 //import com.google.firebase.database.DatabaseReference;
 //import com.google.firebase.database.FirebaseDatabase;
 //import com.google.firebase.database.ValueEventListener;
+//import com.squareup.picasso.Callback;
+//import com.squareup.picasso.Request;
 //import com.twilio.Twilio;
+//import com.twilio.rest.api.v2010.account.Call;
 //import com.twilio.rest.api.v2010.account.Message;
 //import com.twilio.type.PhoneNumber;
 //
@@ -802,6 +849,7 @@ public class BookingReceipt extends AppCompatActivity {
 //import java.io.InputStream;
 //import java.io.InputStreamReader;
 //import java.io.OutputStream;
+//import java.io.UnsupportedEncodingException;
 //import java.net.HttpURLConnection;
 //import java.net.URL;
 //import java.net.URLEncoder;
@@ -815,6 +863,9 @@ public class BookingReceipt extends AppCompatActivity {
 //import java.util.Locale;
 //import java.util.Map;
 //import java.util.Properties;
+//import java.util.Scanner;
+//
+//import okhttp3.OkHttpClient;
 //
 //
 //public class BookingReceipt extends AppCompatActivity {
@@ -1162,8 +1213,8 @@ public class BookingReceipt extends AppCompatActivity {
 //    }
 //
 //
-//      ///Send Booking Data
-//        private void sendBookingData() {
+//    ///Send Booking Data
+//    private void sendBookingData() {
 //        // Retrieve user details from TextViews.
 //        String name = nameTextView.getText().toString().replace("Name: ", "").trim();
 //        String phone = phoneTextView.getText().toString().replace("Phone: ", "").trim();
@@ -1191,7 +1242,7 @@ public class BookingReceipt extends AppCompatActivity {
 //        double totalAmount = cartItems.stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
 //
 //
-//            // Categorize cart items.
+//        // Categorize cart items.
 //        List<CartItem> accommodations = new ArrayList<>();
 //        List<CartItem> foodAndDrinks = new ArrayList<>();
 //        List<CartItem> packages = new ArrayList<>();
@@ -1278,153 +1329,192 @@ public class BookingReceipt extends AppCompatActivity {
 //            return;
 //        }
 //
+//
 //        /// Update userId from the current user.
-////        userId = currentUser.getUid();
-////        DatabaseReference bookingRef = FirebaseDatabase.getInstance()
-////                .getReference("users")
-////                .child(userId)
-////                .child("MyBooking");
+//        userId = currentUser.getUid();
+//        DatabaseReference bookingRef = FirebaseDatabase.getInstance()
+//                .getReference("users")
+//                .child(userId)
+//                .child("MyBooking");
+//
+//        /// Check if any booking data exists in MyBooking.
+//        String finalUserId = userId;
+//        bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.exists()) {
+//                    // If any booking exists, abort the submission.
+//                    Toast.makeText(BookingReceipt.this,
+//                            "Sorry, you already have an active booking.", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    /// No pending booking exists; proceed with submission.
+//                    String bookingId = bookingRef.push().getKey();
+//                    if (bookingId != null) {
+//                        bookingRef.child(bookingId).setValue(bookingData)
+//                                .addOnCompleteListener(task -> {
+//                                    if (task.isSuccessful()) {
+//                                        Toast.makeText(BookingReceipt.this, "Booking submitted successfully", Toast.LENGTH_SHORT).show();
+//
+//
+//                                        /// ******************* New Code Start *******************
+//                                        /// Create a new node at the top level called "bookingRequest"
+//
+////                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
+////                                        String formattedDate = sdf.format(new Date());
 ////
-////            /// Check if a pending booking already exists.
-////        String finalUserId = userId;
-////        bookingRef.orderByChild("bookingReview/statusReview")
-////                .equalTo("Pending")
-////                .addListenerForSingleValueEvent(new ValueEventListener() {
-////                    @Override
-////                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-////                        if (snapshot.exists()) {
-////                            /// A pending booking exists. Abort new submission.
-////                            Toast.makeText(BookingReceipt.this, "Sorry, your first booking is not done.", Toast.LENGTH_SHORT).show();
-////                        } else {
-//
-//            /// Update userId from the current user.
-//            userId = currentUser.getUid();
-//            DatabaseReference bookingRef = FirebaseDatabase.getInstance()
-//                    .getReference("users")
-//                    .child(userId)
-//                    .child("MyBooking");
-//
-//            /// Check if any booking data exists in MyBooking.
-//            String finalUserId = userId;
-//            bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    if (snapshot.exists()) {
-//                        // If any booking exists, abort the submission.
-//                        Toast.makeText(BookingReceipt.this,
-//                                "Sorry, you already have an active booking.", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                            /// No pending booking exists; proceed with submission.
-//                            String bookingId = bookingRef.push().getKey();
-//                            if (bookingId != null) {
-//                                bookingRef.child(bookingId).setValue(bookingData)
-//                                        .addOnCompleteListener(task -> {
-//                                            if (task.isSuccessful()) {
-//                                                Toast.makeText(BookingReceipt.this, "Booking submitted successfully", Toast.LENGTH_SHORT).show();
+////                                        DatabaseReference bookingRequestRef = FirebaseDatabase.getInstance()
+////                                                .getReference("bookingRequest");
+////
+////                                        /// Build a new map for the booking request with a custom message and the date.
+////                                        Map<String, Object> bookingRequest = new HashMap<>();
+////                                        bookingRequest.put("message", "Booking request by " + name);
+////                                        bookingRequest.put("date", formattedDate);
+////
+////                                        // Push the booking request to a new node.
+////                                        bookingRequestRef.push().setValue(bookingRequest);
 //
 //
-//                                                /// ******************* New Code Start *******************
-//                                                /// Create a new node at the top level called "bookingRequest"
+//                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
+//                                        String formattedDate = sdf.format(new Date());
 //
-//                                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
-//                                                String formattedDate = sdf.format(new Date());
+//                                        DatabaseReference bookingRequestRef = FirebaseDatabase.getInstance()
+//                                                .getReference("bookingRequest");
 //
-//                                                DatabaseReference bookingRequestRef = FirebaseDatabase.getInstance()
-//                                                        .getReference("bookingRequest");
+//                                        Map<String, Object> bookingRequest = new HashMap<>();
+//                                        bookingRequest.put("message", "Booking request by " + name);
+//                                        bookingRequest.put("date", formattedDate);
 //
-//                                                /// Build a new map for the booking request with a custom message and the date.
-//                                                Map<String, Object> bookingRequest = new HashMap<>();
-//                                                bookingRequest.put("message", "Booking request by " + name);
-//                                                bookingRequest.put("date", formattedDate);
+//                                        DatabaseReference newReqRef = bookingRequestRef.push();
+//                                        newReqRef.setValue(bookingRequest)
+//                                                .addOnSuccessListener(aVoid -> {
+//                                                    /// Simplified Telegram message without technical IDs
+//                                                    String telegramMsg = "🔔 New Booking Request 🔔\n"
+//                                                            + "👤 Name: " + name + "\n"
+//                                                            + "📅 Date: " + formattedDate + "\n"
+//                                                            + "⏳ Status: " + "Pending";
 //
-//                                                // Push the booking request to a new node.
-//                                                bookingRequestRef.push().setValue(bookingRequest);
-//                                                /// ******************* New Code End *******************
+//                                                    sendTelegramNotification(telegramMsg);
+//                                                })
+//                                                .addOnFailureListener(e -> {
+//                                                    Log.e("Firebase", "BookingRequest failed", e);
+//                                                });
 //
+//                                        /// ******************* New Code End *******************
 //
-//                                                /// Clean up previous notifications.
-//                                                DatabaseReference notificationRef = FirebaseDatabase.getInstance()
-//                                                        .getReference("users")
-//                                                        .child(finalUserId)
-//                                                        .child("notifications");
-//                                                notificationRef.removeValue();
+//                                        /// Clean up previous notifications.
+//                                        DatabaseReference notificationRef = FirebaseDatabase.getInstance()
+//                                                .getReference("users")
+//                                                .child(finalUserId)
+//                                                .child("notifications");
+//                                        notificationRef.removeValue();
 //
+//                                        /// Copy orderItems to MyReview node with a default statusReview of "Pending".
+//                                        Object orderItemsObj = bookingReview.get("orderItems");
+//                                        if (orderItemsObj instanceof Map) {
+//                                            /// Cast orderItemsObj to a Map
+//                                            @SuppressWarnings("unchecked")
+//                                            Map<String, Object> orderItemsMap = (Map<String, Object>) orderItemsObj;
 //
-//                                                /// Copy orderItems to MyReview node with a default statusReview of "Pending".
-//                                                Object orderItemsObj = bookingReview.get("orderItems");
-//                                                if (orderItemsObj instanceof Map) {
-//                                                    /// Cast orderItemsObj to a Map
-//                                                    @SuppressWarnings("unchecked")
-//                                                    Map<String, Object> orderItemsMap = (Map<String, Object>) orderItemsObj;
+//                                            /// Add default statusReview
+//                                            orderItemsMap.put("statusReview", "Pending");
 //
-//                                                    // Add default statusReview
-//                                                    orderItemsMap.put("statusReview", "Pending");
+//                                            /// Get a reference to the MyReview node
+//                                            DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
+//                                                    .getReference("users")
+//                                                    .child(finalUserId)
+//                                                    .child("MyReview");
 //
-//                                                    /// Get a reference to the MyReview node
-//                                                    DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
-//                                                            .getReference("users")
-//                                                            .child(finalUserId)
-//                                                            .child("MyReview");
-//
-//                                                    // Generate a unique key for the new review
-//                                                    String reviewId = myReviewRef.push().getKey();
-//                                                    if (reviewId != null) {
-//                                                        // Set the value of the new review to orderItemsMap
-//                                                        myReviewRef.child(reviewId).setValue(orderItemsMap);
-//                                                    }
-//                                                }
-//
-//                                                // Append available date to booked items.
-//                                                if (orderItemsObj instanceof Map) {
-//                                                    //noinspection unchecked
-//                                                    updateBookedItemsStatus((Map<String, Object>) orderItemsObj, bookingDate);
-//                                                }
-//
-//                                                // Permanently delete cart items.
-//                                                CartManager.getInstance(BookingReceipt.this, finalUserId).clearCartItems();
-//
-//                                                // Save booking state persistently.
-//                                                SharedPreferences preferences = getSharedPreferences("BookingPref_" + finalUserId,  MODE_PRIVATE);
-//                                                SharedPreferences.Editor editor = preferences.edit();
-//                                                editor.putBoolean("bookingSubmitted", true);
-//                                                ///editor.putString("bookingId", bookingId);
-//                                                editor.apply();
-//
-//
-//                                                /// ******************* Start Foreground Service *******************
-//                                                // This will start your BookingStatusService as a foreground service.
-//                                                Intent serviceIntent = new Intent(BookingReceipt.this, BookingStatusService.class);
-//                                                androidx.core.content.ContextCompat.startForegroundService(BookingReceipt.this, serviceIntent);
-//                                                Log.d("BookingReceipt", "Foreground service started");
-//                                                /// ******************* End Foreground Service *******************
-//
-//
-//                                                // Navigate to BookingStatus, which reads the saved state.
-//                                                Intent intent = new Intent(BookingReceipt.this, BookingStatus.class);
-//                                                intent.putExtra("bookingSubmitted", true);
-//                                                ///intent.putExtra("bookingId", bookingId);
-//
-//                                                startActivity(intent);
-//                                                overridePendingTransition(0, 0);
-//                                                finish();
-//                                            } else {
-//                                                Toast.makeText(BookingReceipt.this, "Error submitting booking", Toast.LENGTH_SHORT).show();
+//                                            /// Generate a unique key for the new review
+//                                            String reviewId = myReviewRef.push().getKey();
+//                                            if (reviewId != null) {
+//                                                /// Set the value of the new review to orderItemsMap
+//                                                myReviewRef.child(reviewId).setValue(orderItemsMap);
 //                                            }
-//                                        });
-//                            } else {
-//                                Toast.makeText(BookingReceipt.this, "Error generating booking ID", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    }
+//                                        }
 //
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        Toast.makeText(BookingReceipt.this, "Error checking booking status", Toast.LENGTH_SHORT).show();
+//                                        /// Append available date to booked items.
+//                                        if (orderItemsObj instanceof Map) {
+//                                            ///noinspection unchecked
+//                                            updateBookedItemsStatus((Map<String, Object>) orderItemsObj, bookingDate);
+//                                        }
+//
+//                                        /// Permanently delete cart items.
+//                                        CartManager.getInstance(BookingReceipt.this, finalUserId).clearCartItems();
+//
+//                                        /// Save booking state persistently.
+//                                        SharedPreferences preferences = getSharedPreferences("BookingPref_" + finalUserId,  MODE_PRIVATE);
+//                                        SharedPreferences.Editor editor = preferences.edit();
+//                                        editor.putBoolean("bookingSubmitted", true);
+//                                        editor.apply();
+//
+//
+//                                        /// ******************* Start Foreground Service *******************
+//                                        /// This will start your BookingStatusService as a foreground service.
+//                                        Intent serviceIntent = new Intent(BookingReceipt.this, BookingStatusService.class);
+//                                        androidx.core.content.ContextCompat.startForegroundService(BookingReceipt.this, serviceIntent);
+//                                        Log.d("BookingReceipt", "Foreground service started");
+//                                        /// ******************* End Foreground Service *******************
+//
+//
+//                                        // Navigate to BookingStatus, which reads the saved state.
+//                                        Intent intent = new Intent(BookingReceipt.this, BookingStatus.class);
+//                                        intent.putExtra("bookingSubmitted", true);
+//                                        ///intent.putExtra("bookingId", bookingId);
+//
+//                                        startActivity(intent);
+//                                        overridePendingTransition(0, 0);
+//                                        finish();
+//                                    } else {
+//                                        Toast.makeText(BookingReceipt.this, "Error submitting booking", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                });
+//                    } else {
+//                        Toast.makeText(BookingReceipt.this, "Error generating booking ID", Toast.LENGTH_SHORT).show();
 //                    }
-//                });
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Toast.makeText(BookingReceipt.this, "Error checking booking status", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 //    }
 //
+//    private void sendTelegramNotification(String message) {
+//        new Thread(() -> {
+//            try {
+//                String botToken = "7263113934:AAHIz9CRO-7zgvkK_75b9BCFcaN3lrRXGqo";
+//                String chatId = "7259957866";
 //
+//                String urlString = "https://api.telegram.org/bot" + botToken
+//                        + "/sendMessage?chat_id=" + chatId
+//                        + "&text=" + URLEncoder.encode(message, "UTF-8");
+//
+//                URL url = new URL(urlString);
+//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                conn.setRequestMethod("GET");
+//
+//                /// Log the full URL (for debugging)
+//                Log.d("Telegram", "Request URL: " + urlString);
+//
+//                int responseCode = conn.getResponseCode();
+//                if (responseCode == 200) {
+//                    Log.i("Telegram", "Message sent successfully");
+//                } else {
+//                    /// Read error response
+//                    InputStream errorStream = conn.getErrorStream();
+//                    if (errorStream != null) {
+//                        String error = new Scanner(errorStream).useDelimiter("\\A").next();
+//                        Log.e("Telegram", "API Error: " + error);
+//                    }
+//                }
+//                conn.disconnect();
+//            } catch (Exception e) {
+//                Log.e("Telegram", "Error: ", e);
+//            }
+//        }).start();
+//    }
 //
 //    /// --------------------- Helper Methods ---------------------
 //
@@ -1508,8 +1598,8 @@ public class BookingReceipt extends AppCompatActivity {
 //                    @Override
 //                    public void onCancelled(@NonNull DatabaseError error) {
 //                        /// Handle error if needed
-//                }
-//         });
+//                    }
+//                });
 //    }
 //}
 //

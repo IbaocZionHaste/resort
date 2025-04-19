@@ -36,6 +36,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +48,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Payment extends AppCompatActivity {
 
@@ -237,7 +242,22 @@ public class Payment extends AppCompatActivity {
                                                             Map<String, Object> paymentSentData = new HashMap<>();
                                                             paymentSentData.put("message", "Payment sent by " + fName + " " + lName);
                                                             paymentSentData.put("date", currentDateTime);
-                                                            paymentSentRef.push().setValue(paymentSentData);
+                                                            ///paymentSentRef.push().setValue(paymentSentData);
+
+                                                            DatabaseReference newReqRef = paymentSentRef.push();
+                                                            newReqRef.setValue(paymentSentData)
+                                                                    .addOnSuccessListener(aVoid -> {
+                                                                        /// Simplified Telegram message without technical IDs
+                                                                        String telegramMsg = "🔔 New Payment Request 🔔\n"
+                                                                                + "👤 Name: " + fName + " " + lName + "\n"
+                                                                                + "📅 Date: " + currentDateTime + "\n"
+                                                                                + "✅ Status: " + "Done";
+
+                                                                        sendTelegramNotification(telegramMsg);
+                                                                    })
+                                                                    .addOnFailureListener(e -> {
+                                                                        Log.e("Firebase", "BookingRequest failed", e);
+                                                                    });
 
                                                             /// *** Update SharedPreferences for persistent UI state ***
                                                             /// This ensures that in your Booking Status activity the progress (3) and payment submission time persist.
@@ -286,6 +306,43 @@ public class Payment extends AppCompatActivity {
         // Go back to the previous screen
         backButton.setOnClickListener(v -> onBackPressed());
     }
+
+
+    private void sendTelegramNotification(String message) {
+        new Thread(() -> {
+            try {
+                String botToken = "7263113934:AAHIz9CRO-7zgvkK_75b9BCFcaN3lrRXGqo";
+                String chatId = "7259957866";
+
+                String urlString = "https://api.telegram.org/bot" + botToken
+                        + "/sendMessage?chat_id=" + chatId
+                        + "&text=" + URLEncoder.encode(message, "UTF-8");
+
+                URL url = new URL(urlString);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                /// Log the full URL (for debugging)
+                Log.d("Telegram", "Request URL: " + urlString);
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == 200) {
+                    Log.i("Telegram", "Message sent successfully");
+                } else {
+                    /// Read error response
+                    InputStream errorStream = conn.getErrorStream();
+                    if (errorStream != null) {
+                        String error = new Scanner(errorStream).useDelimiter("\\A").next();
+                        Log.e("Telegram", "API Error: " + error);
+                    }
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                Log.e("Telegram", "Error: ", e);
+            }
+        }).start();
+    }
+
 
     private boolean validateFields() {
         return !TextUtils.isEmpty(firstName.getText().toString().trim())
