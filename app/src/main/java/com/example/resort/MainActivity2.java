@@ -37,18 +37,17 @@ public class MainActivity2 extends AppCompatActivity {
 
 
         SSCustomBottomNavigation bottomNavigation = findViewById(R.id.bottomNavigation);
-        // Adding items to the bottom navigation
+        /// Adding items to the bottom navigation
         bottomNavigation.add(new SSCustomBottomNavigation.Model(1, R.drawable.ic_home_home, "Home"));
         bottomNavigation.add(new SSCustomBottomNavigation.Model(2, R.drawable.ic_accommodation, "Accommodation"));
-        //bottomNavigation.add(new SSCustomBottomNavigation.Model(3, R.drawable.ic_plus, "Booking"));
         bottomNavigation.add(new SSCustomBottomNavigation.Model(4, R.drawable.ic_explore, "Explore"));
         bottomNavigation.add(new SSCustomBottomNavigation.Model(5, R.drawable.ic_profile, "Profile"));
 
         bottomNavigation.show(1, true);
-        // Load the default fragment (Home) when the activity starts
+        /// Load the default fragment (Home) when the activity starts
         loadFragment(new HomeFragment());
 
-        // Setting up the menu click listener with fragment replacement
+        /// Setting up the menu click listener with fragment replacement
         bottomNavigation.setOnClickMenuListener(model -> {
             Fragment selectedFragment = null;
             switch (model.getId()) {
@@ -58,9 +57,6 @@ public class MainActivity2 extends AppCompatActivity {
                 case 2:
                     selectedFragment = new AccommodationFragment();
                     break;
-///                    case 3:
-///                        selectedFragment = new BookingFragment();
-///                        break;
                 case 4:
                     selectedFragment = new ExploreFragment();
                     break;
@@ -78,14 +74,14 @@ public class MainActivity2 extends AppCompatActivity {
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.frame, fragment) // Make sure you have a FrameLayout with this ID in your activity_main2 layout
+                    .replace(R.id.frame, fragment) /// Make sure you have a FrameLayout with this ID in your activity_main2 layout
                     .commit();
         }
     }
 
 }
 
-///Fix Error
+///Fix Current
 //package com.example.resort;
 //
 //import androidx.activity.EdgeToEdge;

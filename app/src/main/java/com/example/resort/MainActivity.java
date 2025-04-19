@@ -46,19 +46,11 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
 
-        /// Fullscreen
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-        //WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // Check if there is an Internet connection
+        /// Check if there is an Internet connection
         if (!isNetworkAvailable()) {
             showNoInternetDialog();
             return;
         }
-        ///Foreground
-        //Intent serviceIntent = new Intent(MainActivity.this, BookingStatusService.class);
-        //androidx.core.content.ContextCompat.startForegroundService(MainActivity.this, serviceIntent);
-        //android.util.Log.d("Booking Status", "Foreground service started");
 
         /// Show the custom loading screen (only the progress spinner and message, tinted light blue)
         showLoading();
@@ -225,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-///Fix Auto Swipe
+///Fix Current
 //package com.example.resort;
 //
 //import android.app.Dialog;

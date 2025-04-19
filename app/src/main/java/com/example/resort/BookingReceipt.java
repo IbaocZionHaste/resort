@@ -527,24 +527,6 @@ public class BookingReceipt extends AppCompatActivity {
             return;
         }
 
-        /// Update userId from the current user.
-//        userId = currentUser.getUid();
-//        DatabaseReference bookingRef = FirebaseDatabase.getInstance()
-//                .getReference("users")
-//                .child(userId)
-//                .child("MyBooking");
-//
-//            /// Check if a pending booking already exists.
-//        String finalUserId = userId;
-//        bookingRef.orderByChild("bookingReview/statusReview")
-//                .equalTo("Pending")
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if (snapshot.exists()) {
-//                            /// A pending booking exists. Abort new submission.
-//                            Toast.makeText(BookingReceipt.this, "Sorry, your first booking is not done.", Toast.LENGTH_SHORT).show();
-//                        } else {
 
         /// Update userId from the current user.
         userId = currentUser.getUid();

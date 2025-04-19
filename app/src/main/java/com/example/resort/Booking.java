@@ -135,7 +135,7 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
                 editTextTimeIn.getText().toString().trim().isEmpty() ||
                 editTextTimeOut.getText().toString().trim().isEmpty()) {
             messageTextView.setText("Please fill in the Date, Time-In, and Time-Out fields.");
-            messageTextView.setTextColor(Color.BLACK);
+            messageTextView.setTextColor(Color.RED);
             return;
         }
 

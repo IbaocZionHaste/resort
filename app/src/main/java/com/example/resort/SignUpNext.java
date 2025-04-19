@@ -82,6 +82,7 @@ public class SignUpNext extends AppCompatActivity {
                 intent.putExtra("age", etAge.getText().toString().trim());
 
                 /// Format phone number properly for PH numbers
+                ///String phoneCombined = ccp.getSelectedCountryCodeWithPlus() + etPhone.getText().toString().trim();
                 String rawPhone = etPhone.getText().toString().trim();
                 String formattedPhone = formatPhoneNumber(rawPhone);
                 String phoneCombined = ccp.getSelectedCountryCodeWithPlus() + formattedPhone;
