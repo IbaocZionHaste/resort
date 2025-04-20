@@ -627,6 +627,38 @@ public class BookingStatus extends AppCompatActivity {
 
     }
 
+    private void showDecline() {
+        /// Update UI for decline branch
+        messageFramedot2.setVisibility(View.VISIBLE);
+        messageText2.setVisibility(View.VISIBLE);
+        String currentTime = getCurrentTime();
+        String msg = "&quot;Sorry, your booking has been declined by the admin. Click the refresh now!&quot;<br>";
+        String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
+        messageText2.setText(Html.fromHtml(msg + redTime));
+        sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
+
+        ///moveAllBookingsToHistory();
+        ///clearBookingMessageUI();
+        ///clearBookingPreferences();
+
+    }
+
+    private void showRefund() {
+        /// Update UI for refund branch.
+        messageFramedot4.setVisibility(View.VISIBLE);
+        messageText4.setVisibility(View.VISIBLE);
+        String currentTime = getCurrentTime();
+        String msg = "&quot;Your payment has been reversed and refunded by the admin. Click the refresh now!&quot;<br>";
+        String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
+        messageText4.setText(Html.fromHtml(msg + redTime));
+        sendNotificationToFirebase(messageText4.getText().toString(), "PaymentRefunded");
+
+        ///moveAllBookingsToHistory();
+        ///clearBookingMessageUI();
+        ///clearBookingPreferences();
+
+    }
+
 
     /// Booking submitted
     private void listenForMyBooking() {
@@ -771,6 +803,7 @@ public class BookingStatus extends AppCompatActivity {
                                     break;
                                 } else if (statusReview.equalsIgnoreCase("Declined") && !declineProcessed) {
                                     declineProcessed = true;
+                                    showDecline(); ///Message
                                     DataSnapshot paymentSnap = bookingSnapshot.child("paymentTransaction");
                                     if (paymentSnap.exists()) {
                                         String currentPaymentStatus = paymentSnap.child("paymentStatus")
@@ -791,18 +824,12 @@ public class BookingStatus extends AppCompatActivity {
                                                     .child("PaymentDate")
                                                     .setValue(paymentDate);
 
-                                            // Update UI for decline branch
-                                            messageFramedot2.setVisibility(View.VISIBLE);
-                                            messageText2.setVisibility(View.VISIBLE);
-                                            String currentTime = getCurrentTime();
-                                            String msg = "&quot;Sorry, your booking has been declined by the admin.&quot;<br>";
-                                            String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
-                                            messageText2.setText(Html.fromHtml(msg + redTime));
-                                            sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
-                                            moveAllBookingsToHistory();
-                                            clearBookingMessageUI();
-                                            clearBookingPreferences();
 
+
+                                            /// Stop the foreground service
+                                            Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+                                            stopService(stopIntent);
+                                            Log.d("BookingStatus", "Foreground service stopped.");
 
                                             // Delete the MyReview node after processing decline
                                             DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
@@ -876,6 +903,7 @@ public class BookingStatus extends AppCompatActivity {
                                         paymentStatus.equalsIgnoreCase("Refund") &&
                                         !paymentDeclineProcessed) {
                                     paymentDeclineProcessed = true;
+                                    showRefund(); ///Message
                                     // Process refund logic as you already have.
                                     DataSnapshot paymentSnap = bookingSnapshot.child("bookingReview");
                                     if (paymentSnap.exists()) {
@@ -888,17 +916,11 @@ public class BookingStatus extends AppCompatActivity {
                                                     .child("statusReview")
                                                     .setValue("Refund");
 
-                                            // Update UI for refund branch.
-                                            messageFramedot2.setVisibility(View.VISIBLE);
-                                            messageText2.setVisibility(View.VISIBLE);
-                                            String currentTime = getCurrentTime();
-                                            String msg = "&quot;Your payment has been reversed and refunded by the admin.&quot;<br>";
-                                            String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
-                                            messageText2.setText(Html.fromHtml(msg + redTime));
-                                            sendNotificationToFirebase(messageText2.getText().toString(), "PaymentRefunded");
-                                            moveAllBookingsToHistory();
-                                            clearBookingMessageUI();
-                                            clearBookingPreferences();
+
+                                            /// Stop the foreground service
+                                            Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+                                            stopService(stopIntent);
+                                            Log.d("BookingStatus", "Foreground service stopped.");
 
 
                                             // Delete the MyReview node after refund.
@@ -975,6 +997,11 @@ public class BookingStatus extends AppCompatActivity {
                                 updateDots();
                                 showDot5Message();
                                 stopPolling();
+
+                                /// Stop the foreground service
+                                Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+                                stopService(stopIntent);
+                                Log.d("BookingStatus", "Foreground service stopped.");
 
                                 ///This code the my review is change to my review done after the booking is done
                                 DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
@@ -1226,9 +1253,6 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 }
-
-
-
 
 ///Fix Current
 //package com.example.resort;
@@ -1521,7 +1545,7 @@ public class BookingStatus extends AppCompatActivity {
 //        prefs.edit().putInt("bookingProgress", progress).apply();
 //    }
 //
-//   ///Force move if decline and refund is stock up
+//    ///Force move if decline and refund is stock up
 //    private void forceProcessDeclinesAndRefunds() {
 //        FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
 //        if (u == null) return;
@@ -1860,6 +1884,38 @@ public class BookingStatus extends AppCompatActivity {
 //
 //    }
 //
+//    private void showDecline() {
+//        /// Update UI for decline branch
+//        messageFramedot2.setVisibility(View.VISIBLE);
+//        messageText2.setVisibility(View.VISIBLE);
+//        String currentTime = getCurrentTime();
+//        String msg = "&quot;Sorry, your booking has been declined by the admin. Click the refresh now!&quot;<br>";
+//        String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
+//        messageText2.setText(Html.fromHtml(msg + redTime));
+//        sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
+//
+//        ///moveAllBookingsToHistory();
+//        ///clearBookingMessageUI();
+//        ///clearBookingPreferences();
+//
+//    }
+//
+//    private void showRefund() {
+//        /// Update UI for refund branch.
+//        messageFramedot4.setVisibility(View.VISIBLE);
+//        messageText4.setVisibility(View.VISIBLE);
+//        String currentTime = getCurrentTime();
+//        String msg = "&quot;Your payment has been reversed and refunded by the admin. Click the refresh now!&quot;<br>";
+//        String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
+//        messageText4.setText(Html.fromHtml(msg + redTime));
+//        sendNotificationToFirebase(messageText4.getText().toString(), "PaymentRefunded");
+//
+//        ///moveAllBookingsToHistory();
+//        ///clearBookingMessageUI();
+//        ///clearBookingPreferences();
+//
+//    }
+//
 //
 //    /// Booking submitted
 //    private void listenForMyBooking() {
@@ -2004,6 +2060,7 @@ public class BookingStatus extends AppCompatActivity {
 //                                    break;
 //                                } else if (statusReview.equalsIgnoreCase("Declined") && !declineProcessed) {
 //                                    declineProcessed = true;
+//                                    showDecline(); ///Message
 //                                    DataSnapshot paymentSnap = bookingSnapshot.child("paymentTransaction");
 //                                    if (paymentSnap.exists()) {
 //                                        String currentPaymentStatus = paymentSnap.child("paymentStatus")
@@ -2024,18 +2081,12 @@ public class BookingStatus extends AppCompatActivity {
 //                                                    .child("PaymentDate")
 //                                                    .setValue(paymentDate);
 //
-//                                            // Update UI for decline branch
-//                                            messageFramedot2.setVisibility(View.VISIBLE);
-//                                            messageText2.setVisibility(View.VISIBLE);
-//                                            String currentTime = getCurrentTime();
-//                                            String msg = "&quot;Sorry, your booking has been declined by the admin.&quot;<br>";
-//                                            String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
-//                                            messageText2.setText(Html.fromHtml(msg + redTime));
-//                                            sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
-//                                            moveAllBookingsToHistory();
-//                                            clearBookingMessageUI();
-//                                            clearBookingPreferences();
 //
+//
+//                                            /// Stop the foreground service
+//                                            Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+//                                            stopService(stopIntent);
+//                                            Log.d("BookingStatus", "Foreground service stopped.");
 //
 //                                            // Delete the MyReview node after processing decline
 //                                            DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
@@ -2109,6 +2160,7 @@ public class BookingStatus extends AppCompatActivity {
 //                                        paymentStatus.equalsIgnoreCase("Refund") &&
 //                                        !paymentDeclineProcessed) {
 //                                    paymentDeclineProcessed = true;
+//                                    showRefund(); ///Message
 //                                    // Process refund logic as you already have.
 //                                    DataSnapshot paymentSnap = bookingSnapshot.child("bookingReview");
 //                                    if (paymentSnap.exists()) {
@@ -2121,17 +2173,11 @@ public class BookingStatus extends AppCompatActivity {
 //                                                    .child("statusReview")
 //                                                    .setValue("Refund");
 //
-//                                            // Update UI for refund branch.
-//                                            messageFramedot2.setVisibility(View.VISIBLE);
-//                                            messageText2.setVisibility(View.VISIBLE);
-//                                            String currentTime = getCurrentTime();
-//                                            String msg = "&quot;Your payment has been reversed and refunded by the admin.&quot;<br>";
-//                                            String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
-//                                            messageText2.setText(Html.fromHtml(msg + redTime));
-//                                            sendNotificationToFirebase(messageText2.getText().toString(), "PaymentRefunded");
-//                                            moveAllBookingsToHistory();
-//                                            clearBookingMessageUI();
-//                                            clearBookingPreferences();
+//
+//                                            /// Stop the foreground service
+//                                            Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+//                                            stopService(stopIntent);
+//                                            Log.d("BookingStatus", "Foreground service stopped.");
 //
 //
 //                                            // Delete the MyReview node after refund.
@@ -2208,6 +2254,11 @@ public class BookingStatus extends AppCompatActivity {
 //                                updateDots();
 //                                showDot5Message();
 //                                stopPolling();
+//
+//                                /// Stop the foreground service
+//                                Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+//                                stopService(stopIntent);
+//                                Log.d("BookingStatus", "Foreground service stopped.");
 //
 //                                ///This code the my review is change to my review done after the booking is done
 //                                DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
@@ -2459,6 +2510,3 @@ public class BookingStatus extends AppCompatActivity {
 //    }
 //
 //}
-//
-//
-//
