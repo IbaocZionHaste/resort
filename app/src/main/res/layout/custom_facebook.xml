@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/dialog_background"
+    android:background="@color/whiteSmoke"
     android:layout_gravity="center"
     android:minWidth="240dp">
 
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
+        android:gravity="end"
         android:layout_marginTop="16dp">
 
         <Button
