@@ -95,6 +95,33 @@ public class ProfileFragment extends Fragment {
         loadProfileData();
         profileImage.setOnClickListener(v -> openImagePicker());
 
+        /// ====== Added Custom Dialog for Facebook ======
+        ImageView messageIcon = view.findViewById(R.id.message);
+        messageIcon.setOnClickListener(v -> {
+            // Inflate custom dialog layout
+            LayoutInflater dlgInflater = LayoutInflater.from(getContext());
+            View dialogView = dlgInflater.inflate(R.layout.custom_facebook, null);
+
+            AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                    .setView(dialogView)
+                    .setCancelable(true)
+                    .create();
+
+            // Buttons inside custom layout
+            Button btnProceed = dialogView.findViewById(R.id.button_proceed);
+            Button btnCancel = dialogView.findViewById(R.id.button_cancel);
+
+            btnProceed.setOnClickListener(b -> {
+                String fbUrl = "https://www.facebook.com/profile.php?id=100063953257035";
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fbUrl)));
+                dialog.dismiss();
+            });
+            btnCancel.setOnClickListener(b -> dialog.dismiss());
+
+            dialog.show();
+        });
+        /// ====== End Custom Dialog ======
+
 
         next3.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), AboutUs.class));
@@ -421,7 +448,7 @@ public class ProfileFragment extends Fragment {
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(getActivity(), "Failed to update login status", Toast.LENGTH_SHORT).show()
-         );
+                );
     }
 
     private void redirectToLoginScreen() {
@@ -499,9 +526,7 @@ public class ProfileFragment extends Fragment {
 
 }
 
-
-
-///No Current User
+///No Current
 //package com.example.resort;
 //
 //import static android.content.ContentValues.TAG;
@@ -534,7 +559,7 @@ public class ProfileFragment extends Fragment {
 //import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.auth.FirebaseUser;
 //import com.google.firebase.database.*;
-//        import com.google.firebase.storage.FirebaseStorage;
+//import com.google.firebase.storage.FirebaseStorage;
 //import com.google.firebase.storage.StorageReference;
 //
 //import java.util.Objects;
@@ -598,6 +623,33 @@ public class ProfileFragment extends Fragment {
 //
 //        loadProfileData();
 //        profileImage.setOnClickListener(v -> openImagePicker());
+//
+//        /// ====== Added Custom Dialog for Facebook ======
+//        ImageView messageIcon = view.findViewById(R.id.message);
+//        messageIcon.setOnClickListener(v -> {
+//            // Inflate custom dialog layout
+//            LayoutInflater dlgInflater = LayoutInflater.from(getContext());
+//            View dialogView = dlgInflater.inflate(R.layout.custom_facebook, null);
+//
+//            AlertDialog dialog = new AlertDialog.Builder(requireContext())
+//                    .setView(dialogView)
+//                    .setCancelable(true)
+//                    .create();
+//
+//            // Buttons inside custom layout
+//            Button btnProceed = dialogView.findViewById(R.id.button_proceed);
+//            Button btnCancel = dialogView.findViewById(R.id.button_cancel);
+//
+//            btnProceed.setOnClickListener(b -> {
+//                String fbUrl = "https://www.facebook.com/profile.php?id=100063953257035";
+//                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fbUrl)));
+//                dialog.dismiss();
+//            });
+//            btnCancel.setOnClickListener(b -> dialog.dismiss());
+//
+//            dialog.show();
+//        });
+//        /// ====== End Custom Dialog ======
 //
 //
 //        next3.setOnClickListener(v -> {
@@ -925,7 +977,7 @@ public class ProfileFragment extends Fragment {
 //                })
 //                .addOnFailureListener(e ->
 //                        Toast.makeText(getActivity(), "Failed to update login status", Toast.LENGTH_SHORT).show()
-//                );
+//         );
 //    }
 //
 //    private void redirectToLoginScreen() {
@@ -1002,4 +1054,3 @@ public class ProfileFragment extends Fragment {
 //    }
 //
 //}
-//

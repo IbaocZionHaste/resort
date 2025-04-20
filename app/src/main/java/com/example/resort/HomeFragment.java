@@ -1,10 +1,12 @@
 package com.example.resort;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -133,6 +136,7 @@ public class HomeFragment extends Fragment {
         badgeCount = view.findViewById(R.id.badge_count);
         listenForFirebaseNotifications();
 
+
         // Initialize Firebase and check for logged-in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
@@ -157,6 +161,34 @@ public class HomeFragment extends Fragment {
         profileImage = view.findViewById(R.id.imageView2); /// Make sure this ID exists in your XML
         usernameTextView = view.findViewById(R.id.textView15); /// Make sure this ID exists in your XML
         loadProfileData(); /// Load profile data (username and profile image)
+
+        /// ====== Added Custom Dialog for Facebook ======
+        ImageView messageIcon = view.findViewById(R.id.message);
+        messageIcon.setOnClickListener(v -> {
+            // Inflate custom dialog layout
+            LayoutInflater dlgInflater = LayoutInflater.from(getContext());
+            View dialogView = dlgInflater.inflate(R.layout.custom_facebook, null);
+
+            AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                    .setView(dialogView)
+                    .setCancelable(true)
+                    .create();
+
+            // Buttons inside custom layout
+            Button btnProceed = dialogView.findViewById(R.id.button_proceed);
+            Button btnCancel = dialogView.findViewById(R.id.button_cancel);
+
+            btnProceed.setOnClickListener(b -> {
+                String fbUrl = "https://www.facebook.com/profile.php?id=100063953257035";
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fbUrl)));
+                dialog.dismiss();
+            });
+            btnCancel.setOnClickListener(b -> dialog.dismiss());
+
+            dialog.show();
+        });
+        /// ====== End Custom Dialog ======
+
 
         recyclerView = view.findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -227,6 +259,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         /// Add a touch listener on the root view to detect clicks outside the search bar
         view.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN && searchBar.isFocused()) {
@@ -268,7 +301,7 @@ public class HomeFragment extends Fragment {
         ///Search Bar
 
 
-        ///This not use the color
+        ///This not use the color now
         LinearLayout allColorLayout = view.findViewById(R.id.accommodation);
         LinearLayout cottageLayout = view.findViewById(R.id.progress);
         LinearLayout boatLayout = view.findViewById(R.id.location);
@@ -293,6 +326,7 @@ public class HomeFragment extends Fragment {
         layout.setBackgroundResource(R.drawable.selected_background);
         selectedLayout = layout;
     }
+    ///This not use the color now
 
     /// Load profile data including username , number and profile image from Firebase Storage
     private String cachedImageUrl = null;
@@ -408,14 +442,16 @@ public class HomeFragment extends Fragment {
 
 }
 
-///No Current User
+///No Current
 //package com.example.resort;
 //
 //import android.annotation.SuppressLint;
+//import android.app.AlertDialog;
 //import android.content.Context;
 //import android.content.Intent;
 //import android.graphics.Rect;
 //import android.graphics.drawable.Drawable;
+//import android.net.Uri;
 //import android.os.Bundle;
 //import android.os.Handler;
 //import android.text.Editable;
@@ -427,6 +463,7 @@ public class HomeFragment extends Fragment {
 //import android.view.ViewGroup;
 //import android.view.ViewTreeObserver;
 //import android.view.inputmethod.InputMethodManager;
+//import android.widget.Button;
 //import android.widget.EditText;
 //import android.widget.ImageView;
 //import android.widget.LinearLayout;
@@ -544,6 +581,7 @@ public class HomeFragment extends Fragment {
 //        badgeCount = view.findViewById(R.id.badge_count);
 //        listenForFirebaseNotifications();
 //
+//
 //        // Initialize Firebase and check for logged-in user
 //        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 //        if (currentUser == null) {
@@ -569,6 +607,34 @@ public class HomeFragment extends Fragment {
 //        usernameTextView = view.findViewById(R.id.textView15); /// Make sure this ID exists in your XML
 //        loadProfileData(); /// Load profile data (username and profile image)
 //
+//        /// ====== Added Custom Dialog for Facebook ======
+//        ImageView messageIcon = view.findViewById(R.id.message);
+//        messageIcon.setOnClickListener(v -> {
+//            // Inflate custom dialog layout
+//            LayoutInflater dlgInflater = LayoutInflater.from(getContext());
+//            View dialogView = dlgInflater.inflate(R.layout.custom_facebook, null);
+//
+//            AlertDialog dialog = new AlertDialog.Builder(requireContext())
+//                    .setView(dialogView)
+//                    .setCancelable(true)
+//                    .create();
+//
+//            // Buttons inside custom layout
+//            Button btnProceed = dialogView.findViewById(R.id.button_proceed);
+//            Button btnCancel = dialogView.findViewById(R.id.button_cancel);
+//
+//            btnProceed.setOnClickListener(b -> {
+//                String fbUrl = "https://www.facebook.com/profile.php?id=100063953257035";
+//                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fbUrl)));
+//                dialog.dismiss();
+//            });
+//            btnCancel.setOnClickListener(b -> dialog.dismiss());
+//
+//            dialog.show();
+//        });
+//        /// ====== End Custom Dialog ======
+//
+//
 //        recyclerView = view.findViewById(R.id.recycleView);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 //
@@ -585,7 +651,7 @@ public class HomeFragment extends Fragment {
 //        /// Initialize ProgressBar
 //        progressBar = view.findViewById(R.id.progressBar);
 //
-//        // Fetch promotions from the database
+//        /// Fetch promotions from the database
 //        DatabaseHelper databaseHelper = new DatabaseHelper();
 //        databaseHelper.fetchPromotions(new DatabaseHelper.DataStatus() {
 //            @Override
@@ -638,6 +704,7 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
 //
+//
 //        /// Add a touch listener on the root view to detect clicks outside the search bar
 //        view.setOnTouchListener((v, event) -> {
 //            if (event.getAction() == MotionEvent.ACTION_DOWN && searchBar.isFocused()) {
@@ -679,7 +746,7 @@ public class HomeFragment extends Fragment {
 //        ///Search Bar
 //
 //
-//
+//        ///This not use the color now
 //        LinearLayout allColorLayout = view.findViewById(R.id.accommodation);
 //        LinearLayout cottageLayout = view.findViewById(R.id.progress);
 //        LinearLayout boatLayout = view.findViewById(R.id.location);
@@ -694,7 +761,6 @@ public class HomeFragment extends Fragment {
 //        reviewLayout.setOnClickListener(v -> setSelectedLayout(reviewLayout));
 //        aboutLayout.setOnClickListener(v -> setSelectedLayout(aboutLayout));
 //
-//
 //        return view;
 //    }
 //
@@ -705,6 +771,7 @@ public class HomeFragment extends Fragment {
 //        layout.setBackgroundResource(R.drawable.selected_background);
 //        selectedLayout = layout;
 //    }
+//    ///This not use the color now
 //
 //    /// Load profile data including username , number and profile image from Firebase Storage
 //    private String cachedImageUrl = null;

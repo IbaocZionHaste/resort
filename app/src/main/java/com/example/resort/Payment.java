@@ -248,7 +248,7 @@ public class Payment extends AppCompatActivity {
                                                             newReqRef.setValue(paymentSentData)
                                                                     .addOnSuccessListener(aVoid -> {
                                                                         /// Simplified Telegram message without technical IDs
-                                                                        String telegramMsg = "🔔 New Payment Request 🔔\n"
+                                                                        String telegramMsg = "🔔 New Payment Sent 🔔\n"
                                                                                 + "👤 Name: " + fName + " " + lName + "\n"
                                                                                 + "📅 Date: " + currentDateTime + "\n"
                                                                                 + "✅ Status: " + "Done";

@@ -80,7 +80,9 @@
 
 <!--    </ImageView>-->
 
+
     <ImageView
+        android:id="@+id/message"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/ic_home_headshit"
@@ -91,6 +93,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.125">
     </ImageView>
+
 
 <!--this the setting icon-->
 <!--    <ImageView-->
