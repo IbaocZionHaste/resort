@@ -217,6 +217,7 @@ public class BookingStatusService extends Service {
 
                                             showLocalNotification("Payment Declined!",
                                                     "Your payment has been reversed and refunded by the admin.", 6);
+                                            clearNotification(2);
                                             stopForeground(true);
                                             stopSelf();
 
@@ -232,6 +233,7 @@ public class BookingStatusService extends Service {
                                                     Log.e("DeleteReview", "Failed to delete MyReview after refund.", deleteTask.getException());
                                                 }
                                             });
+
                                         }
                                     }
                                     // Optionally, you might want to stop further polling here.

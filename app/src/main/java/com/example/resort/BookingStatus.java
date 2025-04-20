@@ -503,10 +503,12 @@ public class BookingStatus extends AppCompatActivity {
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime );
         messageText.setText(Html.fromHtml(submissionMessage + redTime));
         sendNotificationToFirebase(messageText.getText().toString(), "dot1");
+        clearNotification(2);
+        clearNotification(3);
         clearNotification(4);
         clearNotification(5);
         clearNotification(6);
-        clearNotification(6);
+        clearNotification(7);
     }
 
     ///  Message view if the booking is payment Not use
@@ -844,8 +846,6 @@ public class BookingStatus extends AppCompatActivity {
                                             String msg = "&quot;Your payment has been reversed and refunded by the admin.&quot;<br>";
                                             String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
                                             messageText2.setText(Html.fromHtml(msg + redTime));
-                                            ///showLocalNotification("Payment Declined!",
-                                            ///"Your payment has been reversed and refunded by the admin.", 5);
                                             sendNotificationToFirebase(messageText2.getText().toString(), "PaymentRefunded");
                                             moveAllBookingsToHistory();
                                             clearBookingMessageUI();
