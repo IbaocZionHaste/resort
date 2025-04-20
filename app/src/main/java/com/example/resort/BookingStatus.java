@@ -744,12 +744,15 @@ public class BookingStatus extends AppCompatActivity {
                                             String msg = "&quot;Sorry, your booking has been declined by the admin.&quot;<br>";
                                             String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
                                             messageText2.setText(Html.fromHtml(msg + redTime));
-                                            ///showLocalNotification("Booking Declined!",
-                                            ///"Sorry, your booking has been declined by the admin.", 4);
                                             sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
                                             moveAllBookingsToHistory();
                                             clearBookingMessageUI();
                                             clearBookingPreferences();
+
+                                            ///Stop Foreground
+                                            Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+                                            stopService(stopIntent);
+                                            Log.d("BookingStatus", "Foreground service stopped.");
 
                                             // Delete the MyReview node after processing decline
                                             DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
@@ -847,6 +850,10 @@ public class BookingStatus extends AppCompatActivity {
                                             clearBookingMessageUI();
                                             clearBookingPreferences();
 
+                                            ///Stop Foreground
+                                            Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+                                            stopService(stopIntent);
+                                            Log.d("BookingStatus", "Foreground service stopped.");
 
                                             // Delete the MyReview node after refund.
                                             DatabaseReference myReviewRef = FirebaseDatabase.getInstance()

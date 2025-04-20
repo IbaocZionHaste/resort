@@ -217,9 +217,9 @@ public class BookingStatusService extends Service {
 
                                             showLocalNotification("Payment Declined!",
                                                     "Your payment has been reversed and refunded by the admin.", 6);
-                                            clearNotification(2);
                                             stopForeground(true);
                                             stopSelf();
+                                            Log.d(TAG, "Booking refund; notification shown");
 
                                             // Delete the MyReview node after refund.
                                             DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
