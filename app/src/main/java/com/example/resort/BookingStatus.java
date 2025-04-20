@@ -627,12 +627,13 @@ public class BookingStatus extends AppCompatActivity {
 
     }
 
+    ///Booking Review Decline
     private void showDecline() {
         /// Update UI for decline branch
         messageFramedot2.setVisibility(View.VISIBLE);
         messageText2.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
-        String msg = "&quot;Sorry, your booking has been declined by the admin. Click the refresh now!&quot;<br>";
+        String msg = "&quot;Sorry, your booking has been declined. Click the refresh now!&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         messageText2.setText(Html.fromHtml(msg + redTime));
         sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
@@ -643,12 +644,13 @@ public class BookingStatus extends AppCompatActivity {
 
     }
 
+    ///Payment Refunded
     private void showRefund() {
         /// Update UI for refund branch.
         messageFramedot4.setVisibility(View.VISIBLE);
         messageText4.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
-        String msg = "&quot;Your payment has been reversed and refunded by the admin. Click the refresh now!&quot;<br>";
+        String msg = "&quot;Sorry, your payment has been refunded. Click the refresh now!&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         messageText4.setText(Html.fromHtml(msg + redTime));
         sendNotificationToFirebase(messageText4.getText().toString(), "PaymentRefunded");
@@ -700,7 +702,6 @@ public class BookingStatus extends AppCompatActivity {
 
         handler.post(pollTask[0]);
     }
-
 
 
     /// Payment Submitted
@@ -1102,6 +1103,7 @@ public class BookingStatus extends AppCompatActivity {
         }
     }
 
+
     /**
      * Sends notification data to Firebase under the current user's notifications node.
      */
@@ -1145,7 +1147,7 @@ public class BookingStatus extends AppCompatActivity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
             notificationManager.cancel(notificationId); /// Removes only the specified notification
-            ///notificationManager.cancelAll(); // Clears all active notifications
+            ///notificationManager.cancelAll(); /// Clears all active notifications
         }
     }
 
@@ -1253,6 +1255,7 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 }
+
 
 ///Fix Current
 //package com.example.resort;

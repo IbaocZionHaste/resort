@@ -111,7 +111,7 @@ public class BookingStatusService extends Service {
                             if ("Approved".equalsIgnoreCase(review)) {
                                 showLocalNotification(
                                         "Booking Approved",
-                                        "Proceed to payment!",
+                                        "Booking has been reviewed. Please proceed to the payment by clicking the Pay Now button.",
                                         100
                                 );
                                 // keep done=false so we can catch later final approval
@@ -120,7 +120,7 @@ public class BookingStatusService extends Service {
                                 done = true;  /// stop after decline
                                 showLocalNotification(
                                         "Booking Declined",
-                                        "Booking has been reviewed. Please proceed to the payment by clicking the Pay Now button.",
+                                        "Sorry, your booking has been declined. Click the refresh now!",
                                         101
                                 );
                                 break;
@@ -139,7 +139,7 @@ public class BookingStatusService extends Service {
                                     done = true;  /// stop after refund
                                     showLocalNotification(
                                             "Payment Refunded",
-                                            "Your payment has been reversed and refunded by the admin.",
+                                            "Sorry, your payment has been refunded. Click the refresh now!",
                                             102
                                     );
                                     break;
@@ -362,7 +362,7 @@ public class BookingStatusService extends Service {
 //                            if ("Approved".equalsIgnoreCase(review)) {
 //                                showLocalNotification(
 //                                        "Booking Approved",
-//                                        "Proceed to payment!",
+//                                        "Booking has been reviewed. Please proceed to the payment by clicking the Pay Now button.",
 //                                        100
 //                                );
 //                                // keep done=false so we can catch later final approval
@@ -371,7 +371,7 @@ public class BookingStatusService extends Service {
 //                                done = true;  /// stop after decline
 //                                showLocalNotification(
 //                                        "Booking Declined",
-//                                        "Booking has been reviewed. Please proceed to the payment by clicking the Pay Now button.",
+//                                        "Sorry, your booking has been declined. Click the refresh now!",
 //                                        101
 //                                );
 //                                break;
@@ -390,7 +390,7 @@ public class BookingStatusService extends Service {
 //                                    done = true;  /// stop after refund
 //                                    showLocalNotification(
 //                                            "Payment Refunded",
-//                                            "Your payment has been reversed and refunded by the admin.",
+//                                            "Sorry, your payment has been refunded. Click the refresh now!",
 //                                            102
 //                                    );
 //                                    break;
@@ -498,6 +498,8 @@ public class BookingStatusService extends Service {
 //        return null;
 //    }
 //}
+//
+
 
 
 
