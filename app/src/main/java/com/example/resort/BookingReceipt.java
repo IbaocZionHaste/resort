@@ -572,6 +572,7 @@ public class BookingReceipt extends AppCompatActivity {
                                         Map<String, Object> bookingRequest = new HashMap<>();
                                         bookingRequest.put("message", "Booking request by " + name);
                                         bookingRequest.put("date", formattedDate);
+                                        ///bookingRequestRef.push().setValue( bookingRequest);
 
                                         DatabaseReference newReqRef = bookingRequestRef.push();
                                         newReqRef.setValue(bookingRequest)

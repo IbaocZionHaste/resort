@@ -411,7 +411,6 @@ public class BookingStatus extends AppCompatActivity {
                         Map<String, Object> cancelData = new HashMap<>();
                         cancelData.put("message", bookingCancelledBy);
                         cancelData.put("date", cancelTime);
-                        ///cancelData.put("userId", userId);
                         ///cancelBookingRef.push().setValue(cancelData);
 
 
@@ -1221,7 +1220,7 @@ public class BookingStatus extends AppCompatActivity {
 
 
 
-///No Current User
+///Fix Current User No Telegram Token
 //package com.example.resort;
 //
 //import static android.app.Service.START_STICKY;

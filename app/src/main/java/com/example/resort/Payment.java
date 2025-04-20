@@ -99,7 +99,7 @@ public class Payment extends AppCompatActivity {
         TextView badge = findViewById(R.id.badge); // Your badge TextView (Optional if you want to show a count)
         messageIcon.setOnClickListener(view -> {
             // Inflate the custom layout for the dialog
-            View dialogView = LayoutInflater.from(Payment.this).inflate(R.layout.dialog_recyclerview, null);
+            View dialogView = LayoutInflater.from(Payment.this).inflate(R.layout.dialog_information, null);
 
             // Set up RecyclerView
             RecyclerView recyclerView = dialogView.findViewById(R.id.dialogRecyclerView);
@@ -112,7 +112,7 @@ public class Payment extends AppCompatActivity {
 
             // Fetch data from Firebase Realtime Database
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("paymentdescription"); // path to your data
+            DatabaseReference myRef = database.getReference("paymentdescription"); /// path to your data
 
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -356,7 +356,7 @@ public class Payment extends AppCompatActivity {
 
 
 
-///Current User
+///Current User No Telegram Token
 //package com.example.resort;
 //
 //import android.annotation.SuppressLint;

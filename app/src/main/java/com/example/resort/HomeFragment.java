@@ -268,7 +268,7 @@ public class HomeFragment extends Fragment {
         ///Search Bar
 
 
-
+        ///This not use the color
         LinearLayout allColorLayout = view.findViewById(R.id.accommodation);
         LinearLayout cottageLayout = view.findViewById(R.id.progress);
         LinearLayout boatLayout = view.findViewById(R.id.location);
@@ -282,7 +282,6 @@ public class HomeFragment extends Fragment {
         boatLayout.setOnClickListener(v -> setSelectedLayout(boatLayout));
         reviewLayout.setOnClickListener(v -> setSelectedLayout(reviewLayout));
         aboutLayout.setOnClickListener(v -> setSelectedLayout(aboutLayout));
-
 
         return view;
     }

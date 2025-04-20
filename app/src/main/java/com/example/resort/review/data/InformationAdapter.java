@@ -71,7 +71,7 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
 
 
 
-/// Fix Error
+/// Fix Current
 //package com.example.resort.review.data;
 //
 //import android.content.ClipData;
