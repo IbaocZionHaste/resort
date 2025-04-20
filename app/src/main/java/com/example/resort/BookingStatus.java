@@ -387,7 +387,7 @@ public class BookingStatus extends AppCompatActivity {
 
                 // Display cancellation message.
                 String cancelTime = getCurrentTime();
-                String cancellationMessage = "Booking has been Cancelled.<br>";
+                String cancellationMessage = "&quot;Booking has been Cancelled.&quot;<br>";
                 String redTime = String.format("<font color='#FF0000'>%s</font>", cancelTime);
                 messageFramedot1.setVisibility(View.VISIBLE);
                 messageText.setVisibility(View.VISIBLE);
@@ -499,7 +499,7 @@ public class BookingStatus extends AppCompatActivity {
         messageFramedot1.setVisibility(View.VISIBLE);
         messageText.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
-        String submissionMessage = "Booking has been Submitted. Please wait for it to be reviewed by admin.<br>";
+        String submissionMessage = "&quot;Booking has been Submitted. Please wait for it to be reviewed by admin.&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime );
         messageText.setText(Html.fromHtml(submissionMessage + redTime));
         sendNotificationToFirebase(messageText.getText().toString(), "dot1");
@@ -514,7 +514,7 @@ public class BookingStatus extends AppCompatActivity {
         messageFramedot3.setVisibility(View.VISIBLE);
         paymentMessageText.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
-        String paymentMessage = "Payment has been Submitted. Please wait for admin review.<br>";
+        String paymentMessage = "&quot;Payment has been Submitted. Please wait for admin review.&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         paymentMessageText.setText(Html.fromHtml(paymentMessage + redTime));
         // Disable payment and cancel buttons
@@ -525,7 +525,6 @@ public class BookingStatus extends AppCompatActivity {
         cancelButton.setEnabled(false);
         cancelButton.setClickable(false);
         cancelButton.setAlpha(0.5f);
-
         sendNotificationToFirebase(paymentMessageText.getText().toString(), "dot3");
 
     }
@@ -534,7 +533,7 @@ public class BookingStatus extends AppCompatActivity {
         messageFramedot2.setVisibility(View.VISIBLE);
         messageText2.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
-        String approvalMessage = "Booking has been Reviewed. Please proceed to the payment by clicking the Pay Now button.<br>";
+        String approvalMessage = "&quot;Booking has been Reviewed. Please proceed to the payment by clicking the Pay Now button.&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         String fullMessage = approvalMessage + redTime;
         messageText2.setText(Html.fromHtml(fullMessage));
@@ -553,7 +552,7 @@ public class BookingStatus extends AppCompatActivity {
         messageFramedot4.setVisibility(View.VISIBLE);
         messageText4.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
-        String msg = "Payment transaction has been Approved. Please wait for final approval.<br>";
+        String msg = "&quot;Payment transaction has been Approved. Please wait for final approval.&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         String fullMessage = msg + redTime;
         messageText4.setText(Html.fromHtml(fullMessage));
@@ -564,7 +563,7 @@ public class BookingStatus extends AppCompatActivity {
     private void showDot5Message() {
         messageFramedot5.setVisibility(View.VISIBLE);
         messageText5.setVisibility(View.VISIBLE);
-        String msg = "Congratulations! Your Booking has been Approved.<br>";
+        String msg = "&quot;Congratulations! Your Booking has been Approved.&quot;<br>";
         String currentTime = getCurrentTime();
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         String fullMessage = msg + redTime;
@@ -742,7 +741,7 @@ public class BookingStatus extends AppCompatActivity {
                                             messageFramedot2.setVisibility(View.VISIBLE);
                                             messageText2.setVisibility(View.VISIBLE);
                                             String currentTime = getCurrentTime();
-                                            String msg = "Sorry, your booking has been declined by the admin. <br>";
+                                            String msg = "&quot;Sorry, your booking has been declined by the admin.&quot;<br>";
                                             String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
                                             messageText2.setText(Html.fromHtml(msg + redTime));
                                             ///showLocalNotification("Booking Declined!",
@@ -842,7 +841,7 @@ public class BookingStatus extends AppCompatActivity {
                                             messageFramedot2.setVisibility(View.VISIBLE);
                                             messageText2.setVisibility(View.VISIBLE);
                                             String currentTime = getCurrentTime();
-                                            String msg = "Your payment has been reversed and refunded by the admin. <br>";
+                                            String msg = "&quot;Your payment has been reversed and refunded by the admin.&quot;<br>";
                                             String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
                                             messageText2.setText(Html.fromHtml(msg + redTime));
                                             ///showLocalNotification("Payment Declined!",

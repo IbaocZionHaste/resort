@@ -308,10 +308,10 @@
 
         <FrameLayout
         android:id="@+id/messageFramedot2"
-            android:layout_width="0dp"
+        android:layout_width="0dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
-        android:elevation="8dp"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/messageFramedot3"
         app:layout_constraintHorizontal_bias="0.0"
@@ -336,7 +336,7 @@
         android:layout_width="0dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
-        android:elevation="8dp"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/messageFramedot4"
         app:layout_constraintHorizontal_bias="0.0"
@@ -361,7 +361,7 @@
         android:layout_width="240dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
-        android:elevation="8dp"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.814"
@@ -387,7 +387,7 @@
         android:layout_width="0dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
-        android:elevation="8dp"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/messageFramedot5"
         app:layout_constraintHorizontal_bias="0.0"
@@ -413,7 +413,7 @@
         android:layout_width="0dp"
         android:layout_height="75dp"
         android:background="@drawable/frame_background"
-        android:elevation="8dp"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/messageFramedot2"
         app:layout_constraintStart_toStartOf="@+id/messageFramedot2"
@@ -431,7 +431,6 @@
             android:visibility="gone"
             android:textSize="13sp"/>
     </FrameLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
