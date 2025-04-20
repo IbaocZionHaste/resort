@@ -125,7 +125,7 @@
 
 
                                 <EditText
-                                    android:id="@+id/editTextText9"
+                                    android:id="@+id/editTextText20"
                                     android:layout_width="match_parent"
                                     android:layout_height="45dp"
                                     android:layout_marginTop="8dp"
@@ -133,11 +133,27 @@
                                     android:clickable="false"
                                     android:drawablePadding="10dp"
                                     android:focusable="false"
-                                    android:hint="Phone Number"
+                                    android:hint="Street Purok"
                                     android:inputType="text"
                                     android:paddingLeft="15dp"
                                     android:textColor="@color/black"
                                     android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editTextText13"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Barangay"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
 
                                 <EditText
                                     android:id="@+id/editTextText10"
@@ -172,6 +188,22 @@
                                     android:textSize="15sp" />
 
                                 <EditText
+                                    android:id="@+id/editTextText9"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/edittext_background"
+                                    android:clickable="false"
+                                    android:drawablePadding="10dp"
+                                    android:focusable="false"
+                                    android:hint="Phone Number"
+                                    android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+
+
+                                <EditText
                                     android:id="@+id/editTextText4"
                                     android:layout_width="match_parent"
                                     android:layout_height="45dp"
@@ -202,7 +234,7 @@
                                     android:textSize="15sp" />
 
                                 <EditText
-                                    android:id="@+id/editTextText13"
+                                    android:id="@+id/editTextText5"
                                     android:layout_width="match_parent"
                                     android:layout_height="45dp"
                                     android:layout_marginTop="8dp"
@@ -210,26 +242,12 @@
                                     android:clickable="false"
                                     android:drawablePadding="10dp"
                                     android:focusable="false"
-                                    android:hint="Barangay"
+                                    android:hint="Username"
                                     android:inputType="text"
                                     android:paddingLeft="15dp"
                                     android:textColor="@color/black"
                                     android:textSize="15sp" />
 
-                                <EditText
-                                    android:id="@+id/editTextText20"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="45dp"
-                                    android:layout_marginTop="8dp"
-                                    android:background="@drawable/edittext_background"
-                                    android:clickable="false"
-                                    android:drawablePadding="10dp"
-                                    android:focusable="false"
-                                    android:hint="Street Purok"
-                                    android:inputType="text"
-                                    android:paddingLeft="15dp"
-                                    android:textColor="@color/black"
-                                    android:textSize="15sp" />
 
                                 <EditText
                                     android:id="@+id/editTextText2"
@@ -246,20 +264,7 @@
                                     android:textColor="@color/black"
                                     android:textSize="15sp" />
 
-                                <EditText
-                                    android:id="@+id/editTextText5"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="45dp"
-                                    android:layout_marginTop="8dp"
-                                    android:background="@drawable/edittext_background"
-                                    android:clickable="false"
-                                    android:drawablePadding="10dp"
-                                    android:focusable="false"
-                                    android:hint="Username"
-                                    android:inputType="text"
-                                    android:paddingLeft="15dp"
-                                    android:textColor="@color/black"
-                                    android:textSize="15sp" />
+
 
 
                         </LinearLayout>

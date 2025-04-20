@@ -153,7 +153,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
         }
     }
 
-    /// Nested adapter for the swipeable images in the ViewPager2.
+    /// Nested adapter for the swipe able images in the ViewPager2.
     public class PromotionImagesAdapter extends RecyclerView.Adapter<PromotionImagesAdapter.ImageViewHolder> {
 
         private List<Bitmap> images;

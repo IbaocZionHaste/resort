@@ -55,23 +55,24 @@ public class Account extends AppCompatActivity {
 
         back.setOnClickListener(v -> onBackPressed());
 
-        // Get the current user
+        /// Get the current user
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             String currentUserId = currentUser.getUid();
             String cachedUserId = sharedPreferences.getString("userId", null);
 
-            // If cached data belongs to the current user, load it
+            /// If cached data belongs to the current user, load it
+            //noinspection StatementWithEmptyBody
             if (cachedUserId != null && cachedUserId.equals(currentUserId) && loadCachedData()) {
-                // Cached data loaded successfully.
+                /// Cached data loaded successfully.
             } else {
-                // Cached data is missing or belongs to a different user.
-                // Clear cached data.
+                /// Cached data is missing or belongs to a different user.
+                /// Clear cached data.
                 SharedPreferences.Editor clearEditor = sharedPreferences.edit();
                 clearEditor.clear();
                 clearEditor.apply();
 
-                // Retrieve from Firebase
+                /// Retrieve from Firebase
                 mDatabase.child("users").child(currentUserId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -104,7 +105,7 @@ public class Account extends AppCompatActivity {
                                     etEmail.setText(email);
                                     etPhone.setText(phone);
 
-                                    // Cache the data in SharedPreferences along with the current user id
+                                    /// Cache the data in SharedPreferences along with the current user id
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("userId", currentUserId);
                                     editor.putString("firstName", firstName);
