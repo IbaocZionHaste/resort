@@ -683,8 +683,8 @@ public class BookingStatus extends AppCompatActivity {
 
 
 
-    ///Booking Review Admin
-    private void listenForApproval() {
+        ///Booking Review Admin
+        private void listenForApproval() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) return;
         String userId = currentUser.getUid();
@@ -693,6 +693,7 @@ public class BookingStatus extends AppCompatActivity {
 
         // Create a Handler to schedule polling every second
         final Handler handler = new Handler(Looper.getMainLooper());
+        // Use an array to hold the Runnable reference
         final Runnable[] pollTask = new Runnable[1];
         pollTask[0] = new Runnable() {
             @Override
@@ -700,6 +701,7 @@ public class BookingStatus extends AppCompatActivity {
                 bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean shouldStopPolling = false;
                         for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
                             String statusReview = bookingSnapshot.child("bookingReview")
                                     .child("statusReview")
@@ -710,6 +712,9 @@ public class BookingStatus extends AppCompatActivity {
                                     progress = 2;
                                     updateDots();
                                     showApprovalMessage();
+                                    /// Stop polling
+                                    shouldStopPolling = true;
+                                    break;
                                 } else if (statusReview.equalsIgnoreCase("Declined") && !declineProcessed) {
                                     declineProcessed = true;
                                     DataSnapshot paymentSnap = bookingSnapshot.child("paymentTransaction");
@@ -718,11 +723,13 @@ public class BookingStatus extends AppCompatActivity {
                                                 .getValue(String.class);
                                         if (currentPaymentStatus == null ||
                                                 !currentPaymentStatus.equalsIgnoreCase("Declined")) {
+                                            // Update paymentStatus to "Declined"
                                             bookingSnapshot.child("paymentTransaction")
                                                     .getRef()
                                                     .child("paymentStatus")
                                                     .setValue("Declined");
 
+                                            // Append PaymentDate with the current formatted date
                                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
                                             String paymentDate = sdf.format(new Date());
                                             bookingSnapshot.child("paymentTransaction")
@@ -730,17 +737,21 @@ public class BookingStatus extends AppCompatActivity {
                                                     .child("PaymentDate")
                                                     .setValue(paymentDate);
 
+                                            // Update UI for decline branch
                                             messageFramedot2.setVisibility(View.VISIBLE);
                                             messageText2.setVisibility(View.VISIBLE);
                                             String currentTime = getCurrentTime();
-                                            String msg = "\"Sorry, your booking has been declined by the admin.\"<br>";
+                                            String msg = "&quot;Sorry, your booking has been declined by the admin.&quot;<br>";
                                             String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
                                             messageText2.setText(Html.fromHtml(msg + redTime));
+                                            ///showLocalNotification("Booking Declined!",
+                                            ///"Sorry, your booking has been declined by the admin.", 4);
                                             sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
                                             moveAllBookingsToHistory();
                                             clearBookingMessageUI();
                                             clearBookingPreferences();
 
+                                            // Delete the MyReview node after processing decline
                                             DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
                                                     .getReference("users")
                                                     .child(userId)
@@ -754,24 +765,26 @@ public class BookingStatus extends AppCompatActivity {
                                             });
                                         }
                                     }
+                                    // Stop polling after processing decline
+                                    shouldStopPolling = true;
+                                    break;
                                 }
                             }
                         }
-                        // Continue polling every second
-                        handler.postDelayed(pollTask[0], 1000);
+                        // Only reschedule if no update was processed
+                        if (!shouldStopPolling) {
+                            handler.postDelayed(pollTask[0], 1000);
+                        }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Log.e("BookingCheck", "Error reading MyBooking data", error.toException());
-                        // Continue polling even on error
-                        handler.postDelayed(pollTask[0], 1000);
                     }
                 });
             }
         };
 
-        // Start polling every second
+        /// Start polling every second
         handler.post(pollTask[0]);
     }
 
@@ -1141,6 +1154,7 @@ public class BookingStatus extends AppCompatActivity {
      * Clears booking-related keys from SharedPreferences.
      */
     private void clearBookingPreferences() {
+        prefs.edit().clear().apply();
         prefs.edit().remove("bookingSubmitted")
                 .remove("paymentSubmitted")
                 .remove("paymentSubmittedTime")
@@ -1852,109 +1866,109 @@ public class BookingStatus extends AppCompatActivity {
 //
 //
 //
-////    private void listenForApproval() {
-////        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-////        if (currentUser == null) return;
-////        String userId = currentUser.getUid();
-////        DatabaseReference bookingRef = FirebaseDatabase.getInstance()
-////                .getReference("users").child(userId).child("MyBooking");
-////
-////        // Create a Handler to schedule polling every second
-////        final Handler handler = new Handler(Looper.getMainLooper());
-////        // Use an array to hold the Runnable reference
-////        final Runnable[] pollTask = new Runnable[1];
-////        pollTask[0] = new Runnable() {
-////            @Override
-////            public void run() {
-////                bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-////                    @Override
-////                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-////                        boolean shouldStopPolling = false;
-////                        for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
-////                            String statusReview = bookingSnapshot.child("bookingReview")
-////                                    .child("statusReview")
-////                                    .getValue(String.class);
-////                            if (statusReview != null) {
-////                                if (statusReview.equalsIgnoreCase("Approved") && !approvalProcessed) {
-////                                    approvalProcessed = true;
-////                                    progress = 2;
-////                                    updateDots();
-////                                    showApprovalMessage();
-////                                    /// Stop polling
-////                                    shouldStopPolling = true;
-////                                    break;
-////                                } else if (statusReview.equalsIgnoreCase("Declined") && !declineProcessed) {
-////                                    declineProcessed = true;
-////                                    DataSnapshot paymentSnap = bookingSnapshot.child("paymentTransaction");
-////                                    if (paymentSnap.exists()) {
-////                                        String currentPaymentStatus = paymentSnap.child("paymentStatus")
-////                                                .getValue(String.class);
-////                                        if (currentPaymentStatus == null ||
-////                                                !currentPaymentStatus.equalsIgnoreCase("Declined")) {
-////                                            // Update paymentStatus to "Declined"
-////                                            bookingSnapshot.child("paymentTransaction")
-////                                                    .getRef()
-////                                                    .child("paymentStatus")
-////                                                    .setValue("Declined");
-////
-////                                            // Append PaymentDate with the current formatted date
-////                                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
-////                                            String paymentDate = sdf.format(new Date());
-////                                            bookingSnapshot.child("paymentTransaction")
-////                                                    .getRef()
-////                                                    .child("PaymentDate")
-////                                                    .setValue(paymentDate);
-////
-////                                            // Update UI for decline branch
-////                                            messageFramedot2.setVisibility(View.VISIBLE);
-////                                            messageText2.setVisibility(View.VISIBLE);
-////                                            String currentTime = getCurrentTime();
-////                                            String msg = "&quot;Sorry, your booking has been declined by the admin.&quot;<br>";
-////                                            String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
-////                                            messageText2.setText(Html.fromHtml(msg + redTime));
-////                                            ///showLocalNotification("Booking Declined!",
-////                                            ///"Sorry, your booking has been declined by the admin.", 4);
-////                                            sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
-////                                            moveAllBookingsToHistory();
-////                                            clearBookingMessageUI();
-////                                            clearBookingPreferences();
-////
-////                                            // Delete the MyReview node after processing decline
-////                                            DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
-////                                                    .getReference("users")
-////                                                    .child(userId)
-////                                                    .child("MyReview");
-////                                            myReviewRef.removeValue().addOnCompleteListener(task -> {
-////                                                if (task.isSuccessful()) {
-////                                                    Log.d("DeleteReview", "MyReview node deleted successfully.");
-////                                                } else {
-////                                                    Log.e("DeleteReview", "Failed to delete MyReview node.", task.getException());
-////                                                }
-////                                            });
-////                                        }
-////                                    }
-////                                    // Stop polling after processing decline
-////                                    shouldStopPolling = true;
-////                                    break;
-////                                }
-////                            }
-////                        }
-////                        // Only reschedule if no update was processed
-////                        if (!shouldStopPolling) {
-////                            handler.postDelayed(pollTask[0], 1000);
-////                        }
-////                    }
-////                    @Override
-////                    public void onCancelled(@NonNull DatabaseError error) {
-////                        Log.e("BookingCheck", "Error reading MyBooking data", error.toException());
-////                    }
-////                });
-////            }
-////        };
-////
-////        /// Start polling every second
-////        handler.post(pollTask[0]);
-////    }
+//    private void listenForApproval() {
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (currentUser == null) return;
+//        String userId = currentUser.getUid();
+//        DatabaseReference bookingRef = FirebaseDatabase.getInstance()
+//                .getReference("users").child(userId).child("MyBooking");
+//
+//        // Create a Handler to schedule polling every second
+//        final Handler handler = new Handler(Looper.getMainLooper());
+//        // Use an array to hold the Runnable reference
+//        final Runnable[] pollTask = new Runnable[1];
+//        pollTask[0] = new Runnable() {
+//            @Override
+//            public void run() {
+//                bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        boolean shouldStopPolling = false;
+//                        for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
+//                            String statusReview = bookingSnapshot.child("bookingReview")
+//                                    .child("statusReview")
+//                                    .getValue(String.class);
+//                            if (statusReview != null) {
+//                                if (statusReview.equalsIgnoreCase("Approved") && !approvalProcessed) {
+//                                    approvalProcessed = true;
+//                                    progress = 2;
+//                                    updateDots();
+//                                    showApprovalMessage();
+//                                    /// Stop polling
+//                                    shouldStopPolling = true;
+//                                    break;
+//                                } else if (statusReview.equalsIgnoreCase("Declined") && !declineProcessed) {
+//                                    declineProcessed = true;
+//                                    DataSnapshot paymentSnap = bookingSnapshot.child("paymentTransaction");
+//                                    if (paymentSnap.exists()) {
+//                                        String currentPaymentStatus = paymentSnap.child("paymentStatus")
+//                                                .getValue(String.class);
+//                                        if (currentPaymentStatus == null ||
+//                                                !currentPaymentStatus.equalsIgnoreCase("Declined")) {
+//                                            // Update paymentStatus to "Declined"
+//                                            bookingSnapshot.child("paymentTransaction")
+//                                                    .getRef()
+//                                                    .child("paymentStatus")
+//                                                    .setValue("Declined");
+//
+//                                            // Append PaymentDate with the current formatted date
+//                                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
+//                                            String paymentDate = sdf.format(new Date());
+//                                            bookingSnapshot.child("paymentTransaction")
+//                                                    .getRef()
+//                                                    .child("PaymentDate")
+//                                                    .setValue(paymentDate);
+//
+//                                            // Update UI for decline branch
+//                                            messageFramedot2.setVisibility(View.VISIBLE);
+//                                            messageText2.setVisibility(View.VISIBLE);
+//                                            String currentTime = getCurrentTime();
+//                                            String msg = "&quot;Sorry, your booking has been declined by the admin.&quot;<br>";
+//                                            String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
+//                                            messageText2.setText(Html.fromHtml(msg + redTime));
+//                                            ///showLocalNotification("Booking Declined!",
+//                                            ///"Sorry, your booking has been declined by the admin.", 4);
+//                                            sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
+//                                            moveAllBookingsToHistory();
+//                                            clearBookingMessageUI();
+//                                            clearBookingPreferences();
+//
+//                                            // Delete the MyReview node after processing decline
+//                                            DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
+//                                                    .getReference("users")
+//                                                    .child(userId)
+//                                                    .child("MyReview");
+//                                            myReviewRef.removeValue().addOnCompleteListener(task -> {
+//                                                if (task.isSuccessful()) {
+//                                                    Log.d("DeleteReview", "MyReview node deleted successfully.");
+//                                                } else {
+//                                                    Log.e("DeleteReview", "Failed to delete MyReview node.", task.getException());
+//                                                }
+//                                            });
+//                                        }
+//                                    }
+//                                    // Stop polling after processing decline
+//                                    shouldStopPolling = true;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                        // Only reschedule if no update was processed
+//                        if (!shouldStopPolling) {
+//                            handler.postDelayed(pollTask[0], 1000);
+//                        }
+//                    }
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        Log.e("BookingCheck", "Error reading MyBooking data", error.toException());
+//                    }
+//                });
+//            }
+//        };
+//
+//        /// Start polling every second
+//        handler.post(pollTask[0]);
+//    }
 //
 //    ///Booking Review Admin
 //    private void listenForApproval() {
