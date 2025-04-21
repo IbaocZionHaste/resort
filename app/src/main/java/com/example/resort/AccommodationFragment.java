@@ -1,7 +1,10 @@
 package com.example.resort;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +26,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.resort.accommodation.data.Accommodation;
 import com.example.resort.accommodation.data.DatabaseHelper1;
 import com.example.resort.accommodation.data.ProductsAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +47,8 @@ public class AccommodationFragment extends Fragment {
 
     /// Track the currently selected category
     private String currentCategory = "Cottage";
+
+    private DatabaseReference userRef;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -88,6 +101,50 @@ public class AccommodationFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) { }
         });
+
+
+        // Initialize Firebase and check for logged-in user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            // No user is logged in, redirect to login screen
+            Intent intent = new Intent(getActivity(), Login.class);
+            startActivity(intent);
+            requireActivity().finish();
+            return view;
+        }
+        userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+
+        /// Check if user is banned by fetching user data from Firebase
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String userStatus = dataSnapshot.child("status").getValue(String.class);
+                if (userStatus != null && userStatus.equalsIgnoreCase("banned")) {
+                    // Show alert dialog if user is banned
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("Account Suspended")
+                            .setMessage("You are banned because of suspicious activity.")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    FirebaseAuth.getInstance().signOut();
+                                    Intent intent = new Intent(getActivity(), Login.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    requireActivity().finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                /// Handle possible errors.
+            }
+        });
+
 
         /// Clear search text when search bar is clicked
         searchEditText.setOnClickListener(v -> searchEditText.setText(""));
@@ -195,6 +252,7 @@ public class AccommodationFragment extends Fragment {
         }
     }
 }
+
 
 
 

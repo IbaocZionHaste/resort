@@ -2,6 +2,9 @@ package com.example.resort;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -35,6 +38,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,11 +77,59 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
     // Toggle for following user's location.
     private boolean isFollowing = false;
 
+    private DatabaseReference userRef;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.explore_fragment, container, false);
+        ///return inflater.inflate(R.layout.explore_fragment, container, false);
+        View view = inflater.inflate(R.layout.explore_fragment, container, false);
+
+        // Initialize Firebase and check for logged-in user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            // No user is logged in, redirect to login screen
+            Intent intent = new Intent(getActivity(), Login.class);
+            startActivity(intent);
+            requireActivity().finish();
+            return view;
+        }
+        userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+
+        /// Check if user is banned by fetching user data from Firebase
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String userStatus = dataSnapshot.child("status").getValue(String.class);
+                if (userStatus != null && userStatus.equalsIgnoreCase("banned")) {
+                    // Show alert dialog if user is banned
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("Account Suspended")
+                            .setMessage("You are banned because of suspicious activity.")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    FirebaseAuth.getInstance().signOut();
+                                    Intent intent = new Intent(getActivity(), Login.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    requireActivity().finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                /// Handle possible errors.
+            }
+        });
+
+        return view;
     }
+
 
     @SuppressLint("MissingPermission")
     @Override
@@ -121,6 +180,7 @@ public class ExploreFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
+
 
         // Refresh button to update distance and ETA manually.
         btnRefresh.setOnClickListener(v -> fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
