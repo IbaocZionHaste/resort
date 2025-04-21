@@ -3,6 +3,7 @@ package com.example.resort;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -147,6 +148,39 @@ public class HomeFragment extends Fragment {
             return view;
         }
         userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+
+        /// Check if user is banned by fetching user data from Firebase
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String userStatus = dataSnapshot.child("status").getValue(String.class);
+                if (userStatus != null && userStatus.equalsIgnoreCase("banned")) {
+                    // Show alert dialog if user is banned
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("Account Suspended")
+                            .setMessage("You are banned because of suspicious activity.")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    FirebaseAuth.getInstance().signOut();
+                                    Intent intent = new Intent(getActivity(), Login.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    requireActivity().finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                /// Handle possible errors.
+            }
+        });
+
+
 
         // Notification button click listener
         ImageView notificationBtn = view.findViewById(R.id.notification);
