@@ -143,7 +143,6 @@ public class BookingStatus extends AppCompatActivity {
         }
 
 
-
         /// Adjust layout for system insets.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             v.setPadding(insets.getInsets(WindowInsetsCompat.Type.systemBars()).left,
@@ -152,7 +151,6 @@ public class BookingStatus extends AppCompatActivity {
                     insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom);
             return insets;
         });
-
 
         /// Initialize UI elements.
         dot1 = findViewById(R.id.dot1);
@@ -231,7 +229,6 @@ public class BookingStatus extends AppCompatActivity {
 
 
         ///Refresh Data
-
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,7 +236,6 @@ public class BookingStatus extends AppCompatActivity {
                 refreshData(); /// Call your listener functions again
             }
         });
-
 
 
         ///Pay Now Button
@@ -261,12 +257,10 @@ public class BookingStatus extends AppCompatActivity {
         FinalForApproval();
     }
 
-
     ///Refresh Data
     private void refreshData() {
         forceProcessDeclinesAndRefunds();
     }
-
 
     /// Update dots and lines based on current progress.
     private void updateDots() {
@@ -544,7 +538,7 @@ public class BookingStatus extends AppCompatActivity {
         }).start();
     }
 
-    /// Message view if the booking is submit Not use
+    /// Message view if the booking is submit by user
     private void showSubmissionMessage() {
         messageFramedot1.setVisibility(View.VISIBLE);
         messageText.setVisibility(View.VISIBLE);
@@ -561,7 +555,7 @@ public class BookingStatus extends AppCompatActivity {
 
     }
 
-    ///  Message view if the booking is payment Not use
+    ///  Message view if the booking is payment submitted
     private void showPaymentSubmittedMessage() {
         messageFramedot3.setVisibility(View.VISIBLE);
         paymentMessageText.setVisibility(View.VISIBLE);
@@ -769,7 +763,6 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 
-
     ///Booking Review Admin
     private void listenForApproval() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -825,12 +818,6 @@ public class BookingStatus extends AppCompatActivity {
                                                     .child("PaymentDate")
                                                     .setValue(paymentDate);
 
-
-
-                                            /// Stop the foreground service
-                                            Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
-                                            stopService(stopIntent);
-                                            Log.d("BookingStatus", "Foreground service stopped.");
 
                                             // Delete the MyReview node after processing decline
                                             DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
@@ -918,10 +905,6 @@ public class BookingStatus extends AppCompatActivity {
                                                     .setValue("Refund");
 
 
-                                            /// Stop the foreground service
-                                            Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
-                                            stopService(stopIntent);
-                                            Log.d("BookingStatus", "Foreground service stopped.");
 
 
                                             // Delete the MyReview node after refund.
@@ -999,10 +982,6 @@ public class BookingStatus extends AppCompatActivity {
                                 showDot5Message();
                                 stopPolling();
 
-                                /// Stop the foreground service
-                                Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
-                                stopService(stopIntent);
-                                Log.d("BookingStatus", "Foreground service stopped.");
 
                                 ///This code the my review is change to my review done after the booking is done
                                 DatabaseReference myReviewRef = FirebaseDatabase.getInstance()

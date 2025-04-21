@@ -182,7 +182,7 @@ public class ProfileFragment extends Fragment {
                 int calculatedProgress = 0;
 
                 for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
-                    // Retrieve booking review status.
+                    /// Retrieve booking review status.
                     String statusReview = bookingSnapshot.child("bookingReview")
                             .child("statusReview")
                             .getValue(String.class);

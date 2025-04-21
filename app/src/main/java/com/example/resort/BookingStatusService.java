@@ -48,36 +48,34 @@ public class BookingStatusService extends Service {
     }
 
     private void startForegroundServiceWithNotification() {
-        // Create channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel ch = new NotificationChannel(
+            NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
                     "Booking Updates",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            ch.setDescription("Notifications for booking status");
+            channel.setDescription("Notifications for booking status");
             NotificationManager mgr = getSystemService(NotificationManager.class);
-            if (mgr != null) mgr.createNotificationChannel(ch);
+            if (mgr != null) mgr.createNotificationChannel(channel);
         }
 
-        // Build persistent notification
-        Intent stop = new Intent(this, BookingStatusService.class)
+        Intent stopIntent = new Intent(this, BookingStatusService.class)
                 .setAction("STOP_FOREGROUND_SERVICE");
-        PendingIntent pi = PendingIntent.getService(
-                this, 0, stop,
+        PendingIntent stopPending = PendingIntent.getService(
+                this, 0, stopIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        Notification notify = new NotificationCompat.Builder(this, CHANNEL_ID)
+        Notification foregroundNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Island Front View Booking")
                 .setContentText("Service running…")
                 .setSmallIcon(R.drawable.ic_profile_notification)
-                .addAction(R.drawable.ic_launcher_foreground, "Stop", pi)
+                .addAction(R.drawable.ic_launcher_foreground, "Stop", stopPending)
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .build();
 
-        startForeground(1, notify);
+        startForeground(1, foregroundNotification);
     }
 
     private void listenForNotifications() {
@@ -102,31 +100,32 @@ public class BookingStatusService extends Service {
 
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snap) {
-                        for (DataSnapshot bSnap : snap.getChildren()) {
-                            /// 1) Booking review
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot bSnap : snapshot.getChildren()) {
+                            // 1) Booking review
                             String review = bSnap.child("bookingReview")
                                     .child("statusReview")
                                     .getValue(String.class);
                             if ("Approved".equalsIgnoreCase(review)) {
-                                showLocalNotification(
-                                        "Booking Approved",
-                                        "Booking has been reviewed. Please proceed to the payment by clicking the Pay Now button.",
-                                        100
-                                );
-                                // keep done=false so we can catch later final approval
-                                break;
+                                if (!shownNotifications.contains(100)) {
+                                    showLocalNotification(
+                                            "Booking Approved",
+                                            "Booking has been reviewed. Please proceed to payment.",
+                                            100
+                                    );
+                                    break;
+                                }
                             } else if ("Declined".equalsIgnoreCase(review)) {
-                                done = true;  /// stop after decline
+                                done = true;
                                 showLocalNotification(
                                         "Booking Declined",
-                                        "Sorry, your booking has been declined. Click the refresh now!",
+                                        "Sorry, your booking has been declined.",
                                         101
                                 );
                                 break;
                             }
 
-                            /// 2) Payment transaction
+                            // 2) Payment transaction
                             if (bSnap.child("paymentTransaction").exists()) {
                                 String payStatus = bSnap.child("paymentTransaction")
                                         .child("paymentStatus")
@@ -135,28 +134,37 @@ public class BookingStatusService extends Service {
                                         .child("finalStatus")
                                         .getValue(String.class);
 
-                                if ("Refund".equalsIgnoreCase(payStatus)) {
-                                    done = true;  /// stop after refund
-                                    showLocalNotification(
-                                            "Payment Refunded",
-                                            "Sorry, your payment has been refunded. Click the refresh now!",
-                                            102
-                                    );
-                                    break;
-                                } else if ("Approved".equalsIgnoreCase(payStatus)) {
-                                    showLocalNotification(
-                                            "Payment Approved",
-                                            "Payment transaction has been approved. Please wait for final approval.",
-                                            103
-                                    );
-                                    break;
-                                } else if ("Approved".equalsIgnoreCase(finalStatus)) {
-                                    done = true;  /// stop after final approval
+                                // Check final approval first
+                                if ("Approved".equalsIgnoreCase(finalStatus)) {
+                                    done = true;
+                                    // force show even if previously sent
+                                    shownNotifications.remove(104);
                                     showLocalNotification(
                                             "Final Approval",
                                             "Congratulations! Your booking has been approved.",
                                             104
                                     );
+                                    break;
+                                }
+                                // Then refund
+                                if ("Refund".equalsIgnoreCase(payStatus)) {
+                                    done = true;
+                                    showLocalNotification(
+                                            "Payment Refunded",
+                                            "Your payment has been refunded.",
+                                            102
+                                    );
+                                    break;
+                                }
+                                // Then interim approval
+                                if ("Approved".equalsIgnoreCase(payStatus)) {
+                                    if (!shownNotifications.contains(103)) {
+                                        showLocalNotification(
+                                                "Payment Approved",
+                                                "Payment has been approved. Waiting for final approval.",
+                                                103
+                                        );
+                                    }
                                     break;
                                 }
                             }
@@ -184,34 +192,29 @@ public class BookingStatusService extends Service {
     }
 
     private void showLocalNotification(String title, String message, int id) {
-        // 1) Skip if already shown
         if (shownNotifications.contains(id)) return;
         shownNotifications.add(id);
 
-        NotificationManager mgr = (NotificationManager)
-                getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager mgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (mgr == null) return;
 
-        // 2) (Optional) skip if still active in status bar
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             for (StatusBarNotification sbn : mgr.getActiveNotifications()) {
                 if (sbn.getId() == id) return;
             }
         }
 
-        // 3) Ensure channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel ch = new NotificationChannel(
+            NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
                     "Booking Updates",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            ch.setDescription("Booking status alerts");
-            mgr.createNotificationChannel(ch);
+            channel.setDescription("Booking status alerts");
+            mgr.createNotificationChannel(channel);
         }
 
-        // 4) Build & fire
-        Notification notify = new NotificationCompat.Builder(this, CHANNEL_ID)
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_profile_notification)
                 .setContentTitle(title)
                 .setContentText(message)
@@ -220,7 +223,7 @@ public class BookingStatusService extends Service {
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .build();
 
-        mgr.notify(id, notify);
+        mgr.notify(id, notification);
         Log.d(TAG, "Notified: " + title);
     }
 
@@ -248,7 +251,9 @@ public class BookingStatusService extends Service {
     }
 }
 
-///Fix Current 2 Original
+
+
+///Fix Current
 //package com.example.resort;
 //
 //import android.app.Notification;
@@ -299,36 +304,34 @@ public class BookingStatusService extends Service {
 //    }
 //
 //    private void startForegroundServiceWithNotification() {
-//        // Create channel
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel ch = new NotificationChannel(
+//            NotificationChannel channel = new NotificationChannel(
 //                    CHANNEL_ID,
 //                    "Booking Updates",
 //                    NotificationManager.IMPORTANCE_DEFAULT
 //            );
-//            ch.setDescription("Notifications for booking status");
+//            channel.setDescription("Notifications for booking status");
 //            NotificationManager mgr = getSystemService(NotificationManager.class);
-//            if (mgr != null) mgr.createNotificationChannel(ch);
+//            if (mgr != null) mgr.createNotificationChannel(channel);
 //        }
 //
-//        // Build persistent notification
-//        Intent stop = new Intent(this, BookingStatusService.class)
+//        Intent stopIntent = new Intent(this, BookingStatusService.class)
 //                .setAction("STOP_FOREGROUND_SERVICE");
-//        PendingIntent pi = PendingIntent.getService(
-//                this, 0, stop,
+//        PendingIntent stopPending = PendingIntent.getService(
+//                this, 0, stopIntent,
 //                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
 //        );
 //
-//        Notification notify = new NotificationCompat.Builder(this, CHANNEL_ID)
+//        Notification foregroundNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
 //                .setContentTitle("Island Front View Booking")
 //                .setContentText("Service running…")
 //                .setSmallIcon(R.drawable.ic_profile_notification)
-//                .addAction(R.drawable.ic_launcher_foreground, "Stop", pi)
+//                .addAction(R.drawable.ic_launcher_foreground, "Stop", stopPending)
 //                .setOngoing(true)
 //                .setAutoCancel(false)
 //                .build();
 //
-//        startForeground(1, notify);
+//        startForeground(1, foregroundNotification);
 //    }
 //
 //    private void listenForNotifications() {
@@ -353,278 +356,26 @@ public class BookingStatusService extends Service {
 //
 //                ref.addListenerForSingleValueEvent(new ValueEventListener() {
 //                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snap) {
-//                        for (DataSnapshot bSnap : snap.getChildren()) {
-//                            /// 1) Booking review
-//                            String review = bSnap.child("bookingReview")
-//                                    .child("statusReview")
-//                                    .getValue(String.class);
-//                            if ("Approved".equalsIgnoreCase(review)) {
-//                                showLocalNotification(
-//                                        "Booking Approved",
-//                                        "Booking has been reviewed. Please proceed to the payment by clicking the Pay Now button.",
-//                                        100
-//                                );
-//                                // keep done=false so we can catch later final approval
-//                                break;
-//                            } else if ("Declined".equalsIgnoreCase(review)) {
-//                                done = true;  /// stop after decline
-//                                showLocalNotification(
-//                                        "Booking Declined",
-//                                        "Sorry, your booking has been declined. Click the refresh now!",
-//                                        101
-//                                );
-//                                break;
-//                            }
-//
-//                            /// 2) Payment transaction
-//                            if (bSnap.child("paymentTransaction").exists()) {
-//                                String payStatus = bSnap.child("paymentTransaction")
-//                                        .child("paymentStatus")
-//                                        .getValue(String.class);
-//                                String finalStatus = bSnap.child("paymentTransaction")
-//                                        .child("finalStatus")
-//                                        .getValue(String.class);
-//
-//                                if ("Refund".equalsIgnoreCase(payStatus)) {
-//                                    done = true;  /// stop after refund
-//                                    showLocalNotification(
-//                                            "Payment Refunded",
-//                                            "Sorry, your payment has been refunded. Click the refresh now!",
-//                                            102
-//                                    );
-//                                    break;
-//                                } else if ("Approved".equalsIgnoreCase(payStatus)) {
-//                                    showLocalNotification(
-//                                            "Payment Approved",
-//                                            "Payment transaction has been approved. Please wait for final approval.",
-//                                            103
-//                                    );
-//                                    break;
-//                                } else if ("Approved".equalsIgnoreCase(finalStatus)) {
-//                                    done = true;  /// stop after final approval
-//                                    showLocalNotification(
-//                                            "Final Approval",
-//                                            "Congratulations! Your booking has been approved.",
-//                                            104
-//                                    );
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-//                        if (done) {
-//                            handler.removeCallbacks(pollTask);
-//                            stopForeground(true);
-//                            stopSelf();
-//                        } else {
-//                            handler.postDelayed(pollTask, 1000);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        Log.e(TAG, "Polling error", error.toException());
-//                        handler.postDelayed(pollTask, 1000);
-//                    }
-//                });
-//            }
-//        };
-//
-//        handler.post(pollTask);
-//    }
-//
-//    private void showLocalNotification(String title, String message, int id) {
-//        // 1) Skip if already shown
-//        if (shownNotifications.contains(id)) return;
-//        shownNotifications.add(id);
-//
-//        NotificationManager mgr = (NotificationManager)
-//                getSystemService(Context.NOTIFICATION_SERVICE);
-//        if (mgr == null) return;
-//
-//        // 2) (Optional) skip if still active in status bar
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            for (StatusBarNotification sbn : mgr.getActiveNotifications()) {
-//                if (sbn.getId() == id) return;
-//            }
-//        }
-//
-//        // 3) Ensure channel
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel ch = new NotificationChannel(
-//                    CHANNEL_ID,
-//                    "Booking Updates",
-//                    NotificationManager.IMPORTANCE_DEFAULT
-//            );
-//            ch.setDescription("Booking status alerts");
-//            mgr.createNotificationChannel(ch);
-//        }
-//
-//        // 4) Build & fire
-//        Notification notify = new NotificationCompat.Builder(this, CHANNEL_ID)
-//                .setSmallIcon(R.drawable.ic_profile_notification)
-//                .setContentTitle(title)
-//                .setContentText(message)
-//                .setAutoCancel(true)
-//                .setOngoing(false)
-//                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-//                .build();
-//
-//        mgr.notify(id, notify);
-//        Log.d(TAG, "Notified: " + title);
-//    }
-//
-//    @Override
-//    public int onStartCommand(Intent intent, int flags, int startId) {
-//        if (intent != null && "STOP_FOREGROUND_SERVICE".equals(intent.getAction())) {
-//            stopForeground(true);
-//            stopSelf();
-//            return START_NOT_STICKY;
-//        }
-//        return START_STICKY;
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        stopForeground(true);
-//        super.onDestroy();
-//        Log.d(TAG, "Service destroyed");
-//    }
-//
-//    @Nullable
-//    @Override
-//    public IBinder onBind(Intent intent) {
-//        return null;
-//    }
-//}
-//
-
-
-
-
-
-///No Current User 1 Not Use
-//package com.example.resort;
-//
-//import android.app.Notification;
-//import android.app.NotificationChannel;
-//import android.app.NotificationManager;
-//import android.app.PendingIntent;
-//import android.app.Service;
-//import android.content.Context;
-//import android.content.Intent;
-//import android.media.RingtoneManager;
-//import android.os.Build;
-//import android.os.Handler;
-//import android.os.IBinder;
-//import android.os.Looper;
-//import android.service.notification.StatusBarNotification;
-//import android.util.Log;
-//
-//import androidx.annotation.NonNull;
-//import androidx.annotation.Nullable;
-//import androidx.core.app.NotificationCompat;
-//
-//import com.google.firebase.auth.FirebaseAuth;
-//import com.google.firebase.auth.FirebaseUser;
-//import com.google.firebase.database.DataSnapshot;
-//import com.google.firebase.database.DatabaseError;
-//import com.google.firebase.database.DatabaseReference;
-//import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.database.ValueEventListener;
-//
-//public class BookingStatusService extends Service {
-//    private static final String TAG = "BookingStatusService";
-//    private static final String CHANNEL_ID = "booking_channel";
-//
-//    private Handler handler;
-//    private Runnable pollTask;
-//
-//    @Override
-//    public void onCreate() {
-//        super.onCreate();
-//        Log.d(TAG, "Service onCreate – initializing");
-//        handler = new Handler(Looper.getMainLooper());
-//        startForegroundServiceWithNotification();
-//        listenForNotifications();
-//    }
-//
-//    private void startForegroundServiceWithNotification() {
-//        // Create channel
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel ch = new NotificationChannel(
-//                    CHANNEL_ID,
-//                    "Booking Updates",
-//                    NotificationManager.IMPORTANCE_DEFAULT
-//            );
-//            ch.setDescription("Notifications for booking status");
-//            NotificationManager mgr = getSystemService(NotificationManager.class);
-//            if (mgr != null) mgr.createNotificationChannel(ch);
-//        }
-//
-//        // Build persistent notification
-//        Intent stop = new Intent(this, BookingStatusService.class)
-//                .setAction("STOP_FOREGROUND_SERVICE");
-//        PendingIntent pi = PendingIntent.getService(
-//                this, 0, stop,
-//                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-//        );
-//
-//
-//        Notification notify = new NotificationCompat.Builder(this, CHANNEL_ID)
-//                .setContentTitle("Island Front View Booking")
-//                .setContentText("Service running…")
-//                .setSmallIcon(R.drawable.ic_profile_notification)
-//                .addAction(R.drawable.ic_launcher_foreground, "Stop", pi)
-//                .setOngoing(true)
-//                .setAutoCancel(false)
-//                .build();
-//
-//        startForeground(1, notify);
-//    }
-//
-//    private void listenForNotifications() {
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        if (user == null) {
-//            Log.w(TAG, "No user—cannot poll bookings.");
-//            stopSelf();
-//            return;
-//        }
-//
-//        DatabaseReference ref = FirebaseDatabase.getInstance()
-//                .getReference("users")
-//                .child(user.getUid())
-//                .child("MyBooking");
-//
-//        pollTask = new Runnable() {
-//            boolean done = false;
-//
-//            @Override
-//            public void run() {
-//                if (done) return;
-//
-//                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snap) {
-//                        for (DataSnapshot bSnap : snap.getChildren()) {
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for (DataSnapshot bSnap : snapshot.getChildren()) {
 //                            // 1) Booking review
 //                            String review = bSnap.child("bookingReview")
 //                                    .child("statusReview")
 //                                    .getValue(String.class);
 //                            if ("Approved".equalsIgnoreCase(review)) {
-//                                ///done = true;
-//                                showLocalNotification(
-//                                        "Booking Approved",
-//                                        "Proceed to payment!",
-//                                        100
-//                                );
-//                                break;
+//                                if (!shownNotifications.contains(100)) {
+//                                    showLocalNotification(
+//                                            "Booking Approved",
+//                                            "Booking has been reviewed. Please proceed to payment.",
+//                                            100
+//                                    );
+//                                    break;
+//                                }
 //                            } else if ("Declined".equalsIgnoreCase(review)) {
 //                                done = true;
 //                                showLocalNotification(
 //                                        "Booking Declined",
-//                                        "Booking has been Reviewed. Please proceed to the payment by clicking the Pay Now button.",
+//                                        "Sorry, your booking has been declined.",
 //                                        101
 //                                );
 //                                break;
@@ -639,29 +390,37 @@ public class BookingStatusService extends Service {
 //                                        .child("finalStatus")
 //                                        .getValue(String.class);
 //
+//                                // Check final approval first
+//                                if ("Approved".equalsIgnoreCase(finalStatus)) {
+//                                    done = true;
+//                                    // force show even if previously sent
+//                                    shownNotifications.remove(104);
+//                                    showLocalNotification(
+//                                            "Final Approval",
+//                                            "Congratulations! Your booking has been approved.",
+//                                            104
+//                                    );
+//                                    break;
+//                                }
+//                                // Then refund
 //                                if ("Refund".equalsIgnoreCase(payStatus)) {
 //                                    done = true;
 //                                    showLocalNotification(
 //                                            "Payment Refunded",
-//                                            "Your payment has been reversed and refunded by the admin.",
+//                                            "Your payment has been refunded.",
 //                                            102
 //                                    );
 //                                    break;
-//                                } else if ("Approved".equalsIgnoreCase(payStatus)) {
-//                                    ///done = true;
-//                                    showLocalNotification(
-//                                            "Payment Approved",
-//                                            "Payment transaction has been Approved. Please wait for final approval.",
-//                                            103
-//                                    );
-//                                    break;
-//                                } else if ("Approved".equalsIgnoreCase(finalStatus)) {
-//                                    done = true;
-//                                    showLocalNotification(
-//                                            "Final Approval",
-//                                            "Congratulations! Your Booking has been Approved.",
-//                                            104
-//                                    );
+//                                }
+//                                // Then interim approval
+//                                if ("Approved".equalsIgnoreCase(payStatus)) {
+//                                    if (!shownNotifications.contains(103)) {
+//                                        showLocalNotification(
+//                                                "Payment Approved",
+//                                                "Payment has been approved. Waiting for final approval.",
+//                                                103
+//                                        );
+//                                    }
 //                                    break;
 //                                }
 //                            }
@@ -679,7 +438,6 @@ public class BookingStatusService extends Service {
 //                    @Override
 //                    public void onCancelled(@NonNull DatabaseError error) {
 //                        Log.e(TAG, "Polling error", error.toException());
-//                        // retry on error
 //                        handler.postDelayed(pollTask, 1000);
 //                    }
 //                });
@@ -689,28 +447,30 @@ public class BookingStatusService extends Service {
 //        handler.post(pollTask);
 //    }
 //
-//
 //    private void showLocalNotification(String title, String message, int id) {
-//        NotificationManager mgr = (NotificationManager)
-//                getSystemService(Context.NOTIFICATION_SERVICE);
+//        if (shownNotifications.contains(id)) return;
+//        shownNotifications.add(id);
+//
+//        NotificationManager mgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //        if (mgr == null) return;
 //
-//        // avoid duplicates
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //            for (StatusBarNotification sbn : mgr.getActiveNotifications()) {
 //                if (sbn.getId() == id) return;
 //            }
 //        }
 //
-//        // ensure channel
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel ch = new NotificationChannel(
-//                    CHANNEL_ID, "Booking Updates", NotificationManager.IMPORTANCE_DEFAULT);
-//            ch.setDescription("Booking status alerts");
-//            mgr.createNotificationChannel(ch);
+//            NotificationChannel channel = new NotificationChannel(
+//                    CHANNEL_ID,
+//                    "Booking Updates",
+//                    NotificationManager.IMPORTANCE_DEFAULT
+//            );
+//            channel.setDescription("Booking status alerts");
+//            mgr.createNotificationChannel(channel);
 //        }
 //
-//        Notification notify = new NotificationCompat.Builder(this, CHANNEL_ID)
+//        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
 //                .setSmallIcon(R.drawable.ic_profile_notification)
 //                .setContentTitle(title)
 //                .setContentText(message)
@@ -719,7 +479,7 @@ public class BookingStatusService extends Service {
 //                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 //                .build();
 //
-//        mgr.notify(id, notify);
+//        mgr.notify(id, notification);
 //        Log.d(TAG, "Notified: " + title);
 //    }
 //
@@ -746,7 +506,7 @@ public class BookingStatusService extends Service {
 //        return null;
 //    }
 //}
-
+//
 
 ///No Current Many Bug
 //package com.example.resort;
