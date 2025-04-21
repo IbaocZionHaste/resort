@@ -187,15 +187,16 @@ public class ProfileFragment extends Fragment {
                             .child("statusReview")
                             .getValue(String.class);
 
-                    // Skip declined bookings.
+                    /// Skip declined bookings.
                     if (statusReview != null && statusReview.equalsIgnoreCase("Declined")) {
-                        continue;
+                        ///continue;  ///this not use
+                        calculatedProgress = Math.max(calculatedProgress, 2);
                     }
 
-                    // Booking submission exists: progress at least 1.
+                    /// Booking submission exists: progress at least 1.
                     calculatedProgress = Math.max(calculatedProgress, 1);
 
-                    // If booking review is approved, upgrade progress to at least 2.
+                    /// If booking review is approved, upgrade progress to at least 2.
                     if (statusReview != null && statusReview.equalsIgnoreCase("Approved")) {
                         calculatedProgress = Math.max(calculatedProgress, 2);
                     }

@@ -286,6 +286,7 @@ public class BookingStatus extends AppCompatActivity {
     private void forceProcessDeclinesAndRefunds() {
         FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
         if (u == null) return;
+
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child(u.getUid())
@@ -298,12 +299,18 @@ public class BookingStatus extends AppCompatActivity {
                     String review = b.child("bookingReview")
                             .child("statusReview")
                             .getValue(String.class);
-                    String pay    = b.child("paymentTransaction")
+                    String pay = b.child("paymentTransaction")
                             .child("paymentStatus")
                             .getValue(String.class);
+                    String finalStatus = b.child("paymentTransaction")
+                            .child("finalStatus")
+                            .getValue(String.class);
 
+                    // Trigger actions if Declined, Refunded, or Approved
                     if ("Declined".equalsIgnoreCase(review)
-                            || "Refund".equalsIgnoreCase(pay)) {
+                            || "Refund".equalsIgnoreCase(pay)
+                            || "Approved".equalsIgnoreCase(finalStatus)) {
+
                         moveAllBookingsToHistory();
                         clearBookingMessageUI();
                         clearBookingPreferences();
@@ -311,6 +318,7 @@ public class BookingStatus extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError e) { }
         });
@@ -611,7 +619,7 @@ public class BookingStatus extends AppCompatActivity {
     private void showDot5Message() {
         messageFramedot5.setVisibility(View.VISIBLE);
         messageText5.setVisibility(View.VISIBLE);
-        String msg = "&quot;Congratulations! Your Booking has been Approved.&quot;<br>";
+        String msg = "&quot;Congratulations! Your Booking has been Approved. Click the refresh now!&quot;<br>";
         String currentTime = getCurrentTime();
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         String fullMessage = msg + redTime;
@@ -620,6 +628,7 @@ public class BookingStatus extends AppCompatActivity {
         sendNotificationToFirebase(messageText5.getText().toString(), "dot5");
 
     }
+
 
     ///Booking Review Decline
     private void showDecline() {
@@ -653,6 +662,23 @@ public class BookingStatus extends AppCompatActivity {
         ///clearBookingMessageUI();
         ///clearBookingPreferences();
 
+    }
+
+    ///Not Use
+    private void showRefundMessage() {
+        messageFramedot2.setVisibility(View.VISIBLE);
+        messageText2.setVisibility(View.VISIBLE);
+        String currentTime = getCurrentTime();
+        String approvalMessage = "&quot;Booking has been Reviewed. Please proceed to the payment by clicking the Pay Now button.&quot;<br>";
+        String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
+        String fullMessage = approvalMessage + redTime;
+        messageText2.setText(Html.fromHtml(fullMessage));
+        prefs.edit().putString("bookingStatus", "reviewApproved").apply();
+
+        // Disable the cancel button.
+        cancelButton.setEnabled(false);
+        cancelButton.setClickable(false);
+        cancelButton.setAlpha(0.5f);
     }
 
 
@@ -797,7 +823,11 @@ public class BookingStatus extends AppCompatActivity {
                                     break;
                                 } else if (statusReview.equalsIgnoreCase("Declined") && !declineProcessed) {
                                     declineProcessed = true;
+                                    progress = 2; ///New
+                                    updateDots();
                                     showDecline(); ///Message
+
+
                                     DataSnapshot paymentSnap = bookingSnapshot.child("paymentTransaction");
                                     if (paymentSnap.exists()) {
                                         String currentPaymentStatus = paymentSnap.child("paymentStatus")
@@ -892,7 +922,10 @@ public class BookingStatus extends AppCompatActivity {
                                         !paymentDeclineProcessed) {
                                     paymentDeclineProcessed = true;
                                     showRefund(); ///Message
-                                    // Process refund logic as you already have.
+                                    showRefundMessage(); ///Message Not Use
+                                    progress = Math.max(progress, 4);
+
+                                    /// Process refund logic as you already have.
                                     DataSnapshot paymentSnap = bookingSnapshot.child("bookingReview");
                                     if (paymentSnap.exists()) {
                                         String currentPaymentStatus = paymentSnap.child("statusReview")
@@ -903,8 +936,6 @@ public class BookingStatus extends AppCompatActivity {
                                                     .getRef()
                                                     .child("statusReview")
                                                     .setValue("Refund");
-
-
 
 
                                             // Delete the MyReview node after refund.
@@ -963,9 +994,9 @@ public class BookingStatus extends AppCompatActivity {
                         if (!snapshot.hasChildren()) {
                             stopPolling();
                             new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                                clearBookingMessageUI();
-                                clearBookingPreferences();
-                                moveAllBookingsToHistory();
+                                ///clearBookingMessageUI();
+                                ///clearBookingPreferences();
+                                ///moveAllBookingsToHistory();
                             }, 1000);
                             return;
                         }
@@ -998,7 +1029,7 @@ public class BookingStatus extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot reviewSnapshot) {
                                         if (reviewSnapshot.exists()) {
-                                            Map<String, Object> approvedReviews = new HashMap<>();
+                                            ///Map<String, Object> approvedReviews = new HashMap<>(); Not Use
 
                                             for (DataSnapshot review : reviewSnapshot.getChildren()) {
                                                 //noinspection unchecked
@@ -1041,9 +1072,9 @@ public class BookingStatus extends AppCompatActivity {
 
                                 ///Delay 1 minute
                                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                                    clearBookingMessageUI();
-                                    clearBookingPreferences();
-                                    moveAllBookingsToHistory();
+                                    ///clearBookingMessageUI();
+                                    ///clearBookingPreferences();
+                                    ///moveAllBookingsToHistory();
                                 }, 1000);
                                 break; // Exit loop after processing one booking.
                             }

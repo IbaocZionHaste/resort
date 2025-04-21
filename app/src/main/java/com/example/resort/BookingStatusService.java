@@ -141,7 +141,7 @@ public class BookingStatusService extends Service {
                                     shownNotifications.remove(104);
                                     showLocalNotification(
                                             "Final Approval",
-                                            "Congratulations! Your booking has been approved.",
+                                            "Congratulations! Your booking has been approved. Click the refresh now!",
                                             104
                                     );
                                     break;
