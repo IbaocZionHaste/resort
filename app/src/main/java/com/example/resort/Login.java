@@ -76,8 +76,8 @@ public class Login extends AppCompatActivity {
         checkBoxRememberMe = findViewById(R.id.termsCheckBox);
 
         // NEW: Reference Google and Facebook login buttons (make sure these IDs exist in your layout)
-        ImageButton buttonGoogle = findViewById(R.id.button3);
-        ImageButton buttonFacebook = findViewById(R.id.button2);
+        //ImageButton buttonGoogle = findViewById(R.id.button3);
+        //ImageButton buttonFacebook = findViewById(R.id.button2);
 
         // Initialize the progress dialog
         progressDialog = new ProgressDialog(this);
@@ -153,14 +153,14 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // NEW: Set click listeners for Google and Facebook buttons
-        buttonGoogle.setOnClickListener(v ->
-                Toast.makeText(Login.this, "Google login is not available now", Toast.LENGTH_SHORT).show()
-        );
-
-        buttonFacebook.setOnClickListener(v ->
-                Toast.makeText(Login.this, "Facebook login is not available now", Toast.LENGTH_SHORT).show()
-        );
+        /// NEW: Set click listeners for Google and Facebook buttons
+//        buttonGoogle.setOnClickListener(v ->
+//                Toast.makeText(Login.this, "Google login is not available now", Toast.LENGTH_SHORT).show()
+//        );
+//
+//        buttonFacebook.setOnClickListener(v ->
+//                Toast.makeText(Login.this, "Facebook login is not available now", Toast.LENGTH_SHORT).show()
+//        );
 
 
     }
