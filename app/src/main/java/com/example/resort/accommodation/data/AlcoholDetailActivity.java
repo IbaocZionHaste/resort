@@ -73,7 +73,6 @@ public class AlcoholDetailActivity extends AppCompatActivity {
 
 
 
-
     // ----- Helper Methods for Dot Indicators -----
     private void setupDots() {
         llDots.removeAllViews();
@@ -114,6 +113,7 @@ public class AlcoholDetailActivity extends AppCompatActivity {
                     .into(ivImageSwipe);
         }
     }
+
 
     // ----- Swipe Handlers -----
     private void onSwipeLeft() {
