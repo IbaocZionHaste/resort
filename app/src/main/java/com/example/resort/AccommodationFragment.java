@@ -152,10 +152,10 @@ public class AccommodationFragment extends Fragment {
         /// Category button initializations
         LinearLayout cottageLayout = view.findViewById(R.id.cottage);
         LinearLayout boatLayout = view.findViewById(R.id.boat);
-        LinearLayout foodLayout = view.findViewById(R.id.food);
-        LinearLayout dessertLayout = view.findViewById(R.id.dessert);
-        LinearLayout beverageLayout = view.findViewById(R.id.beverage);
-        LinearLayout alcoholLayout = view.findViewById(R.id.alcohol);
+        //LinearLayout foodLayout = view.findViewById(R.id.food);
+        //LinearLayout dessertLayout = view.findViewById(R.id.dessert);
+        //LinearLayout beverageLayout = view.findViewById(R.id.beverage);
+        //LinearLayout alcoholLayout = view.findViewById(R.id.alcohol);
         LinearLayout packageLayout = view.findViewById(R.id.pack);
 
         // Set default selection to "Cottage"
@@ -170,22 +170,23 @@ public class AccommodationFragment extends Fragment {
             setSelectedLayout(boatLayout);
             fetchProductsByCategory("Boat");
         });
-        foodLayout.setOnClickListener(v -> {
-            setSelectedLayout(foodLayout);
-            fetchProductsByCategory("Food");
-        });
-        dessertLayout.setOnClickListener(v -> {
-            setSelectedLayout(dessertLayout);
-            fetchProductsByCategory("Dessert");
-        });
-        beverageLayout.setOnClickListener(v -> {
-            setSelectedLayout(beverageLayout);
-            fetchProductsByCategory("Beverage");
-        });
-        alcoholLayout.setOnClickListener(v -> {
-            setSelectedLayout(alcoholLayout);
-            fetchProductsByCategory("Alcohol");
-        });
+//        foodLayout.setOnClickListener(v -> {
+//            setSelectedLayout(foodLayout);
+//            fetchProductsByCategory("Food");
+//        });
+//        dessertLayout.setOnClickListener(v -> {
+//            setSelectedLayout(dessertLayout);
+//            fetchProductsByCategory("Dessert");
+//        });
+//        beverageLayout.setOnClickListener(v -> {
+//            setSelectedLayout(beverageLayout);
+//            fetchProductsByCategory("Beverage");
+//        });
+//        alcoholLayout.setOnClickListener(v -> {
+//            setSelectedLayout(alcoholLayout);
+//            fetchProductsByCategory("Alcohol");
+//        });
+
         packageLayout.setOnClickListener(v -> {
             setSelectedLayout(packageLayout);
             fetchProductsByCategory("Package");

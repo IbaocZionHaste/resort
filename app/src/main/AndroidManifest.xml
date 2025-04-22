@@ -23,9 +23,7 @@
     <uses-permission android:name="android.permission.CLIPBOARD" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
-    <!-- Add this permission -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- Add this permission -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
@@ -42,9 +40,11 @@
         android:theme="@style/Theme.Resort"
         tools:targetApi="31">
         <activity
+            android:name=".AccommodationAddons"
+            android:exported="false" />
+        <activity
             android:name=".history.data.ViewDetailsActivity"
             android:exported="false" />
-
         <activity
             android:name=".BookingHistory"
             android:exported="false" />
@@ -146,8 +146,7 @@
         <service
             android:name=".BookingStatusService"
             android:exported="false"
-            android:foregroundServiceType="location|dataSync"/>
-
+            android:foregroundServiceType="location|dataSync" />
     </application>
 
 </manifest>

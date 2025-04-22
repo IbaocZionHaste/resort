@@ -86,6 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -111,7 +112,7 @@
                     android:paddingLeft="15dp"
                     android:text="Cottage"
                     android:textColor="@color/black"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -141,88 +142,87 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/food"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/border_rounded"
-                android:orientation="vertical"
-                android:padding="8dp">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/food"-->
+<!--                android:layout_width="80dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:background="@drawable/border_rounded"-->
+<!--                android:orientation="vertical"-->
+<!--                android:padding="8dp">-->
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
 
-                    android:paddingLeft="20dp"
-                    android:paddingBottom="5dp"
-                    android:src="@drawable/ic_accommo_food" /> <!-- Replace with your actual drawable -->
+<!--                    android:paddingLeft="20dp"-->
+<!--                    android:paddingBottom="5dp"-->
+<!--                    android:src="@drawable/ic_accommo_food" /> &lt;!&ndash; Replace with your actual drawable &ndash;&gt;-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingLeft="20dp"
-                    android:text="Food"
-                    android:textColor="@color/black"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:paddingLeft="20dp"-->
+<!--                    android:text="Food"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="10sp"-->
+<!--                    android:textStyle="bold" />-->
+<!--            </LinearLayout>-->
 
-            <LinearLayout
-                android:id="@+id/dessert"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/border_rounded"
-                android:orientation="vertical"
-                android:padding="8dp">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/dessert"-->
+<!--                android:layout_width="80dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:background="@drawable/border_rounded"-->
+<!--                android:orientation="vertical"-->
+<!--                android:padding="8dp">-->
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
-                    android:paddingBottom="5dp"
-                    android:src="@drawable/ic_accommo_desserts" /> <!-- Replace with your actual drawable -->
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:paddingLeft="20dp"-->
+<!--                    android:paddingBottom="5dp"-->
+<!--                    android:src="@drawable/ic_accommo_desserts" /> &lt;!&ndash; Replace with your actual drawable &ndash;&gt;-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:text="Dessert"
-                    android:textColor="@color/black"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:paddingLeft="15dp"-->
+<!--                    android:text="Dessert"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="10sp"-->
+<!--                    android:textStyle="bold" />-->
+<!--            </LinearLayout>-->
 
-            <LinearLayout
-                android:id="@+id/beverage"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/border_rounded"
-                android:orientation="vertical"
-                android:padding="8dp">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/beverage"-->
+<!--                android:layout_width="80dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:background="@drawable/border_rounded"-->
+<!--                android:orientation="vertical"-->
+<!--                android:padding="8dp">-->
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:paddingLeft="25dp"-->
+<!--                    android:paddingBottom="5dp"-->
+<!--                    android:src="@drawable/ic_accommo_drink" /> &lt;!&ndash; Replace with your actual drawable &ndash;&gt;-->
 
-                    android:paddingLeft="25dp"
-                    android:paddingBottom="5dp"
-                    android:src="@drawable/ic_accommo_drink" /> <!-- Replace with your actual drawable -->
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:text="Beverage"
-                    android:textColor="@color/black"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:paddingLeft="15dp"-->
+<!--                    android:text="Beverage"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="10sp"-->
+<!--                    android:textStyle="bold" />-->
+<!--            </LinearLayout>-->
 
             <LinearLayout
                 android:id="@+id/alcohol"
@@ -238,16 +238,16 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
                     android:paddingBottom="5dp"
-                    android:src="@drawable/ic_accommo_alcohol" /> <!-- Replace with your actual drawable -->
+                    android:src="@drawable/ic_room" /> <!-- Replace with your actual drawable -->
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:text="Alcohol"
+                    android:paddingLeft="18dp"
+                    android:text="Room"
                     android:textColor="@color/black"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -274,7 +274,7 @@
                     android:paddingLeft="15dp"
                     android:text="Package"
                     android:textColor="@color/black"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -302,7 +302,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/arial_th"
-        android:text="Feature Products"
+        android:text="Feature Accommodations"
         android:textColor="@color/black"
         android:textSize="13dp"
         app:layout_constraintBottom_toBottomOf="parent"
