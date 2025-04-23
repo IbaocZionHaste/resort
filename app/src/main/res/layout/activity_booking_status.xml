@@ -234,7 +234,6 @@
                 app:itemTextAppearanceActive="@style/Size_Text"
                 app:itemTextAppearanceInactive="@style/Size_Text" />
         </LinearLayout>
-
     </LinearLayout>
 
 
@@ -246,10 +245,11 @@
             android:text="Booking Status"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="22dp"
+            android:textSize="23dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.542"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.043" />
@@ -339,7 +339,8 @@
             android:id="@+id/messageText2"
             android:layout_width="240dp"
             android:layout_height="76dp"
-            android:textAlignment="textStart"
+            android:textAlignment="viewStart"
+            android:justificationMode="inter_word"
             android:padding="8dp"
             android:text="Booking has been Reviewed. Plese proceed to the payment by clicking the Pay Now button."
             android:textColor="@color/black"
@@ -364,7 +365,8 @@
             android:id="@+id/messageText3"
             android:layout_width="240dp"
             android:layout_height="75dp"
-            android:textAlignment="textStart"
+            android:textAlignment="viewStart"
+            android:justificationMode="inter_word"
             android:padding="8dp"
             android:text="Booking has been Submitted. Please wait for it to be reviewed by the admin."
             android:textColor="@color/black"
@@ -389,8 +391,9 @@
             android:id="@+id/messageText5"
             android:layout_width="240dp"
             android:layout_height="75dp"
-            android:textAlignment="textStart"
             android:padding="8dp"
+            android:textAlignment="viewStart"
+            android:justificationMode="inter_word"
             android:text="Congratulation! Your Booking has been Approved."
             android:textColor="@color/black"
             android:visibility="gone"
@@ -415,7 +418,8 @@
             android:id="@+id/messageText4"
             android:layout_width="245dp"
             android:layout_height="75dp"
-            android:textAlignment="textStart"
+            android:textAlignment="viewStart"
+            android:justificationMode="inter_word"
             android:padding="8dp"
             android:text="Booking has been Approved. Please patiently wait for the admin to approved your booking."
             android:textColor="@color/black"
@@ -440,7 +444,8 @@
             android:id="@+id/messageText"
             android:layout_width="240dp"
             android:layout_height="75dp"
-            android:textAlignment="textStart"
+            android:textAlignment="viewStart"
+            android:justificationMode="inter_word"
             android:padding="8dp"
             android:text="Booking has been Submitted. Please wait for it to be reviewed by the admin."
             android:textColor="@color/black"
