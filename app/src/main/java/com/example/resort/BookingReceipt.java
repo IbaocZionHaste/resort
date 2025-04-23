@@ -331,6 +331,7 @@ public class BookingReceipt extends AppCompatActivity {
                 case "accommodation":
                 case "boat":
                 case "cottage":
+                case "room":
                     accommodations.add(item);
                     break;
                 case "food":
@@ -459,6 +460,7 @@ public class BookingReceipt extends AppCompatActivity {
                 case "accommodation":
                 case "boat":
                 case "cottage":
+                case "room":
                     accommodations.add(item);
                     break;
                 case "food":

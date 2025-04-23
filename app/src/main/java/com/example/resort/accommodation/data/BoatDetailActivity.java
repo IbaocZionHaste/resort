@@ -565,7 +565,6 @@ public class BoatDetailActivity extends AppCompatActivity {
     }
 }
 
-
 ///Fix Current
 //package com.example.resort.accommodation.data;
 //

@@ -40,6 +40,9 @@
         android:theme="@style/Theme.Resort"
         tools:targetApi="31">
         <activity
+            android:name=".accommodation.data.RoomDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".AccommodationAddons"
             android:exported="false" />
         <activity

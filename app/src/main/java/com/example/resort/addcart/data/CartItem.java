@@ -16,7 +16,7 @@ public class CartItem {
         this.quantity = 1; // Default quantity
         this.imageUrl = imageUrl;
         /// Assign capacity ONLY if it's a "Cottage" or "Boat"
-        this.capacity = ("Cottage".equals(category) || "Boat".equals(category)) ? capacity : null;
+        this.capacity = ("Cottage".equals(category) || "Boat".equals(category) || "Room".equals(category)) ? capacity : null;
     }
 
     // Overloaded constructor for Cottage/Boat without image
@@ -65,7 +65,7 @@ public class CartItem {
     }
 
     public void setCapacity(Integer capacity) {
-        if ("Cottage".equals(category) || "Boat".equals(category)) {
+        if ("Cottage".equals(category) || "Boat".equals(category) || "Room".equals(category)) {
             this.capacity = capacity;
         }
     }

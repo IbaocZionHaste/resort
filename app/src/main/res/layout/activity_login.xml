@@ -112,7 +112,7 @@
             android:layout_height="24dp"
             android:text="Forgot Password"
             android:textColor="@color/blue"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:textStyle="bold"
             android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toTopOf="@+id/button"
@@ -159,7 +159,7 @@
             android:layout_height="24dp"
             android:text="Remember me"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:textStyle="bold"
 
             android:layout_marginBottom="5dp"

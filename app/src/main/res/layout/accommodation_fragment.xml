@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="3dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -225,7 +225,7 @@
 <!--            </LinearLayout>-->
 
             <LinearLayout
-                android:id="@+id/alcohol"
+                android:id="@+id/room"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"

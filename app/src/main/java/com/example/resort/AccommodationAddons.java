@@ -9,20 +9,22 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.resort.accommodation.data.Accommodation;
 import com.example.resort.accommodation.data.DatabaseHelper1;
 import com.example.resort.accommodation.data.ProductsAdapter;
@@ -37,7 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 import java.util.Objects;
 
-public class AccommodationAddons extends Fragment {
+public class AccommodationAddons extends AppCompatActivity {
 
     private LinearLayout selectedLayout;
     private RecyclerView recyclerView;
@@ -51,31 +53,36 @@ public class AccommodationAddons extends Fragment {
     private DatabaseReference userRef;
 
     @SuppressLint("ClickableViewAccessibility")
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_accommodation_addons, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_accommodation_addons);
 
-        progressBar = view.findViewById(R.id.progressBar);
+        progressBar       = findViewById(R.id.progressBar);
+        searchEditText    = findViewById(R.id.searchEditText);
+        recyclerView      = findViewById(R.id.recycleView);
+        ImageView backBtn = findViewById(R.id.btn);
+        ConstraintLayout mainLayout = findViewById(R.id.mainLayout);
+
         progressBar.setVisibility(View.GONE);
-        searchEditText = view.findViewById(R.id.searchEditText);
-        recyclerView = view.findViewById(R.id.recycleView);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(20);
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setNestedScrollingEnabled(false);
 
-        // Load default products for "Cottage"
+        // Fetch default "Food" products
         fetchProductsByCategory("Food");
 
-        ConstraintLayout mainLayout = view.findViewById(R.id.mainLayout);
+        // Hide keyboard when tapping outside
         mainLayout.setOnTouchListener((v, event) -> {
-            hideKeyboard();
-            searchEditText.clearFocus();
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                hideKeyboard();
+                searchEditText.clearFocus();
+            }
             return false;
         });
 
@@ -83,95 +90,70 @@ public class AccommodationAddons extends Fragment {
             if (!hasFocus) hideKeyboard();
         });
 
-        // Search listener - filter within the current category
+        // Search filter
         searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) { }
+            @Override public void beforeTextChanged(CharSequence s, int st, int c, int a) { }
+            @Override public void afterTextChanged(Editable e) { }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                String searchTerm = charSequence.toString().trim();
-                if (!searchTerm.isEmpty()) {
-                    searchProducts(searchTerm);
-                } else {
-                    fetchProductsByCategory(currentCategory);
-                }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String term = s.toString().trim();
+                if (!term.isEmpty()) searchProducts(term);
+                else             fetchProductsByCategory(currentCategory);
             }
-
-            @Override
-            public void afterTextChanged(Editable editable) { }
         });
 
 
-        // Initialize Firebase and check for logged-in user
+        backBtn.setOnClickListener(v -> onBackPressed());
+
+        // Firebase user check
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            // No user is logged in, redirect to login screen
-            Intent intent = new Intent(getActivity(), Login.class);
-            startActivity(intent);
-            requireActivity().finish();
-            return view;
+            startActivity(new Intent(this, Login.class));
+            finish();
+            return;
         }
-        userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+        userRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(currentUser.getUid());
 
-        /// Check if user is banned by fetching user data from Firebase
+        // Banned-user dialog
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String userStatus = dataSnapshot.child("status").getValue(String.class);
-                if (userStatus != null && userStatus.equalsIgnoreCase("banned")) {
-                    // Show alert dialog if user is banned
-                    new AlertDialog.Builder(getActivity())
+            @Override public void onDataChange(@NonNull DataSnapshot snap) {
+                String status = snap.child("status").getValue(String.class);
+                if ("banned".equalsIgnoreCase(status)) {
+                    new AlertDialog.Builder(AccommodationAddons.this)
                             .setTitle("Account Suspended")
                             .setMessage("You are banned because of suspicious activity.")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    FirebaseAuth.getInstance().signOut();
-                                    Intent intent = new Intent(getActivity(), Login.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                    requireActivity().finish();
-                                }
+                            .setPositiveButton("OK", (dlg, which) -> {
+                                FirebaseAuth.getInstance().signOut();
+                                Intent i = new Intent(AccommodationAddons.this, Login.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(i);
+                                finish();
                             })
                             .setCancelable(false)
                             .show();
                 }
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                /// Handle possible errors.
+            @Override public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("AccommodationActivity", "Firebase error: " + error.getMessage());
             }
         });
 
-
-        /// Clear search text when search bar is clicked
+        // Clear on click
         searchEditText.setOnClickListener(v -> searchEditText.setText(""));
 
-        /// Category button initializations
-        //LinearLayout cottageLayout = view.findViewById(R.id.cottage);
-        //LinearLayout boatLayout = view.findViewById(R.id.boat);
+        // Category buttons
+        LinearLayout foodLayout    = findViewById(R.id.food);
+        LinearLayout dessertLayout = findViewById(R.id.dessert);
+        LinearLayout bevLayout     = findViewById(R.id.beverage);
+        LinearLayout alcLayout     = findViewById(R.id.alcohol);
 
-        LinearLayout foodLayout = view.findViewById(R.id.food);
-        LinearLayout dessertLayout = view.findViewById(R.id.dessert);
-        LinearLayout beverageLayout = view.findViewById(R.id.beverage);
-        LinearLayout alcoholLayout = view.findViewById(R.id.alcohol);
-
-        //LinearLayout packageLayout = view.findViewById(R.id.pack);
-
-        // Set default selection to "Cottage"
+        // Default selected
         selectedLayout = foodLayout;
         setSelectedLayout(selectedLayout);
-
-//        cottageLayout.setOnClickListener(v -> {
-//            setSelectedLayout(cottageLayout);
-//            fetchProductsByCategory("Cottage");
-//        });
-//        boatLayout.setOnClickListener(v -> {
-//            setSelectedLayout(boatLayout);
-//            fetchProductsByCategory("Boat");
-//        });
 
         foodLayout.setOnClickListener(v -> {
             setSelectedLayout(foodLayout);
@@ -181,22 +163,17 @@ public class AccommodationAddons extends Fragment {
             setSelectedLayout(dessertLayout);
             fetchProductsByCategory("Dessert");
         });
-        beverageLayout.setOnClickListener(v -> {
-            setSelectedLayout(beverageLayout);
+        bevLayout.setOnClickListener(v -> {
+            setSelectedLayout(bevLayout);
             fetchProductsByCategory("Beverage");
         });
-        alcoholLayout.setOnClickListener(v -> {
-            setSelectedLayout(alcoholLayout);
+        alcLayout.setOnClickListener(v -> {
+            setSelectedLayout(alcLayout);
             fetchProductsByCategory("Alcohol");
         });
-//        packageLayout.setOnClickListener(v -> {
-//            setSelectedLayout(packageLayout);
-//            fetchProductsByCategory("Package");
-//        });
 
-        // Fetch default products again for "Cottage"
+        // fetch again to ensure view is populated
         fetchProductsByCategory("Food");
-        return view;
     }
 
     private void setSelectedLayout(LinearLayout layout) {
@@ -208,51 +185,42 @@ public class AccommodationAddons extends Fragment {
     }
 
     private void fetchProductsByCategory(String category) {
-        /// Update current category for search filtering
         currentCategory = category;
         progressBar.setVisibility(View.VISIBLE);
-        DatabaseHelper1 databaseHelper = new DatabaseHelper1();
-        databaseHelper.fetchProducts(category, new DatabaseHelper1.FirebaseCallback() {
-            @Override
-            public void onCallback(List<Accommodation> products) {
+        new DatabaseHelper1().fetchProducts(category, new DatabaseHelper1.FirebaseCallback() {
+            @Override public void onCallback(List<Accommodation> products) {
                 progressBar.setVisibility(View.GONE);
-                productsAdapter = new ProductsAdapter(getContext(), products);
+                productsAdapter = new ProductsAdapter(AccommodationAddons.this, products);
                 recyclerView.setAdapter(productsAdapter);
             }
-
-            @Override
-            public void onError(String errorMessage) {
+            @Override public void onError(String msg) {
                 progressBar.setVisibility(View.GONE);
-                Log.e("AccommodationFragment", "Error fetching data: " + errorMessage);
+                Log.e("AccommodationActivity", "Error: " + msg);
+                Toast.makeText(AccommodationAddons.this, "Error: " + msg, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void searchProducts(String searchTerm) {
+    private void searchProducts(String term) {
         progressBar.setVisibility(View.VISIBLE);
-        DatabaseHelper1 databaseHelper = new DatabaseHelper1();
-        // Search within the currently selected category
-        databaseHelper.searchProductsByName(searchTerm, currentCategory, new DatabaseHelper1.FirebaseCallback() {
-            @Override
-            public void onCallback(List<Accommodation> products) {
+        new DatabaseHelper1().searchProductsByName(term, currentCategory, new DatabaseHelper1.FirebaseCallback() {
+            @Override public void onCallback(List<Accommodation> products) {
                 progressBar.setVisibility(View.GONE);
-                productsAdapter = new ProductsAdapter(getContext(), products);
+                productsAdapter = new ProductsAdapter(AccommodationAddons.this, products);
                 recyclerView.setAdapter(productsAdapter);
             }
-
-            @Override
-            public void onError(String errorMessage) {
+            @Override public void onError(String msg) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccommodationAddons.this, "Error: " + msg, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null && requireActivity().getCurrentFocus() != null) {
-            imm.hideSoftInputFromWindow(Objects.requireNonNull(requireActivity().getCurrentFocus()).getWindowToken(), 0);
+        View focused = getCurrentFocus();
+        if (focused != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
         }
     }
 }
-

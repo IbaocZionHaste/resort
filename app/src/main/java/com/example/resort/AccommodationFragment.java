@@ -156,6 +156,7 @@ public class AccommodationFragment extends Fragment {
         //LinearLayout dessertLayout = view.findViewById(R.id.dessert);
         //LinearLayout beverageLayout = view.findViewById(R.id.beverage);
         //LinearLayout alcoholLayout = view.findViewById(R.id.alcohol);
+        LinearLayout roomLayout = view.findViewById(R.id.room);
         LinearLayout packageLayout = view.findViewById(R.id.pack);
 
         // Set default selection to "Cottage"
@@ -186,6 +187,10 @@ public class AccommodationFragment extends Fragment {
 //            setSelectedLayout(alcoholLayout);
 //            fetchProductsByCategory("Alcohol");
 //        });
+        roomLayout.setOnClickListener(v -> {
+            setSelectedLayout(roomLayout);
+            fetchProductsByCategory("Room");
+        });
 
         packageLayout.setOnClickListener(v -> {
             setSelectedLayout(packageLayout);

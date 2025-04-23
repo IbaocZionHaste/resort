@@ -146,6 +146,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             /// Preliminary checks
             if ("Boat".equalsIgnoreCase(product.getCategory()) ||
                     "Cottage".equalsIgnoreCase(product.getCategory()) ||
+                    "Room".equalsIgnoreCase(product.getCategory()) ||
                     "Package".equalsIgnoreCase(product.getCategory())) {
                 if ("Unavailable".equalsIgnoreCase(product.getStatus())) {
                     Toast.makeText(context, "Sorry, the item is not available now. Click the item to view the available date.", Toast.LENGTH_SHORT).show();
@@ -160,6 +161,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
             if ("Boat".equalsIgnoreCase(product.getCategory()) ||
                     "Cottage".equalsIgnoreCase(product.getCategory()) ||
+                    "Room".equalsIgnoreCase(product.getCategory()) ||
                     "Package".equalsIgnoreCase(product.getCategory())) {
                 if (existingItem != null) {
                     Toast.makeText(context, "Sorry, only 1 item allowed for " + product.getCategory(), Toast.LENGTH_SHORT).show();
@@ -188,7 +190,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             btnOk.setOnClickListener(view -> {
                 double priceValue = Double.parseDouble(product.getPrice());
                 Integer capacityValue = null;
-                if ("Boat".equalsIgnoreCase(product.getCategory()) || "Cottage".equalsIgnoreCase(product.getCategory())) {
+                if ("Boat".equalsIgnoreCase(product.getCategory()) || "Cottage".equalsIgnoreCase(product.getCategory()) || "Room".equalsIgnoreCase(product.getCategory())) {
                     capacityValue = (product.getCapacity() != null) ? Integer.valueOf(product.getCapacity()) : null;
                 }
 
@@ -234,6 +236,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         if (category == null) return false;
         return category.equalsIgnoreCase("Cottage") ||
                 category.equalsIgnoreCase("Boat") ||
+                category.equalsIgnoreCase("Room") ||
                 category.equalsIgnoreCase("Food") ||
                 category.equalsIgnoreCase("Dessert") ||
                 category.equalsIgnoreCase("Alcohol") ||
@@ -247,6 +250,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         switch (product.getCategory()) {
             case "Boat":
                 intent = new Intent(context, BoatDetailActivity.class);
+                break;
+            case "Room":
+                intent = new Intent(context, RoomDetailActivity.class);
                 break;
             case "Food":
                 intent = new Intent(context, FoodDetailActivity.class);
@@ -280,9 +286,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         intent.putExtra("accommodationAvailableDate", product.getAvailableDate());
         switch (product.getCategory()) {
             case "Boat":
+            case "Room":
                 intent.putExtra("accommodationCapacity", product.getCapacity());
                 intent.putExtra("accommodationDesign", product.getDesign());
                 break;
+
             case "Food":
                 intent.putExtra("food1", product.getFood1());
                 intent.putExtra("pieceNameFood", product.getPieceNameFood());
@@ -328,7 +336,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         ImageView productImageView;
         TextView nameTextView;
         ImageView plusIcon;
-
         /// Holds the album photo URL (if fetched).
         public String albumPhoto1 = null;
 

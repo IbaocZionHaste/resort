@@ -20,13 +20,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+
+    <ImageView
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:padding="3dp"
+        android:src="@drawable/ic_book_arrow"
+        app:layout_constraintBottom_toTopOf="@+id/category"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view2"
+        app:layout_constraintVertical_bias="0.252"
+        app:tint="@color/black" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="65dp"
         android:layout_height="65dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.046"
+        app:layout_constraintHorizontal_bias="0.953"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.037"
@@ -86,7 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="1dp"
             android:orientation="horizontal">
 
 <!--            <LinearLayout-->
@@ -324,7 +340,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/recycleView"
         app:layout_constraintTop_toTopOf="@+id/recycleView"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintVertical_bias="0.447" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

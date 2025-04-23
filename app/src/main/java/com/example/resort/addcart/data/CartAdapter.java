@@ -2,10 +2,12 @@ package com.example.resort.addcart.data;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.example.resort.AccommodationAddons;
 import com.example.resort.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,7 +70,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.quantityText.setText(String.valueOf(item.getQuantity()));
 
         /// Display capacity if the item is a Cottage or Boat and capacity is not null
-        if (("Cottage".equals(item.getCategory()) || "Boat".equals(item.getCategory()))
+        if (("Cottage".equals(item.getCategory()) || "Boat".equals(item.getCategory()) || "Room".equals(item.getCategory()))
                 && item.getCapacity() != null) {
             holder.capacity.setText("Capacity: " + item.getCapacity());
             holder.capacity.setVisibility(View.VISIBLE);
@@ -76,7 +79,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
 
         /// Check category: hide plus/minus and quantity for Boat, Cottage, and Package items
-        if ("Boat".equals(item.getCategory()) || "Cottage".equals(item.getCategory()) || "Package".equals(item.getCategory())) {
+        if ("Boat".equals(item.getCategory()) || "Cottage".equals(item.getCategory()) || "Package".equals(item.getCategory()) || "Room".equals(item.getCategory())) {
             holder.plusButton.setVisibility(View.GONE);
             holder.minusButton.setVisibility(View.GONE);
             holder.quantityText.setVisibility(View.GONE);
@@ -131,6 +134,22 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             notifyItemRangeChanged(position, cartItems.size());
             updateListener.onCartUpdated();
         });
+
+
+        String cat = item.getCategory();
+        if ("Food".equals(cat) || "Dessert".equals(cat) || "Beverage".equals(cat) || "Alcohol".equals(cat)) {
+            holder.button.setVisibility(View.GONE);
+        } else {
+            holder.button.setVisibility(View.VISIBLE);
+            holder.button.setText("Add ons");
+            holder.button.setOnClickListener(v -> {
+                Intent intent = new Intent(context, AccommodationAddons.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            });
+        }
+
+
     }
 
     @Override
@@ -146,6 +165,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     static class CartViewHolder extends RecyclerView.ViewHolder {
         TextView nameText, priceText, quantityText, category, capacity;
         ImageView plusButton, minusButton, deleteButton, itemImage;
+        Button button;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -158,6 +178,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             plusButton = itemView.findViewById(R.id.plusButton);
             minusButton = itemView.findViewById(R.id.minusButton);
             deleteButton = itemView.findViewById(R.id.deleteButton);
+            button = itemView.findViewById(R.id.button);
         }
     }
 }

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.resort.R;
 import com.example.resort.addcart.data.CartAdapter;
+import com.example.resort.addcart.data.CartAdapter2;
 import com.example.resort.addcart.data.CartItem;
 import com.example.resort.addcart.data.CartManager;
 import com.example.resort.addcart.data.CartUpdateListener;
@@ -300,6 +302,7 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         }
     }
 }
+
 
 
 ///No Current User
