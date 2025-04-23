@@ -795,6 +795,8 @@ public class BookingReceipt extends AppCompatActivity {
 
 
 
+
+
 ///Fix Current
 //package com.example.resort;
 //
