@@ -30,5 +30,33 @@
         Guests can enjoy a variety of activities such as kayaking, snorkeling in vibrant coral reefs, and lounging on the powdery white sands. For relaxation, there’s an inviting beachside bar and a restaurant serving freshly caught seafood and local delicacies. Whether you’re seeking a romantic retreat, a family vacation, or an adventure-packed holiday, Island Front View Beach Resort promises an unforgettable experience where the beauty of nature meets warm hospitality.
     </string>
 
+    <string name="terms_title">User Terms &amp; Agreement</string>
 
+    <string name="terms_text">
+1. Data Collection &amp; Usage\n\n
+We collect, store, and use your personal information (including name, email, device data, and usage patterns) to provide and improve our services. All data is handled in accordance with our Privacy Policy.\n\n
+
+2. Account Responsibilities\n\n
+• You are responsible for maintaining the confidentiality of your login credentials.
+• You agree to notify us immediately of any unauthorized use of your account.
+• You may not share your account with others.\n\n
+
+3. Acceptable Use\n\n
+• You agree not to use the service for illegal activities, harassment, or to transmit harmful or offensive content.
+• Violations may result in suspension or permanent termination of your account without refund.\n\n
+
+4. Service Changes &amp; Updates\n\n
+We reserve the right to modify, suspend, or discontinue any part of the service at any time, with or without notice. Continued use of the service after any change constitutes acceptance of those changes.\n\n
+
+5. Third-Party Links &amp; Services\n\n
+Our app may contain links to third-party websites or services. We are not responsible for their content, privacy practices, or terms. You access them at your own risk.\n\n
+
+6. Limitation of Liability\n\n
+To the fullest extent permitted by law, we shall not be liable for any indirect, incidental, or consequential damages arising out of your use of the service.\n\n
+
+7. Governing Law\n\n
+These terms are governed by the laws of [Your Country/Region]. Any disputes will be resolved in the courts of [Your Jurisdiction].\n\n
+
+By tapping “Agree,” you confirm that you have read, understood, and accepted all of the above.
+    </string>
 </resources>

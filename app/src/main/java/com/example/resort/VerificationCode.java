@@ -290,7 +290,7 @@ public class VerificationCode extends AppCompatActivity {
         btnOk.setOnClickListener(v -> {
             alertDialog.dismiss();
             /// Redirect to the Login activity when the "OK" button is pressed.
-            Intent intent = new Intent(VerificationCode.this, Login.class);
+            Intent intent = new Intent(VerificationCode.this, SignUp.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();

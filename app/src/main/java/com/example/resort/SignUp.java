@@ -1,6 +1,8 @@
 package com.example.resort;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -11,10 +13,12 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -78,6 +82,17 @@ public class SignUp extends AppCompatActivity {
 
 
         btnSignUp.setOnClickListener(v -> registerUser());
+
+        ///CheckBox Term
+        termsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    showAgreementDialog();
+                }
+            }
+        });
+
     }
 
 
@@ -160,10 +175,10 @@ public class SignUp extends AppCompatActivity {
             return;
         }
 
-        // Show progress dialog
+        /// Show progress dialog
         showProgressDialog();
 
-        // Register new user with Firebase Authentication
+        /// Register new user with Firebase Authentication
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     progressDialog.dismiss();
@@ -206,7 +221,7 @@ public class SignUp extends AppCompatActivity {
                                             userData.put("gender", gender);
                                             userData.put("email", email);
                                             userData.put("username", username);
-                                            userData.put("imageUrl", "default_image_url"); /// Default image
+                                            userData.put("imageUrl", "default_image_url");
                                             /// Added registrationDate field.
                                             userData.put("registrationDate", registrationDate);
 
@@ -234,7 +249,48 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    // Method to reset all input fields
+    ///Agreement Data
+    private void showAgreementDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_terms, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+        builder.setView(dialogView);
+        AlertDialog alertDialog = builder.create();
+
+
+        ///Connect buttons
+        Button btnAgree = dialogView.findViewById(R.id.btnAgree);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+
+        btnAgree.setOnClickListener(v -> {
+            termsCheckBox.setOnCheckedChangeListener(null);
+            termsCheckBox.setChecked(true);
+            addTermsListenerBack();
+            alertDialog.dismiss();
+        });
+
+        btnCancel.setOnClickListener(v -> {
+            termsCheckBox.setOnCheckedChangeListener(null);
+            termsCheckBox.setChecked(false);
+            addTermsListenerBack();
+            alertDialog.dismiss();
+        });
+
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+
+
+    private void addTermsListenerBack() {
+        termsCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                showAgreementDialog();
+            }
+        });
+    }
+
+    /// Method to reset all input fields
     private void resetFields() {
         etEmail.setText("");
         etUsername.setText("");
@@ -264,6 +320,7 @@ public class SignUp extends AppCompatActivity {
         progressDialog.show();
     }
 }
+
 
 
 
