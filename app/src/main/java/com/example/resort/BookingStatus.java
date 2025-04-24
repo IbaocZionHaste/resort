@@ -1387,19 +1387,37 @@ public class BookingStatus extends AppCompatActivity {
                     ((TextView) view.findViewById(R.id.tvReference)).setText(reference);
 
                     // Change the button text to "Okay"
-                    Button submitButton = view.findViewById(R.id.btnSubmitPayment);
-                    submitButton.setText("Okay");
+                    Button CancelButton = view.findViewById(R.id.btnCancelPayment);
+                    CancelButton.setText("Cancel");
 
                     // Create and show the dialog
                     AlertDialog dialog = builder.setView(view).create();
                     dialog.show();
 
                     // Set a click listener on the "Okay" button to dismiss the dialog
-                    submitButton.setOnClickListener(v -> {
+                    CancelButton.setOnClickListener(v -> {
                         if (dialog.isShowing()) {
                             dialog.dismiss();
                         }
                     });
+
+                     // --- ADD THIS DOWNLOAD BLOCK ---
+                    Button btnDownload = view.findViewById(R.id.btnDownloadPayment);
+                    btnDownload.setOnClickListener(v -> {
+                        // Hide action buttons
+                        btnDownload.setVisibility(View.GONE);
+                        CancelButton.setVisibility(View.GONE);
+
+                        view.post(() -> {
+                            downloadAsPDF(view, dialog, success -> {
+                                if (!success) {
+                                    btnDownload.setVisibility(View.VISIBLE);
+                                    CancelButton.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        });
+                    });
+
                 }
             }
 
@@ -1555,7 +1573,6 @@ public class BookingStatus extends AppCompatActivity {
                                     });
                                 });
                             });
-
 
 
                             btnCancel.setOnClickListener(v -> dialog.dismiss());

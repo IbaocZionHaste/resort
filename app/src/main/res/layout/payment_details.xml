@@ -1,197 +1,471 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_feedback"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/edittext_background">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_feedback"
-        android:padding="10dp"
+        android:background="@drawable/edittext_background"
+
         android:layout_gravity="center">
 
-        <!-- Dialog Title -->
+        <!-- Title -->
         <TextView
             android:id="@+id/tvDialogTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Payment Recipient  Details"
+            android:text="Payment Receipt Details"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textStyle="bold"
             android:gravity="center"
             android:fontFamily="@font/arial_th"
             android:textColor="@color/black"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="5dp" />
 
-        <!-- Divider -->
+        <!-- Underline -->
         <View
+            android:layout_width="60dp"
+            android:layout_height="2dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/light_blue"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Info Card -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Name Section -->
-        <TextView
-            android:id="@+id/tvNameLabel"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="John Doe"
-            android:textColor="@color/black"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="5dp">
 
-        <!-- Payment Method Section -->
-        <TextView
-            android:id="@+id/tvPaymentMethodLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Payment Method:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
-        <TextView
-            android:id="@+id/tvPaymentMethod"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Credit Card"
-            android:textColor="@color/black"
-            android:layout_marginBottom="16dp"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="12dp">
 
-        <!-- Amount Section -->
-        <TextView
-            android:id="@+id/tvAmountLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total Amount:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
-        <TextView
-            android:id="@+id/tvTotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$650.00"
-            android:textColor="@color/black"
-            android:layout_marginBottom="16dp"/>
+                <!-- Row Template -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="4dp">
 
+                    <TextView
+                        android:id="@+id/tvNameLabel"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Name:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
 
-        <!-- Balance Section -->
-        <TextView
-            android:id="@+id/tvBalanceLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Paid Amount:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
-        <TextView
-            android:id="@+id/tvAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$150.00"
-            android:textColor="@color/black"
-            android:layout_marginBottom="16dp"/>
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="John Doe"
+                        android:textColor="@color/black" />
+                </LinearLayout>
 
+                <!-- Duplicate template for each field -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="4dp">
 
+                    <TextView
+                        android:id="@+id/tvPaymentMethodLabel"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Payment Method:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
 
+                    <TextView
+                        android:id="@+id/tvPaymentMethod"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Credit Card"
+                        android:textColor="@color/black" />
+                </LinearLayout>
 
+                <!-- Amounts -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="4dp">
 
+                    <TextView
+                        android:id="@+id/tvTotalLabel"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Total Amount:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
 
-        <!-- Total Section -->
-        <TextView
-            android:id="@+id/tvTotalLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Balance:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
+                    <TextView
+                        android:id="@+id/tvTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$650.00"
+                        android:textColor="@color/black" />
+                </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvBalance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$500.00"
-            android:textColor="@color/black"
-            android:layout_marginBottom="16dp"/>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="4dp">
 
-        <!-- Date Section -->
-        <TextView
-            android:id="@+id/tvDateLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="02/25/2025"
-            android:textColor="@color/black"
-            android:layout_marginBottom="16dp"/>
+                    <TextView
+                        android:id="@+id/tvAmountLabel"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Paid Amount:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
 
-        <!-- Phone Section -->
-        <TextView
-            android:id="@+id/tvPhoneLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Phone:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
-        <TextView
-            android:id="@+id/tvPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+1 234 567 890"
-            android:textColor="@color/black"
-            android:layout_marginBottom="16dp"/>
+                    <TextView
+                        android:id="@+id/tvAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$150.00"
+                        android:textColor="@color/black" />
+                </LinearLayout>
 
-        <!-- Reference Section -->
-        <TextView
-            android:id="@+id/tvReferenceLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reference:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
-        <TextView
-            android:id="@+id/tvReference"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ABC123XYZ"
-            android:textColor="@color/black"
-            android:layout_marginBottom="32dp"/>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="4dp">
 
-        <!-- Submit Button - Right Aligned -->
+                    <TextView
+                        android:id="@+id/tvBalanceLabel"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Balance:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$500.00"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <!-- Date / Phone / Reference Rows -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:id="@+id/tvDateLabel"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Date:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="02/25/2025"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:id="@+id/tvPhoneLabel"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Phone:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+1 234 567 890"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:id="@+id/tvReferenceLabel"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Reference:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvReference"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ABC123XYZ"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <!-- Action Buttons -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:gravity="end">
 
             <Button
-                android:id="@+id/btnSubmitPayment"
+                android:id="@+id/btnCancelPayment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Okay"
+                android:text="Cancel"
+                android:backgroundTint="@color/red"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:padding="14dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/arial_th" />
+
+            <Button
+                android:id="@+id/btnDownloadPayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
                 android:backgroundTint="@color/light_blue"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:padding="12dp"
-                android:gravity="center" />
+                android:textSize="16sp"
+                android:padding="14dp"
+                android:fontFamily="@font/arial_th" />
+
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>
+
+    <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:background="@drawable/background_feedback"-->
+<!--    android:padding="16dp">-->
+
+<!--    <LinearLayout-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/background_feedback"-->
+<!--        android:padding="10dp"-->
+<!--        android:layout_gravity="center">-->
+
+<!--        &lt;!&ndash; Dialog Title &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvDialogTitle"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Payment Recipient  Details"-->
+<!--            android:textAppearance="?attr/textAppearanceHeadline6"-->
+<!--            android:textStyle="bold"-->
+<!--            android:gravity="center"-->
+<!--            android:fontFamily="@font/arial_th"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:paddingBottom="10dp" />-->
+
+<!--        &lt;!&ndash; Divider &ndash;&gt;-->
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:background="@android:color/darker_gray"-->
+<!--            android:layout_marginBottom="16dp"/>-->
+
+<!--        &lt;!&ndash; Name Section &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvNameLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Name:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="8dp" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvName"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="John Doe"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="16dp"/>-->
+
+<!--        &lt;!&ndash; Payment Method Section &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvPaymentMethodLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Payment Method:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="8dp" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvPaymentMethod"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Credit Card"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="16dp"/>-->
+
+<!--        &lt;!&ndash; Amount Section &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvAmountLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Total Amount:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="8dp" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvTotal"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="$650.00"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="16dp"/>-->
+
+
+<!--        &lt;!&ndash; Balance Section &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvBalanceLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Paid Amount:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="8dp" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvAmount"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="$150.00"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="16dp"/>-->
+
+
+
+
+
+
+<!--        &lt;!&ndash; Total Section &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvTotalLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Balance:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="8dp" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvBalance"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="$500.00"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="16dp"/>-->
+
+<!--        &lt;!&ndash; Date Section &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvDateLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Date:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="8dp" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvDate"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="02/25/2025"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="16dp"/>-->
+
+<!--        &lt;!&ndash; Phone Section &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvPhoneLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Phone:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="8dp" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvPhone"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="+1 234 567 890"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="16dp"/>-->
+
+<!--        &lt;!&ndash; Reference Section &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvReferenceLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Reference:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="8dp" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvReference"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="ABC123XYZ"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginBottom="32dp"/>-->
+
+<!--        &lt;!&ndash; Submit Button - Right Aligned &ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="end">-->
+
+<!--            <Button-->
+<!--                android:id="@+id/btnSubmitPayment"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Okay"-->
+<!--                android:backgroundTint="@color/light_blue"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="14sp"-->
+<!--                android:padding="12dp"-->
+<!--                android:gravity="center" />-->
+<!--        </LinearLayout>-->
+<!--    </LinearLayout>-->
+<!--</ScrollView>-->
