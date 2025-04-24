@@ -337,7 +337,7 @@
 
         <TextView
             android:id="@+id/messageText2"
-            android:layout_width="240dp"
+            android:layout_width="245dp"
             android:layout_height="76dp"
             android:textAlignment="viewStart"
             android:justificationMode="inter_word"
@@ -363,15 +363,35 @@
 
         <TextView
             android:id="@+id/messageText3"
-            android:layout_width="240dp"
+            android:layout_width="245dp"
             android:layout_height="75dp"
-            android:textAlignment="viewStart"
             android:justificationMode="inter_word"
             android:padding="8dp"
             android:text="Booking has been Submitted. Please wait for it to be reviewed by the admin."
+            android:textAlignment="viewStart"
             android:textColor="@color/black"
             android:visibility="gone"
-            android:textSize="13sp"  />
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/View"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:justificationMode="inter_word"
+            android:padding="8dp"
+            android:layout_marginTop="45dp"
+            android:text="View Details"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_marginStart="170dp"
+            android:textAlignment="viewStart"
+            android:textColor="@color/blue"
+            android:visibility="gone"
+            android:textSize="10sp" />
+
+
     </FrameLayout>
 
     <FrameLayout
@@ -389,7 +409,7 @@
 
         <TextView
             android:id="@+id/messageText5"
-            android:layout_width="240dp"
+            android:layout_width="245dp"
             android:layout_height="75dp"
             android:padding="8dp"
             android:textAlignment="viewStart"
@@ -398,6 +418,22 @@
             android:textColor="@color/black"
             android:visibility="gone"
             android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/Download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:justificationMode="inter_word"
+            android:padding="8dp"
+            android:layout_marginTop="45dp"
+            android:text="Print Details"
+            android:textStyle="bold"
+            android:layout_marginStart="170dp"
+            android:textAlignment="viewStart"
+            android:textColor="@color/blue"
+            android:visibility="gone"
+            android:textSize="10sp" />
+
     </FrameLayout>
 
 
@@ -442,7 +478,7 @@
 
         <TextView
             android:id="@+id/messageText"
-            android:layout_width="240dp"
+            android:layout_width="245dp"
             android:layout_height="75dp"
             android:textAlignment="viewStart"
             android:justificationMode="inter_word"

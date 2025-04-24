@@ -85,19 +85,12 @@ public class ViewDetailsActivity extends AppCompatActivity {
         if (booking != null && booking.getPaymentTransaction() != null) {
             PaymentTransaction transaction = booking.getPaymentTransaction();
 
-            ///TextView tvPaymentDate= findViewById(R.id.tvPaymentDate);
+
             TextView tvDownPayment = findViewById(R.id.tvDownPayment);
             TextView tvAmountTotal = findViewById(R.id.tvAmountTotal);
 
             tvDownPayment.setText("Down Payment: " + transaction.downPayment);
             tvAmountTotal.setText("Total Amount: " + transaction.amount);
-//            String paymentDate = transaction.PaymentDate;
-//            if (paymentDate == null || paymentDate.trim().isEmpty()) {
-//                tvPaymentDate.setText("Payment Date: N/A");
-//            } else {
-//                tvPaymentDate.setText("Payment Date: " + paymentDate);
-//            }
-
         }
 
         if (booking != null && booking.getPaymentMethod() != null) {
@@ -106,17 +99,19 @@ public class ViewDetailsActivity extends AppCompatActivity {
             // Set each field's text with the respective payment details
             TextView tvPayment = findViewById(R.id.tvPayment);
             TextView tvAmount = findViewById(R.id.tvAmount);
+            TextView tvBalance = findViewById(R.id.tvBalance);
+            TextView tvTotal = findViewById(R.id.tvTotal);
             TextView tvDates = findViewById(R.id.tvDates);
             TextView tvFirstname = findViewById(R.id.tvFirstname);
             TextView tvLastname = findViewById(R.id.tvLastname);
             TextView tvPhones = findViewById(R.id.tvPhones);
             TextView tvReference = findViewById(R.id.tvReference);
-
             TextView tvStatus = findViewById(R.id.tvStatus);
 
             tvPayment.setText("Payment: " + pm.Payment);
             tvAmount.setText("Amount: " + pm.Amount);
-            ///tvDates.setText("Date: " + pm.Date);
+            tvBalance.setText("Balance: " + (TextUtils.isEmpty(pm.Balance) ? "N/A" :pm.Balance));
+            tvTotal.setText("Total: " + (TextUtils.isEmpty(pm.Total) ? "N/A" :pm.Total));
             tvDates.setText("Date: " + (TextUtils.isEmpty(pm.Date) ? "N/A" : pm.Date));
             tvFirstname.setText("Firstname: " + pm.Firstname);
             tvLastname.setText("Lastname: " + pm.Lastname);

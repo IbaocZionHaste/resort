@@ -184,7 +184,7 @@ public class Payment extends AppCompatActivity {
                     if (bookingId == null) { Toast.makeText(Payment.this, "Booking ID missing!", Toast.LENGTH_SHORT).show(); return; }
                     DatabaseReference bookingRef = myBookingRef.child(bookingId);
 
-                    // Parse and guard
+                    /// Parse and guard
                     double down;
                     try { down = Double.parseDouble(amtStr); }
                     catch(NumberFormatException e) { Toast.makeText(Payment.this, "Invalid amount!", Toast.LENGTH_SHORT).show(); return; }
@@ -198,7 +198,7 @@ public class Payment extends AppCompatActivity {
                     double total = down + balance;
                     String now = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
 
-                    // Build paymentData
+                    /// Build paymentData
                     Map<String,Object> paymentData = new HashMap<>();
                     paymentData.put("Payment", payMethod);
                     paymentData.put("Firstname", fName);
@@ -217,8 +217,6 @@ public class Payment extends AppCompatActivity {
                     txnData.put("balance", balance);
                     txnData.put("PaymentDate", now);
 
-
-
                     /// Update nodes
                     bookingRef.child("paymentMethod").updateChildren(paymentData)
                             .addOnCompleteListener(task1 -> {
@@ -235,14 +233,16 @@ public class Payment extends AppCompatActivity {
                                                             "Payment sent by " + fName + " " + lName);
                                                     paymentSentData.put("date", now);
                                                     paymentSentRef.push().setValue(paymentSentData);
+                                                    
 
                                                     /// Persist UI state
                                                     SharedPreferences prefs = getSharedPreferences("BookingPref_"+userId, MODE_PRIVATE);
                                                     prefs.edit().putBoolean("paymentSubmitted", true).putInt("bookingProgress",3).apply();
                                                     sendTelegramNotification("🔔 New Payment Sent 🔔\n👤 Name: "+fName+" "+lName+"\n📅 Date: "+now+"\n✅ Status: Done");
-                                                    Toast.makeText(Payment.this,"Payment submitted successfully!",Toast.LENGTH_SHORT).show();
-                                                    startActivity(new Intent(Payment.this, BookingStatus.class).putExtra("paymentSubmitted",true));
-                                                    finish();
+                                                    Toast.makeText(Payment.this, "Payment submitted successfully!", Toast.LENGTH_SHORT).show();
+                                                            Intent intent = new Intent(Payment.this, BookingStatus.class);
+                                                            intent.putExtra("paymentSubmitted", true);
+                                                            finish();
                                                 } else Log.e("PaymentTransaction","Txn update failed.");
                                             });
                                 } else Toast.makeText(Payment.this,"Failed updating payment info",Toast.LENGTH_SHORT).show();

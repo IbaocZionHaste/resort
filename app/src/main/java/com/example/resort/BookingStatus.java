@@ -6,6 +6,7 @@ import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,6 +28,7 @@ import android.telephony.SmsManager;
 import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -96,7 +98,7 @@ public class BookingStatus extends AppCompatActivity {
     private Button payNowButton, cancelButton, refreshButton;
     /// Message containers for dots 1 to 5.
     private FrameLayout messageFramedot1, messageFramedot2, messageFramedot3, messageFramedot4, messageFramedot5;
-    private TextView messageText, messageText2, paymentMessageText, messageText4, messageText5;
+    private TextView messageText, messageText2, paymentMessageText, messageText4, messageText5, viewDetails;
     /// SharedPreferences for persisting booking state.
     private SharedPreferences prefs;
     /// Flags for one-time processing.
@@ -179,6 +181,8 @@ public class BookingStatus extends AppCompatActivity {
         messageText4 = findViewById(R.id.messageText4);
         messageFramedot5 = findViewById(R.id.messageFramedot5);
         messageText5 = findViewById(R.id.messageText5);
+        viewDetails = findViewById(R.id.View);
+
 
         // Initially hide message texts.
         messageText.setVisibility(View.GONE);
@@ -186,6 +190,15 @@ public class BookingStatus extends AppCompatActivity {
         paymentMessageText.setVisibility(View.GONE);
         messageText4.setVisibility(View.GONE);
         messageText5.setVisibility(View.GONE);
+        viewDetails.setVisibility(View.GONE);
+        viewDetails.setEnabled(true);
+        viewDetails.setClickable(true);
+
+        viewDetails.setOnClickListener(v -> {
+            Log.d("BookingStatus", "⚡ View Details clicked!");
+            fetchAndShowPaymentDetails(v.getContext());
+        });
+
 
         updateDots();
 
@@ -567,6 +580,7 @@ public class BookingStatus extends AppCompatActivity {
     private void showPaymentSubmittedMessage() {
         messageFramedot3.setVisibility(View.VISIBLE);
         paymentMessageText.setVisibility(View.VISIBLE);
+        viewDetails.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
         String paymentMessage = "&quot;Payment has been Submitted. Please wait for admin review.&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
@@ -680,6 +694,8 @@ public class BookingStatus extends AppCompatActivity {
         cancelButton.setClickable(false);
         cancelButton.setAlpha(0.5f);
     }
+
+
 
 
     /// Booking submitted
@@ -1263,6 +1279,80 @@ public class BookingStatus extends AppCompatActivity {
     private String getCurrentTime() {
         return new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());
     }
+
+    private void fetchAndShowPaymentDetails(Context context) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = user.getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("MyBooking");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    Toast.makeText(context, "No booking data found.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
+                    DataSnapshot paymentMethodSnapshot = bookingSnapshot.child("paymentMethod");
+
+                    String firstname = paymentMethodSnapshot.child("Firstname").getValue(String.class);
+                    String lastname = paymentMethodSnapshot.child("Lastname").getValue(String.class);
+                    String payment = paymentMethodSnapshot.child("Payment").getValue(String.class);
+                    Long amount = paymentMethodSnapshot.child("Amount").getValue(Long.class);
+                    Long balance = paymentMethodSnapshot.child("Balance").getValue(Long.class);
+                    String date = paymentMethodSnapshot.child("Date").getValue(String.class);
+                    String reference = paymentMethodSnapshot.child("Reference").getValue(String.class);
+                    String status = paymentMethodSnapshot.child("Status").getValue(String.class);
+                    Long total = paymentMethodSnapshot.child("total").getValue(Long.class);
+
+                    // Create the dialog builder
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    LayoutInflater inflater = LayoutInflater.from(context);
+                    View view = inflater.inflate(R.layout.payment_details, null);
+
+                    // Set all TextViews with the data
+                    ((TextView) view.findViewById(R.id.tvName)).setText(firstname + " " + lastname);
+                    ((TextView) view.findViewById(R.id.tvPaymentMethod)).setText(payment);
+                    ((TextView) view.findViewById(R.id.tvAmount)).setText("₱" + (amount != null ? amount : 0));
+                    ((TextView) view.findViewById(R.id.tvBalance)).setText("₱" + (balance != null ? balance : 0));
+                    ((TextView) view.findViewById(R.id.tvTotal)).setText("₱" + (total != null ? total : 0));
+                    ((TextView) view.findViewById(R.id.tvDate)).setText(date);
+                    ((TextView) view.findViewById(R.id.tvPhone)).setText(paymentMethodSnapshot.child("Phone").getValue(String.class));
+                    ((TextView) view.findViewById(R.id.tvReference)).setText(reference);
+
+                    // Change the button text to "Okay"
+                    Button submitButton = view.findViewById(R.id.btnSubmitPayment);
+                    submitButton.setText("Okay");
+
+                    // Create and show the dialog
+                    AlertDialog dialog = builder.setView(view).create();
+                    dialog.show();
+
+                    // Set a click listener on the "Okay" button to dismiss the dialog
+                    submitButton.setOnClickListener(v -> {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 }
 

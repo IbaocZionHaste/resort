@@ -27,7 +27,7 @@ public class BookingData implements Serializable {
     }
 
     public static class PaymentMethod implements Serializable {
-        public String Amount, Date, Firstname, Lastname, Payment, Phone, Reference, Status;
+        public String Amount, Date, Firstname, Lastname, Payment, Phone, Reference, Status, Total, Balance;
         public PaymentMethod() {}
     }
 
