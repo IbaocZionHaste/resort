@@ -1,15 +1,15 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@drawable/background_feedback"
     android:padding="16dp">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="16dp"
+        android:background="@drawable/background_feedback"
+        android:padding="10dp"
         android:layout_gravity="center">
 
         <!-- Dialog Title -->
@@ -17,12 +17,13 @@
             android:id="@+id/tvDialogTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Payment Details"
+            android:text="Payment Recipient  Details"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textStyle="bold"
             android:gravity="center"
+            android:fontFamily="@font/arial_th"
             android:textColor="@color/black"
-            android:paddingBottom="16dp" />
+            android:paddingBottom="10dp" />
 
         <!-- Divider -->
         <View
@@ -185,7 +186,5 @@
                 android:padding="12dp"
                 android:gravity="center" />
         </LinearLayout>
-
     </LinearLayout>
-
 </ScrollView>

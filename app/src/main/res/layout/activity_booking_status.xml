@@ -380,15 +380,15 @@
             android:justificationMode="inter_word"
             android:padding="8dp"
             android:layout_marginTop="45dp"
-            android:text="View Details"
+            android:text="Payment Details"
             android:textStyle="bold"
             android:clickable="true"
-            android:focusable="true"
+            android:linksClickable="true"
+            android:longClickable="true"
             android:focusableInTouchMode="true"
-            android:layout_marginStart="170dp"
+            android:layout_marginStart="153dp"
             android:textAlignment="viewStart"
             android:textColor="@color/blue"
-            android:visibility="gone"
             android:textSize="10sp" />
 
 
@@ -426,12 +426,14 @@
             android:justificationMode="inter_word"
             android:padding="8dp"
             android:layout_marginTop="45dp"
-            android:text="Print Details"
+            android:text="Download Details"
             android:textStyle="bold"
-            android:layout_marginStart="170dp"
+            android:clickable="true"
+            android:linksClickable="true"
+            android:longClickable="true"
+            android:layout_marginStart="150dp"
             android:textAlignment="viewStart"
             android:textColor="@color/blue"
-            android:visibility="gone"
             android:textSize="10sp" />
 
     </FrameLayout>

@@ -29,6 +29,7 @@ import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -98,7 +99,7 @@ public class BookingStatus extends AppCompatActivity {
     private Button payNowButton, cancelButton, refreshButton;
     /// Message containers for dots 1 to 5.
     private FrameLayout messageFramedot1, messageFramedot2, messageFramedot3, messageFramedot4, messageFramedot5;
-    private TextView messageText, messageText2, paymentMessageText, messageText4, messageText5, viewDetails;
+    private TextView messageText, messageText2, paymentMessageText, messageText4, messageText5, viewDetails,  downloadDetails;
     /// SharedPreferences for persisting booking state.
     private SharedPreferences prefs;
     /// Flags for one-time processing.
@@ -182,7 +183,7 @@ public class BookingStatus extends AppCompatActivity {
         messageFramedot5 = findViewById(R.id.messageFramedot5);
         messageText5 = findViewById(R.id.messageText5);
         viewDetails = findViewById(R.id.View);
-
+        downloadDetails = findViewById(R.id.Download);
 
         // Initially hide message texts.
         messageText.setVisibility(View.GONE);
@@ -191,12 +192,47 @@ public class BookingStatus extends AppCompatActivity {
         messageText4.setVisibility(View.GONE);
         messageText5.setVisibility(View.GONE);
         viewDetails.setVisibility(View.GONE);
+        downloadDetails.setVisibility(View.GONE);
+
         viewDetails.setEnabled(true);
         viewDetails.setClickable(true);
+        downloadDetails.setEnabled(true);
+        downloadDetails.setClickable(true);
 
         viewDetails.setOnClickListener(v -> {
             Log.d("BookingStatus", "⚡ View Details clicked!");
             fetchAndShowPaymentDetails(v.getContext());
+        });
+
+        downloadDetails.setOnClickListener(v -> {
+            Log.d("BookingStatus", "⚡ Download Details clicked!");
+            fetchAndShowPaymentDetails(v.getContext());
+        });
+
+        viewDetails.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.animate().scaleX(1.1f).scaleY(1.1f).setDuration(100).start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                    break;
+            }
+            return false;
+        });
+
+        downloadDetails.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.animate().scaleX(1.1f).scaleY(1.1f).setDuration(100).start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                    break;
+            }
+            return false;
         });
 
 
@@ -633,6 +669,7 @@ public class BookingStatus extends AppCompatActivity {
     private void showDot5Message() {
         messageFramedot5.setVisibility(View.VISIBLE);
         messageText5.setVisibility(View.VISIBLE);
+        downloadDetails.setVisibility(View.VISIBLE);
         String msg = "&quot;Congratulations! Your Booking has been Approved. Click the refresh now!&quot;<br>";
         String currentTime = getCurrentTime();
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
