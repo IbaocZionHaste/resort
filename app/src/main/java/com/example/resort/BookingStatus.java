@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsManager;
 import android.text.Html;
@@ -68,6 +70,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -1536,10 +1539,24 @@ public class BookingStatus extends AppCompatActivity {
                             Button btnCancel = dialogV.findViewById(R.id.btnCancel);
 
                             btnDownload.setOnClickListener(v -> {
-                                downloadAsPDF(dialogV, dialog, success -> {
-                                    if (success) dialog.dismiss();
+                                // Hide the buttons before rendering to PDF
+                                btnDownload.setVisibility(View.GONE);
+                                btnCancel.setVisibility(View.GONE);
+
+                                // Use dialogV instead of contentView
+                                dialogV.post(() -> {
+                                    downloadAsPDF(dialogV, dialog, success -> {
+                                        if (!success) {
+                                            // Show the buttons again if the download failed
+                                            btnDownload.setVisibility(View.VISIBLE);
+                                            btnCancel.setVisibility(View.VISIBLE);
+                                        }
+                                        // No need to show buttons again if successful since dialog is dismissed
+                                    });
                                 });
                             });
+
+
 
                             btnCancel.setOnClickListener(v -> dialog.dismiss());
 
@@ -1595,35 +1612,65 @@ public class BookingStatus extends AppCompatActivity {
         page.getCanvas().drawBitmap(bitmap, 0, 0, null);
         pdf.finishPage(page);
 
-        // --- 4) save to app-specific Downloads directory
-        File downloads = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-        if (downloads == null) {
-            Toast.makeText(this, "No downloads folder", Toast.LENGTH_SHORT).show();
-            onDone.accept(false);
-            pdf.close();
-            return;
-        }
+        // --- 4) save to the public Downloads directory
+        File downloads;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // For Android 10+ use MediaStore
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Downloads.DISPLAY_NAME, "booking_" + System.currentTimeMillis() + ".pdf");
+            values.put(MediaStore.Downloads.MIME_TYPE, "application/pdf");
+            values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
 
-        File outFile = new File(downloads, "booking_" + System.currentTimeMillis() + ".pdf");
-
-        try (FileOutputStream fos = new FileOutputStream(outFile)) {
-            pdf.writeTo(fos);
-            Toast.makeText(this, "Saved: " + outFile.getName(), Toast.LENGTH_SHORT).show();
-
-            // Dismiss the dialog if it's showing
-            if (dialogToDismiss != null && dialogToDismiss.isShowing()) {
-                dialogToDismiss.dismiss();
+            Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+            if (uri == null) {
+                Toast.makeText(this, "Cannot create file", Toast.LENGTH_SHORT).show();
+                onDone.accept(false);
+                pdf.close();
+                return;
             }
 
-            onDone.accept(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Save failed.", Toast.LENGTH_SHORT).show();
-            onDone.accept(false);
-        } finally {
-            pdf.close();
+            try (OutputStream os = getContentResolver().openOutputStream(uri)) {
+                pdf.writeTo(os);
+                Toast.makeText(this, "Saved to Downloads", Toast.LENGTH_SHORT).show();
+                if (dialogToDismiss != null && dialogToDismiss.isShowing()) {
+                    dialogToDismiss.dismiss();
+                }
+                onDone.accept(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Save failed", Toast.LENGTH_SHORT).show();
+                onDone.accept(false);
+            } finally {
+                pdf.close();
+            }
+        } else {
+            // Below Android 10: direct file write
+            downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (!downloads.exists() && !downloads.mkdirs()) {
+                Toast.makeText(this, "Cannot access Downloads", Toast.LENGTH_SHORT).show();
+                onDone.accept(false);
+                pdf.close();
+                return;
+            }
+
+            File outFile = new File(downloads, "booking_" + System.currentTimeMillis() + ".pdf");
+            try (FileOutputStream fos = new FileOutputStream(outFile)) {
+                pdf.writeTo(fos);
+                Toast.makeText(this, "Saved to Downloads: " + outFile.getName(), Toast.LENGTH_SHORT).show();
+                if (dialogToDismiss != null && dialogToDismiss.isShowing()) {
+                    dialogToDismiss.dismiss();
+                }
+                onDone.accept(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Save failed", Toast.LENGTH_SHORT).show();
+                onDone.accept(false);
+            } finally {
+                pdf.close();
+            }
         }
     }
+
 }
 
 
