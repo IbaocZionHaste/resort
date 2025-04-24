@@ -11,15 +11,23 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.pdf.PdfDocument;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -33,6 +41,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,8 +50,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationChannelCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -52,6 +64,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -66,6 +81,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -205,10 +221,9 @@ public class BookingStatus extends AppCompatActivity {
         });
 
         downloadDetails.setOnClickListener(v -> {
-            Log.d("BookingStatus", "⚡ Download Details clicked!");
-            fetchAndShowPaymentDetails(v.getContext());
+            Log.d("BookingStatus", "⚡ View Details clicked!");
+            fetchAndShowDownloadDetails(v.getContext());
         });
-
         viewDetails.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -1279,6 +1294,8 @@ public class BookingStatus extends AppCompatActivity {
         paymentMessageText.setText("");
         messageText4.setText("");
         messageText5.setText("");
+        viewDetails.setVisibility(View.GONE);
+        downloadDetails.setVisibility(View.GONE);
 
         dot1.setBackgroundResource(R.drawable.drawable_dot_clear);
         dot2.setBackgroundResource(R.drawable.drawable_dot_clear);
@@ -1391,6 +1408,222 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 
+
+
+   ///Receipt Data
+    public void fetchAndShowDownloadDetails(final Context context) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String userId = user.getUid();
+
+        DatabaseReference profileRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId);
+
+        profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot profileSnap) {
+                String fName = profileSnap.child("firstName").getValue(String.class);
+                String lName = profileSnap.child("lastName").getValue(String.class);
+                String mi = profileSnap.child("middleInitial").getValue(String.class);
+                String street = profileSnap.child("street").getValue(String.class);
+                String barangay = profileSnap.child("barangay").getValue(String.class);
+                String municipality = profileSnap.child("municipality").getValue(String.class);
+                String province = profileSnap.child("province").getValue(String.class);
+
+                DatabaseReference bookingRef = FirebaseDatabase.getInstance()
+                        .getReference("users")
+                        .child(userId)
+                        .child("MyBooking");
+
+                bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot bookingSnap) {
+                        if (!bookingSnap.exists()) {
+                            Toast.makeText(context, "No booking data found.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        for (DataSnapshot booking : bookingSnap.getChildren()) {
+                            DataSnapshot review = booking.child("bookingReview");
+                            DataSnapshot orderItems = review.child("orderItems");
+
+                            String fullName = fName + " " + mi + ". " + lName;
+                            String address = street + "\n" + barangay + ", " + municipality + ", " + province;
+                            String refNo = review.child("refNo").getValue(String.class);
+                            String bDate = review.child("bookingDate").getValue(String.class);
+                            Double amount = review.child("amount").getValue(Double.class);
+
+                            LayoutInflater inflater = LayoutInflater.from(context);
+                            View dialogV = inflater.inflate(R.layout.download_details, null);
+
+                            ((TextView) dialogV.findViewById(R.id.tvCustomerName)).setText(fullName);
+                            ((TextView) dialogV.findViewById(R.id.tvAddress)).setText(address);
+                            ((TextView) dialogV.findViewById(R.id.tvReceiptNo)).setText("Ref: " + refNo);
+                            ((TextView) dialogV.findViewById(R.id.tvDate)).setText(bDate);
+                            ((TextView) dialogV.findViewById(R.id.tvTotal)).setText("Total: ₱" + amount);
+
+                            LinearLayout itemContainer = dialogV.findViewById(R.id.itemContainer);
+
+                            // Accommodations
+                            DataSnapshot accommodations = orderItems.child("accommodations");
+                            if (accommodations.exists()) {
+                                for (DataSnapshot itemSnap : accommodations.getChildren()) {
+                                    View row = inflater.inflate(R.layout.item_row, itemContainer, false);
+                                    String name = itemSnap.child("name").getValue(String.class);
+                                    Long qty = itemSnap.child("quantity").getValue(Long.class);
+                                    Double price = itemSnap.child("price").getValue(Double.class);
+                                    if (name != null && qty != null && price != null) {
+                                        ((TextView) row.findViewById(R.id.tvProductName)).setText(name);
+                                        ((TextView) row.findViewById(R.id.tvQty)).setText(String.valueOf(qty));
+                                        ((TextView) row.findViewById(R.id.tvPrice)).setText(String.format("₱%.2f", price));
+                                        itemContainer.addView(row);
+                                    }
+                                }
+                            }
+
+                            // Food and Drinks
+                            DataSnapshot foodAndDrinks = orderItems.child("foodAndDrinks");
+                            if (foodAndDrinks.exists()) {
+                                for (DataSnapshot itemSnap : foodAndDrinks.getChildren()) {
+                                    View row = inflater.inflate(R.layout.item_row, itemContainer, false);
+                                    String name = itemSnap.child("name").getValue(String.class);
+                                    Long qty = itemSnap.child("quantity").getValue(Long.class);
+                                    Double price = itemSnap.child("price").getValue(Double.class);
+                                    if (name != null && qty != null && price != null) {
+                                        ((TextView) row.findViewById(R.id.tvProductName)).setText(name);
+                                        ((TextView) row.findViewById(R.id.tvQty)).setText(String.valueOf(qty));
+                                        ((TextView) row.findViewById(R.id.tvPrice)).setText(String.format("₱%.2f", price));
+                                        itemContainer.addView(row);
+                                    }
+                                }
+                            }
+
+                            // Packages
+                            DataSnapshot packageData = orderItems.child("package");
+                            if (packageData.exists()) {
+                                for (DataSnapshot itemSnap : packageData.getChildren()) {
+                                    View row = inflater.inflate(R.layout.item_row, itemContainer, false);
+                                    String name = itemSnap.child("name").getValue(String.class);
+                                    Long qty = itemSnap.child("quantity").getValue(Long.class);
+                                    Double price = itemSnap.child("price").getValue(Double.class);
+                                    if (name != null && qty != null && price != null) {
+                                        ((TextView) row.findViewById(R.id.tvProductName)).setText(name);
+                                        ((TextView) row.findViewById(R.id.tvQty)).setText(String.valueOf(qty));
+                                        ((TextView) row.findViewById(R.id.tvPrice)).setText(String.format("₱%.2f", price));
+                                        itemContainer.addView(row);
+                                    }
+                                }
+                            }
+
+                            // Show the dialog
+                            AlertDialog dialog = new AlertDialog.Builder(context)
+                                    .setView(dialogV)
+                                    .setCancelable(false)
+                                    .create();
+
+                            dialog.show();
+
+                            if (dialog.getWindow() != null) {
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                            }
+
+                            Button btnDownload = dialogV.findViewById(R.id.btnDownload);
+                            Button btnCancel = dialogV.findViewById(R.id.btnCancel);
+
+                            btnDownload.setOnClickListener(v -> {
+                                downloadAsPDF(dialogV, dialog, success -> {
+                                    if (success) dialog.dismiss();
+                                });
+                            });
+
+                            btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+                            break; /// Only show the first booking
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(context, "Booking load failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, "Profile load failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    /**
+     * Renders `contentView` to a PDF, writes it into
+     * getExternalFilesDir(DIRECTORY_DOWNLOADS).
+     *
+     * @param contentView the inflated booking‐details layout
+     * @param dialogToDismiss the dialog to dismiss after saving
+     * @param onDone callback that receives true if saved successfully
+     */
+    public void downloadAsPDF(View contentView, AlertDialog dialogToDismiss, Consumer<Boolean> onDone) {
+        // --- 1) ensure the view has a size by measuring+laying out
+        int specW = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int specH = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        contentView.measure(specW, specH);
+        contentView.layout(0, 0, contentView.getMeasuredWidth(), contentView.getMeasuredHeight());
+
+        // --- 2) render the view to a bitmap
+        Bitmap bitmap = Bitmap.createBitmap(
+                contentView.getMeasuredWidth(),
+                contentView.getMeasuredHeight(),
+                Bitmap.Config.ARGB_8888
+        );
+        Canvas canvas = new Canvas(bitmap);
+        contentView.draw(canvas);
+
+        // --- 3) build the PDF
+        PdfDocument pdf = new PdfDocument();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(
+                bitmap.getWidth(), bitmap.getHeight(), 1
+        ).create();
+        PdfDocument.Page page = pdf.startPage(pageInfo);
+        page.getCanvas().drawBitmap(bitmap, 0, 0, null);
+        pdf.finishPage(page);
+
+        // --- 4) save to app-specific Downloads directory
+        File downloads = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        if (downloads == null) {
+            Toast.makeText(this, "No downloads folder", Toast.LENGTH_SHORT).show();
+            onDone.accept(false);
+            pdf.close();
+            return;
+        }
+
+        File outFile = new File(downloads, "booking_" + System.currentTimeMillis() + ".pdf");
+
+        try (FileOutputStream fos = new FileOutputStream(outFile)) {
+            pdf.writeTo(fos);
+            Toast.makeText(this, "Saved: " + outFile.getName(), Toast.LENGTH_SHORT).show();
+
+            // Dismiss the dialog if it's showing
+            if (dialogToDismiss != null && dialogToDismiss.isShowing()) {
+                dialogToDismiss.dismiss();
+            }
+
+            onDone.accept(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Save failed.", Toast.LENGTH_SHORT).show();
+            onDone.accept(false);
+        } finally {
+            pdf.close();
+        }
+    }
 }
 
 

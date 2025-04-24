@@ -71,7 +71,25 @@
             android:id="@+id/tvAmountLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Amount:"
+            android:text="Total Amount:"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginBottom="8dp" />
+        <TextView
+            android:id="@+id/tvTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$650.00"
+            android:textColor="@color/black"
+            android:layout_marginBottom="16dp"/>
+
+
+        <!-- Balance Section -->
+        <TextView
+            android:id="@+id/tvBalanceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paid Amount:"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_marginBottom="8dp" />
@@ -83,37 +101,26 @@
             android:textColor="@color/black"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Balance Section -->
-        <TextView
-            android:id="@+id/tvBalanceLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Balance:"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
-        <TextView
-            android:id="@+id/tvBalance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$500.00"
-            android:textColor="@color/black"
-            android:layout_marginBottom="16dp"/>
+
+
+
+
 
         <!-- Total Section -->
         <TextView
             android:id="@+id/tvTotalLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total:"
+            android:text="Balance:"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_marginBottom="8dp" />
+
         <TextView
-            android:id="@+id/tvTotal"
+            android:id="@+id/tvBalance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$650.00"
+            android:text="$500.00"
             android:textColor="@color/black"
             android:layout_marginBottom="16dp"/>
 

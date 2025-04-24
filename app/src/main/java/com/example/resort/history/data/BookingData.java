@@ -27,13 +27,15 @@ public class BookingData implements Serializable {
     }
 
     public static class PaymentMethod implements Serializable {
-        public String Amount, Date, Firstname, Lastname, Payment, Phone, Reference, Status, Total, Balance;
+        public String Date, Firstname, Lastname, Payment, Phone, Reference, Status;
+        public Long Balance, total, Amount; ///Fix Bug
+
         public PaymentMethod() {}
     }
 
     public static class PaymentTransaction implements Serializable {
         public String PaymentDate, finalStatus, name, paymentStatus, refNo;
-        public long amount, downPayment;
+        public Long amount, downPayment;
         public PaymentTransaction() {}
     }
 }

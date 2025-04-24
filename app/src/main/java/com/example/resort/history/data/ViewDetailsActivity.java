@@ -110,14 +110,13 @@ public class ViewDetailsActivity extends AppCompatActivity {
 
             tvPayment.setText("Payment: " + pm.Payment);
             tvAmount.setText("Amount: " + pm.Amount);
-            tvBalance.setText("Balance: " + (TextUtils.isEmpty(pm.Balance) ? "N/A" :pm.Balance));
-            tvTotal.setText("Total: " + (TextUtils.isEmpty(pm.Total) ? "N/A" :pm.Total));
+            tvBalance.setText("Balance: " + (pm.Balance == null ? "N/A" : pm.Balance));
+            tvTotal.setText("Total: " + (pm.total == null ? "N/A" : pm.total));
             tvDates.setText("Date: " + (TextUtils.isEmpty(pm.Date) ? "N/A" : pm.Date));
             tvFirstname.setText("Firstname: " + pm.Firstname);
             tvLastname.setText("Lastname: " + pm.Lastname);
             tvPhones.setText("Phone: " + pm.Phone);
             tvReference.setText("Reference: " + pm.Reference);
-
             tvStatus.setText("Status: " + pm.Status);
         }
     }

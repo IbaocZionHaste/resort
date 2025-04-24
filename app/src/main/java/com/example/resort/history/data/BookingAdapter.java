@@ -53,14 +53,6 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
             holder.tvPaymentMethod.setText("");
         }
 
-/// Display the refNo from bookingReview
-//        if (booking.getBookingReview() != null && booking.getBookingReview().refNo != null) {
-//            holder.tvRefNo.setText("Reference: " + booking.getBookingReview().refNo);
-//        } else {
-//            holder.tvRefNo.setText(""); // Set empty if no reference number is available
-//        }
-
-
         // Display the refNo (without "Reference:") in red color
         if (booking.getBookingReview() != null && booking.getBookingReview().refNo != null) {
             holder.tvRefNo.setText("Ref.No" + booking.getBookingReview().refNo);
