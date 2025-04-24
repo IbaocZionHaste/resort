@@ -1,16 +1,15 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/edittext_background">
+    android:padding="16dp"
+    android:background="@color/white">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/edittext_background"
-
-        android:layout_gravity="center">
+        android:gravity="center_horizontal">
 
         <!-- Title -->
         <TextView
@@ -23,225 +22,239 @@
             android:gravity="center"
             android:fontFamily="@font/arial_th"
             android:textColor="@color/black"
-            android:paddingBottom="5dp" />
+            android:paddingBottom="8dp" />
 
         <!-- Underline -->
         <View
-            android:layout_width="60dp"
+            android:layout_width="80dp"
             android:layout_height="2dp"
             android:layout_gravity="center"
-            android:backgroundTint="@color/light_blue"
+            android:background="@color/light_blue"
             android:layout_marginBottom="16dp" />
 
         <!-- Info Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp">
+            android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="12dp">
+                android:padding="10dp"
+                android:background="@color/white">
 
-                <!-- Row Template -->
+                <!-- Info Row Template -->
+                <!-- Repeat this row for each label/value -->
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="4dp">
+                    android:orientation="horizontal"
+                    android:paddingVertical="6dp">
 
                     <TextView
-                        android:id="@+id/tvNameLabel"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="Name:"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
 
                     <TextView
                         android:id="@+id/tvName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="John Doe"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
                 </LinearLayout>
 
-                <!-- Duplicate template for each field -->
+                <!-- Repeat for each field -->
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="4dp">
+                    android:orientation="horizontal"
+                    android:paddingVertical="6dp">
 
                     <TextView
-                        android:id="@+id/tvPaymentMethodLabel"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="Payment Method:"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
 
                     <TextView
                         android:id="@+id/tvPaymentMethod"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Credit Card"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
                 </LinearLayout>
 
-                <!-- Amounts -->
+                <!-- Add more fields here following the same pattern -->
+                <!-- Total Amount -->
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="4dp">
+                    android:paddingVertical="6dp">
 
                     <TextView
-                        android:id="@+id/tvTotalLabel"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="Total Amount:"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
 
                     <TextView
                         android:id="@+id/tvTotal"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
                         android:text="$650.00"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
                 </LinearLayout>
 
+                <!-- Paid Amount -->
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="4dp">
+                    android:paddingVertical="6dp">
 
                     <TextView
-                        android:id="@+id/tvAmountLabel"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="Paid Amount:"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
 
                     <TextView
                         android:id="@+id/tvAmount"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
                         android:text="$150.00"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
                 </LinearLayout>
 
+                <!-- Balance -->
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="4dp">
+                    android:paddingVertical="6dp">
 
                     <TextView
-                        android:id="@+id/tvBalanceLabel"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="Balance:"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
 
                     <TextView
                         android:id="@+id/tvBalance"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="$500.00"
-                        android:textColor="@color/black" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
                 </LinearLayout>
 
-                <!-- Date / Phone / Reference Rows -->
+                <!-- Date -->
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="4dp">
+                    android:paddingVertical="6dp">
 
                     <TextView
-                        android:id="@+id/tvDateLabel"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content"
                         android:text="Date:"
+                        android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
 
                     <TextView
                         android:id="@+id/tvDate"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="02/25/2025"
-                        android:textColor="@color/black" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
                 </LinearLayout>
 
+                <!-- Phone -->
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="4dp">
+                    android:paddingVertical="6dp">
 
                     <TextView
-                        android:id="@+id/tvPhoneLabel"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content"
                         android:text="Phone:"
+                        android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
 
                     <TextView
                         android:id="@+id/tvPhone"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="+1 234 567 890"
-                        android:textColor="@color/black" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
                 </LinearLayout>
 
+                <!-- Reference -->
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="4dp">
+                    android:paddingVertical="6dp">
 
                     <TextView
-                        android:id="@+id/tvReferenceLabel"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content"
                         android:text="Reference:"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
 
                     <TextView
                         android:id="@+id/tvReference"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="ABC123XYZ"
-                        android:textColor="@color/black" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/arial_th" />
                 </LinearLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
         <!-- Action Buttons -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:gravity="end">
 
             <Button
@@ -251,10 +264,8 @@
                 android:text="Cancel"
                 android:backgroundTint="@color/red"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:padding="14dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/arial_th" />
+                android:fontFamily="@font/arial_th"
+                android:layout_marginEnd="8dp" />
 
             <Button
                 android:id="@+id/btnDownloadPayment"
@@ -263,14 +274,11 @@
                 android:text="Save"
                 android:backgroundTint="@color/light_blue"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:padding="14dp"
                 android:fontFamily="@font/arial_th" />
-
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>
+
 
     <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--    android:layout_width="match_parent"-->
