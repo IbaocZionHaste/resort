@@ -127,7 +127,7 @@ public class BookingStatus extends AppCompatActivity {
         String userId = currentUser.getUid();
         prefs = getSharedPreferences("BookingPref_" + userId, MODE_PRIVATE);
 
-        // If booking is submitted from previous activity, save state in SharedPreferences.
+        /// If booking is submitted from previous activity, save state in SharedPreferences.
         boolean bookingSubmittedIntent = getIntent().getBooleanExtra("bookingSubmitted", false);
         if (bookingSubmittedIntent) {
             prefs.edit().putBoolean("bookingSubmitted", true).apply();

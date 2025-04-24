@@ -125,7 +125,7 @@ public class Payment extends AppCompatActivity {
         String userId = currentUser.getUid();
         DatabaseReference myBookingRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("MyBooking");
 
-        // Prefill amount fields from paymentTransaction
+        /// Prefill amount fields from paymentTransaction
         myBookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(@NonNull DataSnapshot snap) {
                 if (!snap.exists()) return;
@@ -142,7 +142,7 @@ public class Payment extends AppCompatActivity {
                     @Override public void onCancelled(@NonNull DatabaseError e) {}
                 });
 
-                // Real-time guard: prevent input > fullPayment
+                /// Real-time guard: prevent input > fullPayment
                 amount.addTextChangedListener(new TextWatcher() {
                     @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                     @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -217,6 +217,8 @@ public class Payment extends AppCompatActivity {
                     txnData.put("balance", balance);
                     txnData.put("PaymentDate", now);
 
+
+
                     /// Update nodes
                     bookingRef.child("paymentMethod").updateChildren(paymentData)
                             .addOnCompleteListener(task1 -> {
@@ -224,6 +226,17 @@ public class Payment extends AppCompatActivity {
                                     bookingRef.child("paymentTransaction").updateChildren(txnData)
                                             .addOnCompleteListener(task2 -> {
                                                 if (task2.isSuccessful()) {
+
+                                                    /// Re-create top-level paymentSent node
+                                                    DatabaseReference paymentSentRef = FirebaseDatabase.getInstance()
+                                                            .getReference("paymentSent");
+                                                    Map<String,Object> paymentSentData = new HashMap<>();
+                                                    paymentSentData.put("message",
+                                                            "Payment sent by " + fName + " " + lName);
+                                                    paymentSentData.put("date", now);
+                                                    paymentSentRef.push().setValue(paymentSentData);
+
+                                                    /// Persist UI state
                                                     SharedPreferences prefs = getSharedPreferences("BookingPref_"+userId, MODE_PRIVATE);
                                                     prefs.edit().putBoolean("paymentSubmitted", true).putInt("bookingProgress",3).apply();
                                                     sendTelegramNotification("🔔 New Payment Sent 🔔\n👤 Name: "+fName+" "+lName+"\n📅 Date: "+now+"\n✅ Status: Done");
@@ -239,7 +252,7 @@ public class Payment extends AppCompatActivity {
             });
         });
 
-        // Back button
+        /// Back button
         backButton.setOnClickListener(v -> onBackPressed());
     }
 
