@@ -376,7 +376,7 @@ public class HomeFragment extends Fragment {
                     if (dataSnapshot.exists()) {
                         // Retrieve new data from Firebase
                         String newImageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
-                        String newUsername = dataSnapshot.child("username").getValue(String.class);
+                        String newUsername = dataSnapshot.child("firstName").getValue(String.class);
 
                         // Update profile image if the URL has changed
                         if (!Objects.equals(newImageUrl, cachedImageUrl)) {

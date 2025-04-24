@@ -225,6 +225,7 @@ public class BookingReceipt extends AppCompatActivity {
 //    }
 
 
+
     /// Helper method to capture a screenshot of a given view.
     private Bitmap getScreenShot(View view) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
@@ -520,6 +521,7 @@ public class BookingReceipt extends AppCompatActivity {
         paymentMethod.put("Amount", "N/A");
         paymentMethod.put("Status", "N/A");
 
+
         /// Combine the booking data.
         Map<String, Object> bookingData = new HashMap<>();
         bookingData.put("bookingReview", bookingReview);
@@ -670,7 +672,7 @@ public class BookingReceipt extends AppCompatActivity {
             }
         });
     }
-
+    
     private void sendTelegramNotification(String message) {
         new Thread(() -> {
             try {

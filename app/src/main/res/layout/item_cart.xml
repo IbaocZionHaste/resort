@@ -41,9 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:orientation="vertical">
-
 
 
             <TextView
@@ -108,9 +107,9 @@
                 android:layout_height="wrap_content"
                 android:text="Add Ons"
                 android:clickable="true"
+                app:cardElevation="8dp"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/light_blue" />
-
 
             <ImageView
                 android:id="@+id/minusButton"
