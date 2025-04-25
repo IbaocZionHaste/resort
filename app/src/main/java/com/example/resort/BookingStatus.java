@@ -16,9 +16,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.pdf.PdfDocument;
 import android.media.AudioAttributes;
@@ -1507,7 +1509,7 @@ public class BookingStatus extends AppCompatActivity {
                                 }
                             }
 
-                            // Food and Drinks
+                            /// Food and Drinks
                             DataSnapshot foodAndDrinks = orderItems.child("foodAndDrinks");
                             if (foodAndDrinks.exists()) {
                                 for (DataSnapshot itemSnap : foodAndDrinks.getChildren()) {
@@ -1525,23 +1527,46 @@ public class BookingStatus extends AppCompatActivity {
                             }
 
                             // Packages
-                            DataSnapshot packageData = orderItems.child("package");
-                            if (packageData.exists()) {
-                                for (DataSnapshot itemSnap : packageData.getChildren()) {
-                                    View row = inflater.inflate(R.layout.item_row, itemContainer, false);
-                                    String name = itemSnap.child("name").getValue(String.class);
-                                    Long qty = itemSnap.child("quantity").getValue(Long.class);
-                                    Double price = itemSnap.child("price").getValue(Double.class);
+                            DataSnapshot pkgNode = orderItems.child("package");
+                            if (pkgNode.exists()) {
+                                /// Case A: single object (your current structure)
+                                if (pkgNode.hasChild("name")) {
+                                    String id    = pkgNode.getKey();
+                                    String name  = pkgNode.child("name").getValue(String.class);
+                                    Long   qty   = pkgNode.child("quantity").getValue(Long.class);
+                                    Double price = pkgNode.child("price").getValue(Double.class);
                                     if (name != null && qty != null && price != null) {
+                                        View row = inflater.inflate(R.layout.item_row, itemContainer, false);
+                                        row.setTag(id);
                                         ((TextView) row.findViewById(R.id.tvProductName)).setText(name);
                                         ((TextView) row.findViewById(R.id.tvQty)).setText(String.valueOf(qty));
-                                        ((TextView) row.findViewById(R.id.tvPrice)).setText(String.format("₱%.2f", price));
+                                        ((TextView) row.findViewById(R.id.tvPrice))
+                                                .setText(String.format("₱%.2f", price));
                                         itemContainer.addView(row);
+                                    }
+                                }
+                                /// Case B: list of packages under push-IDs
+                                else {
+                                    for (DataSnapshot itemSnap : pkgNode.getChildren()) {
+                                        String id    = itemSnap.getKey();
+                                        String name  = itemSnap.child("name").getValue(String.class);
+                                        Long   qty   = itemSnap.child("quantity").getValue(Long.class);
+                                        Double price = itemSnap.child("price").getValue(Double.class);
+                                        if (name != null && qty != null && price != null) {
+                                            View row = inflater.inflate(R.layout.item_row, itemContainer, false);
+                                            row.setTag(id);
+                                            ((TextView) row.findViewById(R.id.tvProductName)).setText(name);
+                                            ((TextView) row.findViewById(R.id.tvQty)).setText(String.valueOf(qty));
+                                            ((TextView) row.findViewById(R.id.tvPrice))
+                                                    .setText(String.format("₱%.2f", price));
+                                            itemContainer.addView(row);
+                                        }
                                     }
                                 }
                             }
 
-                            // Show the dialog
+
+                            /// Show the dialog
                             AlertDialog dialog = new AlertDialog.Builder(context)
                                     .setView(dialogV)
                                     .setCancelable(false)
@@ -1604,14 +1629,42 @@ public class BookingStatus extends AppCompatActivity {
      * @param dialogToDismiss the dialog to dismiss after saving
      * @param onDone callback that receives true if saved successfully
      */
-    public void downloadAsPDF(View contentView, AlertDialog dialogToDismiss, Consumer<Boolean> onDone) {
-        // --- 1) ensure the view has a size by measuring+laying out
-        int specW = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+//    public void downloadAsPDF(View contentView, AlertDialog dialogToDismiss, Consumer<Boolean> onDone) {
+//        // --- 1) ensure the view has a size by measuring+laying out
+//        int specW = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+//        int specH = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+//        contentView.measure(specW, specH);
+//        contentView.layout(0, 0, contentView.getMeasuredWidth(), contentView.getMeasuredHeight());
+//
+//        // --- 2) render the view to a bitmap
+//        Bitmap bitmap = Bitmap.createBitmap(
+//                contentView.getMeasuredWidth(),
+//                contentView.getMeasuredHeight(),
+//                Bitmap.Config.ARGB_8888
+//        );
+//        Canvas canvas = new Canvas(bitmap);
+//        contentView.draw(canvas);
+//
+//        // --- 3) build the PDF
+//        PdfDocument pdf = new PdfDocument();
+//        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(
+//                bitmap.getWidth(), bitmap.getHeight(), 1
+//        ).create();
+//        PdfDocument.Page page = pdf.startPage(pageInfo);
+//        page.getCanvas().drawBitmap(bitmap, 0, 0, null);
+//        pdf.finishPage(page);
+        public void downloadAsPDF(View contentView, AlertDialog dialogToDismiss, Consumer<Boolean> onDone) {
+        // 0) Force software layer so everything (images, shapes) draws into the Canvas
+        contentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); // <<<====
+
+        // 1) Measure/layout with actual width (use screen width or parent width)
+        int targetWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int specW = View.MeasureSpec.makeMeasureSpec(targetWidth, View.MeasureSpec.EXACTLY); // <<<====
         int specH = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         contentView.measure(specW, specH);
         contentView.layout(0, 0, contentView.getMeasuredWidth(), contentView.getMeasuredHeight());
 
-        // --- 2) render the view to a bitmap
+        // 2) Render to Bitmap
         Bitmap bitmap = Bitmap.createBitmap(
                 contentView.getMeasuredWidth(),
                 contentView.getMeasuredHeight(),
@@ -1620,14 +1673,29 @@ public class BookingStatus extends AppCompatActivity {
         Canvas canvas = new Canvas(bitmap);
         contentView.draw(canvas);
 
-        // --- 3) build the PDF
+        // 3) Build PDF, splitting into pages if needed
         PdfDocument pdf = new PdfDocument();
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(
-                bitmap.getWidth(), bitmap.getHeight(), 1
-        ).create();
-        PdfDocument.Page page = pdf.startPage(pageInfo);
-        page.getCanvas().drawBitmap(bitmap, 0, 0, null);
-        pdf.finishPage(page);
+        int pageHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        int pageCount = (int) Math.ceil((float) bitmap.getHeight() / pageHeight);
+
+        for (int i = 0; i < pageCount; i++) {
+            int offsetY = i * pageHeight;
+            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(
+                    bitmap.getWidth(),
+                    Math.min(pageHeight, bitmap.getHeight() - offsetY),
+                    i + 1
+            ).create();
+            PdfDocument.Page page = pdf.startPage(pageInfo);
+
+            // draw the slice of the bitmap onto this page
+            page.getCanvas().drawBitmap(
+                    bitmap,
+                    new Rect(0, offsetY, bitmap.getWidth(), offsetY + pageInfo.getPageHeight()),
+                    new Rect(0, 0, pageInfo.getPageWidth(), pageInfo.getPageHeight()),
+                    null
+            );
+            pdf.finishPage(page);
+        }
 
         // --- 4) save to the public Downloads directory
         File downloads;

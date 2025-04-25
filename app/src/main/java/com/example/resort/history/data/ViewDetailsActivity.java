@@ -109,9 +109,9 @@ public class ViewDetailsActivity extends AppCompatActivity {
             TextView tvStatus = findViewById(R.id.tvStatus);
 
             tvPayment.setText("Payment: " + pm.Payment);
-            tvAmount.setText("Amount: " + pm.Amount);
+            tvAmount.setText("Paid Amount: " + pm.Amount);
             tvBalance.setText("Balance: " + (pm.Balance == null ? "N/A" : pm.Balance));
-            tvTotal.setText("Total: " + (pm.total == null ? "N/A" : pm.total));
+            tvTotal.setText("Total Amount: " + (pm.total == null ? "N/A" : pm.total));
             tvDates.setText("Date: " + (TextUtils.isEmpty(pm.Date) ? "N/A" : pm.Date));
             tvFirstname.setText("Firstname: " + pm.Firstname);
             tvLastname.setText("Lastname: " + pm.Lastname);
