@@ -47,7 +47,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
         Review review = reviews.get(position);
-        holder.tvUsername.setText(review.getUser());
+        holder.tvUsername.setText('"' + review.getUser()  + '"');
         holder.tvComment.setText('"' + review.getComment() + '"');
         holder.tvDate.setText(review.getDate());
         /// Convert int to float for RatingBar
