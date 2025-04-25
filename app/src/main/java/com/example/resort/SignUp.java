@@ -153,7 +153,7 @@ public class SignUp extends AppCompatActivity {
             }
         });
     }
-///This code uername is taken
+///This code username is taken
 ///    private void registerUser() {
 //        String email = etEmail.getText().toString().trim();
 //        String username = etUsername.getText().toString().trim();
