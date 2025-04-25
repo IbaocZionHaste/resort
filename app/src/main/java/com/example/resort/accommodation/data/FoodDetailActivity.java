@@ -347,8 +347,36 @@ public class FoodDetailActivity extends AppCompatActivity {
         recyclerViewReviews.setAdapter(reviewAdapter);
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        // Fetch reviews for the current food item (match by itemName).
-        final String foodName = tvName.getText().toString();
+//        // Fetch reviews for the current food item (match by itemName).
+//        final String foodName = tvName.getText().toString();
+//        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+//        usersRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                List<Review> reviews = new ArrayList<>();
+//                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+//                    DataSnapshot ratingsSnapshot = userSnapshot.child("MyRating");
+//                    if (ratingsSnapshot.exists()) {
+//                        for (DataSnapshot ratingSnapshot : ratingsSnapshot.getChildren()) {
+//                            String itemName = ratingSnapshot.child("itemName").getValue(String.class);
+//                            if (foodName.equals(itemName)) {
+//                                String comment = ratingSnapshot.child("comment").getValue(String.class);
+//                                String date = ratingSnapshot.child("date").getValue(String.class);
+//                                Integer rate = ratingSnapshot.child("rate").getValue(Integer.class);
+//                                String user = ratingSnapshot.child("user").getValue(String.class);
+//                                String category = ratingSnapshot.child("category").getValue(String.class);
+//
+//                                Review review = new Review(user, rate, comment, date, category, itemName);
+//                                reviews.add(review);
+//                            }
+//                        }
+//                    }
+//                }
+//                reviewAdapter.updateReviews(reviews);
+//                updateAverageRating(reviews); // Update average rating view.
+//            }
+
+        final String cottageName = tvName.getText().toString().trim();
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -358,23 +386,45 @@ public class FoodDetailActivity extends AppCompatActivity {
                     DataSnapshot ratingsSnapshot = userSnapshot.child("MyRating");
                     if (ratingsSnapshot.exists()) {
                         for (DataSnapshot ratingSnapshot : ratingsSnapshot.getChildren()) {
-                            String itemName = ratingSnapshot.child("itemName").getValue(String.class);
-                            if (foodName.equals(itemName)) {
-                                String comment = ratingSnapshot.child("comment").getValue(String.class);
-                                String date = ratingSnapshot.child("date").getValue(String.class);
-                                Integer rate = ratingSnapshot.child("rate").getValue(Integer.class);
-                                String user = ratingSnapshot.child("user").getValue(String.class);
-                                String category = ratingSnapshot.child("category").getValue(String.class);
+                            String itemNameField = ratingSnapshot.child("itemName")
+                                    .getValue(String.class);
+                            if (itemNameField != null) {
+                                // split the stored string into individual names
+                                String[] storedNames = itemNameField.split("\\s*,\\s*");
+                                // check if our cottageName is one of them
+                                boolean matches = false;
+                                for (String n : storedNames) {
+                                    if (cottageName.equalsIgnoreCase(n.trim())) {
+                                        matches = true;
+                                        break;
+                                    }
+                                }
 
-                                Review review = new Review(user, rate, comment, date, category, itemName);
-                                reviews.add(review);
+                                if (matches) {
+                                    String comment  = ratingSnapshot.child("comment")
+                                            .getValue(String.class);
+                                    String date     = ratingSnapshot.child("date")
+                                            .getValue(String.class);
+                                    Integer rate    = ratingSnapshot.child("rate")
+                                            .getValue(Integer.class);
+                                    String user     = ratingSnapshot.child("user")
+                                            .getValue(String.class);
+                                    String category = ratingSnapshot.child("category")
+                                            .getValue(String.class);
+
+                                    Review review = new Review(
+                                            user, rate, comment, date, category, cottageName
+                                    );
+                                    reviews.add(review);
+                                }
                             }
                         }
                     }
                 }
                 reviewAdapter.updateReviews(reviews);
-                updateAverageRating(reviews); // Update average rating view.
+                updateAverageRating(reviews);
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -576,27 +576,43 @@ public class Comment extends AppCompatActivity {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DataSnapshot bookingSnap = bookingSnapshots.get(selectedBookingIndex);
 
-        // --- GATHER ONLY ACCOMMODATION NAMES ---
+        // 1) Gather all item names
         List<String> names = new ArrayList<>();
-        DataSnapshot accSection = bookingSnap.child("accommodations");
+        DataSnapshot accSection  = bookingSnap.child("accommodations");
+        DataSnapshot foodSection = bookingSnap.child("foodAndDrinks");
+        DataSnapshot pkgSection  = bookingSnap.child("package");
+
         if (accSection.exists()) {
             for (DataSnapshot item : accSection.getChildren()) {
                 String n = item.child("name").getValue(String.class);
                 if (n != null) names.add(n);
             }
         }
+        if (foodSection.exists()) {
+            for (DataSnapshot item : foodSection.getChildren()) {
+                String n = item.child("name").getValue(String.class);
+                if (n != null) names.add(n);
+            }
+        }
+        if (pkgSection.exists()) {
+            String n = pkgSection.child("name").getValue(String.class);
+            if (n != null) names.add(n);
+        }
 
-        // Join into single string or fallback
+        // 2) Join names or fallback
         final String allNames = names.isEmpty()
-                ? "No Accommodation"
+                ? "No Items"
                 : TextUtils.join(", ", names);
 
-        // Category is always "Accommodation"
+        // 3) Category always "Accommodation"
         final String allCategories = "Accommodation";
 
-        // Fetch username then push record
+        // 4) Fetch username then build & push record
         DatabaseReference userRef = FirebaseDatabase.getInstance()
-                .getReference("users").child(userId).child("username");
+                .getReference("users")
+                .child(userId)
+                .child("username");
+
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(DataSnapshot snap) {
                 String username = snap.getValue(String.class);
@@ -617,10 +633,15 @@ public class Comment extends AppCompatActivity {
                 record.put("date", sdf.format(new Date()));
 
                 DatabaseReference ratingRef = FirebaseDatabase.getInstance()
-                        .getReference("users").child(userId).child("MyRating");
+                        .getReference("users")
+                        .child(userId)
+                        .child("MyRating");
+
                 ratingRef.push().setValue(record, (error, ref) -> {
+                    // Restore UI state
                     isSubmitting = false;
                     submitBtn.setEnabled(true);
+
                     if (error == null) {
                         Toast.makeText(Comment.this,
                                 "Rating submitted", Toast.LENGTH_SHORT).show();
@@ -629,8 +650,10 @@ public class Comment extends AppCompatActivity {
                         String bookingKey = bookingSnapshots
                                 .get(selectedBookingIndex).getKey();
                         FirebaseDatabase.getInstance()
-                                .getReference("users").child(userId)
-                                .child("MyReviewDone").child(bookingKey)
+                                .getReference("users")
+                                .child(userId)
+                                .child("MyReviewDone")
+                                .child(bookingKey)
                                 .removeValue();
 
                         bookingSnapshots.remove(selectedBookingIndex);
@@ -653,7 +676,6 @@ public class Comment extends AppCompatActivity {
             }
         });
     }
-
 }
 
 //package com.example.resort;
