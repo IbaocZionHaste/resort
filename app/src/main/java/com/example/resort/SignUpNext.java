@@ -1,3 +1,651 @@
+package com.example.resort;
+
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.hbb20.CountryCodePicker;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * SignUpNext Activity now forwards to OTP verification.
+ * Data is not saved until OTP is confirmed.
+ *
+ * After submission, all user inputs including formatted phone number
+ * are passed to VerificationOtp.
+ */
+public class SignUpNext extends AppCompatActivity {
+    private static final String LOCATIONS_URL =
+            "https://raw.githubusercontent.com/xemasiv/psgc2/master/tree.json";
+
+    private EditText etLastName;
+    private EditText etFirstName;
+    private EditText etMI;
+    private Spinner streetSpinner;
+    private EditText etAge;
+    private EditText etPhone;
+    private Spinner genderSpinner;
+    private Spinner provinceSpinner;
+    private Spinner municipalitySpinner;
+    private Spinner barangaySpinner;
+    private CountryCodePicker ccp;
+    private RequestQueue requestQueue;
+    private JSONObject locationsJson;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sign_up_next);
+
+        /// Initialize views
+        etLastName = findViewById(R.id.editTextText6);
+        etFirstName = findViewById(R.id.editTextText15);
+        etMI = findViewById(R.id.editTextText11);
+        streetSpinner = findViewById(R.id.editTextText32);
+        etAge = findViewById(R.id.editTextTextPassword);
+        etPhone = findViewById(R.id.editTextTextPassword2);
+        genderSpinner = findViewById(R.id.genderSpinner);
+        provinceSpinner = findViewById(R.id.editTextText33);
+        municipalitySpinner = findViewById(R.id.editTextText30);
+        barangaySpinner = findViewById(R.id.editTextText31);
+        ccp = findViewById(R.id.ccp);
+        Button btnNext = findViewById(R.id.button);
+
+        /// Initialize network queue
+        requestQueue = Volley.newRequestQueue(this);
+
+        /// Setup spinners and load data
+        setupGenderSpinner();
+        setupPurokSpinner();
+        fetchLocationsJson();
+
+        /// Listener for province spinner
+        provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                if (view instanceof TextView) ((TextView) view).setTextColor(Color.BLACK);
+                if (pos > 0) {
+                    populateMunicipalities(provinceSpinner.getSelectedItem().toString());
+                } else {
+                    resetSpinner(municipalitySpinner, "Select Municipality...");
+                    resetSpinner(barangaySpinner, "Select Barangay...");
+                }
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        /// Listener for municipality spinner
+        municipalitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                if (view instanceof TextView) ((TextView) view).setTextColor(Color.BLACK);
+                if (pos > 0) {
+                    populateBarangays(
+                            provinceSpinner.getSelectedItem().toString(),
+                            municipalitySpinner.getSelectedItem().toString()
+                    );
+                } else {
+                    resetSpinner(barangaySpinner, "Select Barangay...");
+                }
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        /// Next button click: validate and forward to OTP
+        btnNext.setOnClickListener(v -> {
+            if (isInputValid()) {
+                Intent intent = new Intent(SignUpNext.this, VerificationOtp.class);
+                intent.putExtra("lastName", etLastName.getText().toString().trim());
+                intent.putExtra("firstName", etFirstName.getText().toString().trim());
+                intent.putExtra("middleInitial", etMI.getText().toString().trim());
+                intent.putExtra("province", provinceSpinner.getSelectedItem().toString());
+                intent.putExtra("municipality", municipalitySpinner.getSelectedItem().toString());
+                intent.putExtra("barangay", barangaySpinner.getSelectedItem().toString());
+                intent.putExtra("street", streetSpinner.getSelectedItem().toString());
+                intent.putExtra("age", etAge.getText().toString().trim());
+                String rawPhone = etPhone.getText().toString().trim();
+                String formattedPhone = formatPhoneNumber(rawPhone);
+                intent.putExtra("phoneNumber", ccp.getSelectedCountryCodeWithPlus() + formattedPhone);
+                intent.putExtra("gender", genderSpinner.getSelectedItem().toString());
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(SignUpNext.this, "Please fill in all required fields.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchLocationsJson() {
+        JsonObjectRequest req = new JsonObjectRequest(
+                Request.Method.GET,
+                LOCATIONS_URL,
+                null,
+                response -> {
+                    locationsJson = response;
+                    populateProvinces();
+                },
+                error -> Toast.makeText(this, "Failed to load locations.", Toast.LENGTH_SHORT).show()
+        );
+        requestQueue.add(req);
+    }
+
+    private void populateProvinces() {
+        List<String> list = new ArrayList<>();
+        list.add("Select Province...");
+        Iterator<String> regions = locationsJson.keys();
+        while (regions.hasNext()) {
+            String region = regions.next();
+            JSONObject regObj = locationsJson.optJSONObject(region);
+            if (regObj == null) continue;
+            Iterator<String> provs = regObj.keys();
+            while (provs.hasNext()) {
+                String prov = provs.next();
+                if (!"population".equals(prov)) list.add(prov);
+            }
+        }
+        ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        provinceSpinner.setAdapter(ad);
+    }
+
+    private void populateMunicipalities(String province) {
+        try {
+            JSONObject provObj = null;
+            Iterator<String> regions = locationsJson.keys();
+            while (regions.hasNext()) {
+                JSONObject reg = locationsJson.optJSONObject(regions.next());
+                if (reg != null && reg.has(province)) {
+                    provObj = reg.optJSONObject(province);
+                    break;
+                }
+            }
+            if (provObj == null) {
+                resetSpinner(municipalitySpinner, "Select Municipality...");
+                return;
+            }
+            List<String> list = new ArrayList<>();
+            list.add("Select Municipality...");
+            Iterator<String> munis = provObj.keys();
+            while (munis.hasNext()) {
+                String m = munis.next();
+                if (!"population".equals(m)) list.add(m);
+            }
+            ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+            ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            municipalitySpinner.setAdapter(ad);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        resetSpinner(barangaySpinner, "Select Barangay...");
+    }
+
+    private void populateBarangays(String province, String municipality) {
+        try {
+            JSONObject provObj = null;
+            Iterator<String> regions = locationsJson.keys();
+            while (regions.hasNext()) {
+                JSONObject reg = locationsJson.optJSONObject(regions.next());
+                if (reg != null && reg.has(province)) provObj = reg.optJSONObject(province);
+            }
+            if (provObj == null) return;
+            JSONObject munObj = provObj.optJSONObject(municipality);
+            if (munObj == null) return;
+            List<String> list = new ArrayList<>();
+            list.add("Select Barangay...");
+            Iterator<String> bars = munObj.keys();
+            while (bars.hasNext()) {
+                String b = bars.next();
+                if (!"population".equals(b) && !"class".equals(b)) list.add(b);
+            }
+            ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+            ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            barangaySpinner.setAdapter(ad);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupPurokSpinner() {
+        List<String> list = new ArrayList<>();
+        list.add("Select Purok...");
+        for (int i = 1; i <= 100; i++) list.add("Purok " + i);
+        ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        streetSpinner.setAdapter(ad);
+        streetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
+                if (v instanceof TextView) ((TextView) v).setTextColor(Color.BLACK);
+            }
+            @Override public void onNothingSelected(AdapterView<?> p) {}
+        });
+    }
+
+    private void setupGenderSpinner() {
+        List<String> list = new ArrayList<>();
+        list.add("Select Gender");
+        list.add("Male");
+        list.add("Female");
+        ArrayAdapter<String> ad = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list) {
+            @Override public View getView(int pos, View cv, ViewGroup parent) {
+                TextView tv = (TextView) super.getView(pos, cv, parent);
+                tv.setTextColor(Color.BLACK);
+                return tv;
+            }
+            @Override public View getDropDownView(int pos, View cv, ViewGroup parent) {
+                TextView tv = (TextView) super.getDropDownView(pos, cv, parent);
+                tv.setTextColor(Color.DKGRAY);
+                return tv;
+            }
+        };
+        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genderSpinner.setAdapter(ad);
+    }
+
+    private void resetSpinner(Spinner spinner, String prompt) {
+        List<String> list = new ArrayList<>();
+        list.add(prompt);
+        ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(ad);
+    }
+
+    private boolean isInputValid() {
+        return !TextUtils.isEmpty(etLastName.getText().toString().trim()) &&
+                !TextUtils.isEmpty(etFirstName.getText().toString().trim()) &&
+                provinceSpinner.getSelectedItemPosition() > 0 &&
+                municipalitySpinner.getSelectedItemPosition() > 0 &&
+                barangaySpinner.getSelectedItemPosition() > 0 &&
+                streetSpinner.getSelectedItemPosition() > 0 &&
+                !TextUtils.isEmpty(etAge.getText().toString().trim()) &&
+                !TextUtils.isEmpty(etPhone.getText().toString().trim()) &&
+                genderSpinner.getSelectedItemPosition() > 0;
+    }
+
+
+    private String formatPhoneNumber(String phone) {
+        phone = phone.replaceAll("[^\\d+]", "");
+        if (phone.startsWith("+63")) return phone.substring(3);
+        if (phone.startsWith("63")) return phone.substring(2);
+        if (phone.startsWith("0")) return phone.substring(1);
+        return phone;
+    }
+}
+
+
+
+///This the original
+//package com.example.resort;
+//
+//import android.content.Intent;
+//import android.graphics.Color;
+//import android.os.Bundle;
+//import android.text.TextUtils;
+//import android.view.View;
+//import android.view.ViewGroup;
+//import android.widget.AdapterView;
+//import android.widget.ArrayAdapter;
+//import android.widget.Button;
+//import android.widget.EditText;
+//import android.widget.Spinner;
+//import android.widget.TextView;
+//import android.widget.Toast;
+//
+//import androidx.activity.EdgeToEdge;
+//import androidx.appcompat.app.AppCompatActivity;
+//
+//import com.android.volley.Request;
+//import com.android.volley.RequestQueue;
+//import com.android.volley.toolbox.JsonObjectRequest;
+//import com.android.volley.toolbox.Volley;
+//import com.hbb20.CountryCodePicker;
+//
+//import org.json.JSONObject;
+//
+//import java.util.ArrayList;
+//import java.util.Iterator;
+//import java.util.List;
+//
+///**
+// * SignUpNext Activity now supports all Philippine provinces.
+// * Ensure AndroidManifest.xml contains:
+// * <uses-permission android:name="android.permission.INTERNET" />
+// */
+//public class SignUpNext extends AppCompatActivity {
+//
+//    private static final String LOCATIONS_URL =
+//            "https://raw.githubusercontent.com/xemasiv/psgc2/master/tree.json";
+//
+//    private EditText etLastName, etFirstName, etMI, etStreet, etAge, etPhone;
+//    private Spinner genderSpinner, provinceSpinner, municipalitySpinner, barangaySpinner, streetSpinner ;
+//    private CountryCodePicker ccp;
+//    private RequestQueue requestQueue;
+//    private JSONObject locationsJson;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        EdgeToEdge.enable(this);
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_sign_up_next);
+//
+//        // Initialize views
+//        etLastName         = findViewById(R.id.editTextText6);
+//        etFirstName        = findViewById(R.id.editTextText15);
+//        etMI               = findViewById(R.id.editTextText11);
+//        streetSpinner           = findViewById(R.id.editTextText32);
+//        etAge              = findViewById(R.id.editTextTextPassword);
+//        etPhone            = findViewById(R.id.editTextTextPassword2);
+//
+//        genderSpinner      = findViewById(R.id.genderSpinner);
+//        provinceSpinner    = findViewById(R.id.editTextText33);
+//        municipalitySpinner = findViewById(R.id.editTextText30);
+//        barangaySpinner    = findViewById(R.id.editTextText31);
+//
+//        ccp                = findViewById(R.id.ccp);
+//        Button btnNext     = findViewById(R.id.button);
+//
+//        /// Network queue
+//        requestQueue = Volley.newRequestQueue(this);
+//
+//        /// Setup gender and start loading locations
+//        setupGenderSpinner();
+//        fetchLocationsJson();
+//        setupPurokSpinner();
+//
+//        provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+//                if (view instanceof TextView) {
+//                    ((TextView) view).setTextColor(Color.BLACK); // Set to black
+//                }
+//
+//                if (pos > 0) {
+//                    String provName = provinceSpinner.getSelectedItem().toString();
+//                    populateMunicipalities(provName);
+//                } else {
+//                    resetSpinner(municipalitySpinner, "Select Municipality...");
+//                    resetSpinner(barangaySpinner, "Select Barangay...");
+//                }
+//            }
+//
+//            @Override public void onNothingSelected(AdapterView<?> parent) {}
+//        });
+//
+//        municipalitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+//                if (view instanceof TextView) {
+//                    ((TextView) view).setTextColor(Color.BLACK); // Set to black
+//                }
+//
+//                if (pos > 0) {
+//                    String provName = provinceSpinner.getSelectedItem().toString();
+//                    String muniName = municipalitySpinner.getSelectedItem().toString();
+//                    populateBarangays(provName, muniName);
+//                } else {
+//                    resetSpinner(barangaySpinner, "Select Barangay...");
+//                }
+//            }
+//
+//            @Override public void onNothingSelected(AdapterView<?> parent) {}
+//        });
+//
+//        barangaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+//                if (view instanceof TextView) {
+//                    ((TextView) view).setTextColor(Color.BLACK); // Set to black
+//                }
+//
+//                /// Add any additional logic here if needed
+//            }
+//
+//            @Override public void onNothingSelected(AdapterView<?> parent) {}
+//        });
+//
+//
+//        btnNext.setOnClickListener(v -> {
+//            if (isInputValid()) {
+//                navigateToSummary();
+//            } else {
+//                Toast.makeText(SignUpNext.this, "Please fill in all required fields.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//
+//    private void fetchLocationsJson() {
+//        JsonObjectRequest req = new JsonObjectRequest(
+//                Request.Method.GET,
+//                LOCATIONS_URL,
+//                null,
+//                response -> {
+//                    locationsJson = response;
+//                    populateProvinces();
+//                },
+//                error -> Toast.makeText(this, "Failed to load location data.", Toast.LENGTH_SHORT).show()
+//        );
+//        requestQueue.add(req);
+//    }
+//
+//    private void populateProvinces() {
+//        List<String> provinces = new ArrayList<>();
+//        provinces.add("Select Province...");
+//        // Flatten provinces under each region
+//        Iterator<String> regionKeys = locationsJson.keys();
+//        while (regionKeys.hasNext()) {
+//            String regionName = regionKeys.next();
+//            JSONObject regionObj = locationsJson.optJSONObject(regionName);
+//            if (regionObj == null) continue;
+//            Iterator<String> provKeys = regionObj.keys();
+//            while (provKeys.hasNext()) {
+//                String prov = provKeys.next();
+//                if ("population".equals(prov)) continue;
+//                provinces.add(prov);
+//            }
+//        }
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, provinces);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        provinceSpinner.setAdapter(adapter);
+//    }
+//
+//
+//
+//    private void populateMunicipalities(String provName) {
+//        try {
+//            JSONObject provObj = null;
+//            Iterator<String> regionKeys = locationsJson.keys();
+//            while (regionKeys.hasNext()) {
+//                JSONObject region = locationsJson.optJSONObject(regionKeys.next());
+//                if (region != null && region.has(provName)) {
+//                    provObj = region.optJSONObject(provName);
+//                    break;
+//                }
+//            }
+//            if (provObj == null) {
+//                resetSpinner(municipalitySpinner, "Select Municipality...");
+//                return;
+//            }
+//            List<String> munis = new ArrayList<>();
+//            munis.add("Select Municipality...");
+//            Iterator<String> muniKeys = provObj.keys();
+//            while (muniKeys.hasNext()) {
+//                String mun = muniKeys.next();
+//                if ("population".equals(mun)) continue;
+//                munis.add(mun);
+//            }
+//            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, munis);
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            municipalitySpinner.setAdapter(adapter);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        resetSpinner(barangaySpinner, "Select Barangay...");
+//    }
+//
+//    private void populateBarangays(String provName, String muniName) {
+//        try {
+//            JSONObject provObj = null;
+//            Iterator<String> regionKeys = locationsJson.keys();
+//            while (regionKeys.hasNext()) {
+//                JSONObject region = locationsJson.optJSONObject(regionKeys.next());
+//                if (region != null && region.has(provName)) {
+//                    provObj = region.optJSONObject(provName);
+//                    break;
+//                }
+//            }
+//            if (provObj == null) return;
+//            JSONObject muniObj = provObj.optJSONObject(muniName);
+//            if (muniObj == null) return;
+//            List<String> barangays = new ArrayList<>();
+//            barangays.add("Select Barangay...");
+//            Iterator<String> keys = muniObj.keys();
+//            while (keys.hasNext()) {
+//                String key = keys.next();
+//                if ("class".equals(key) || "population".equals(key)) continue;
+//                barangays.add(key);
+//            }
+//            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, barangays);
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            barangaySpinner.setAdapter(adapter);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//
+//    /** Populate Purok spinner with 1–100 **/
+//    private void setupPurokSpinner() {
+//        List<String> puroks = new ArrayList<>();
+//        puroks.add("Select Purok...");
+//        for (int i = 1; i <= 100; i++) {
+//            puroks.add("Purok " + i);
+//        }
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+//                android.R.layout.simple_spinner_item, puroks);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        streetSpinner.setAdapter(adapter);
+//
+//        streetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+//                if (view instanceof TextView) ((TextView) view).setTextColor(Color.BLACK);
+//            }
+//            @Override public void onNothingSelected(AdapterView<?> parent) {}
+//        });
+//    }
+//
+//    private void resetSpinner(Spinner spinner, String prompt) {
+//        List<String> list = new ArrayList<>();
+//        list.add(prompt);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(adapter);
+//    }
+//
+//    private boolean isInputValid() {
+//        return !TextUtils.isEmpty(etLastName.getText().toString().trim()) &&
+//                !TextUtils.isEmpty(etFirstName.getText().toString().trim()) &&
+//                provinceSpinner.getSelectedItemPosition() > 0 &&
+//                municipalitySpinner.getSelectedItemPosition() > 0 &&
+//                barangaySpinner.getSelectedItemPosition() > 0 &&
+//                !TextUtils.isEmpty(etStreet.getText().toString().trim()) &&
+//                !TextUtils.isEmpty(etAge.getText().toString().trim()) &&
+//                !TextUtils.isEmpty(etPhone.getText().toString().trim()) &&
+//                genderSpinner.getSelectedItemPosition() > 0;
+//    }
+//
+//    private void navigateToSummary() {
+//        Intent intent = new Intent(SignUpNext.this, SignUp.class);
+//        intent.putExtra("lastName", etLastName.getText().toString().trim());
+//        intent.putExtra("firstName", etFirstName.getText().toString().trim());
+//        intent.putExtra("middleInitial", etMI.getText().toString().trim());
+//        intent.putExtra("province", provinceSpinner.getSelectedItem().toString());
+//        intent.putExtra("municipality", municipalitySpinner.getSelectedItem().toString());
+//        intent.putExtra("barangay", barangaySpinner.getSelectedItem().toString());
+//        intent.putExtra("street", etStreet.getText().toString().trim());
+//        intent.putExtra("age", etAge.getText().toString().trim());
+//        String rawPhone = etPhone.getText().toString().trim();
+//        String formattedPhone = formatPhoneNumber(rawPhone);
+//        intent.putExtra("phoneNumber", ccp.getSelectedCountryCodeWithPlus() + formattedPhone);
+//        intent.putExtra("gender", genderSpinner.getSelectedItem().toString());
+//        startActivity(intent);
+//        overridePendingTransition(0, 0);
+//        resetFields();
+//    }
+//
+//    private String formatPhoneNumber(String phone) {
+//        phone = phone.replaceAll("[^\\d+]", "");
+//        if (phone.startsWith("+63")) return phone.substring(3);
+//        if (phone.startsWith("63")) return phone.substring(2);
+//        if (phone.startsWith("0")) return phone.substring(1);
+//        return phone;
+//    }
+//
+//    private void setupGenderSpinner() {
+//        List<String> genders = new ArrayList<>();
+//        genders.add("Select Gender");
+//        genders.add("Male");
+//        genders.add("Female");
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
+//            @Override public View getView(int pos, View cv, ViewGroup parent) {
+//                TextView tv = (TextView) super.getView(pos, cv, parent);
+//                tv.setTextColor(getResources().getColor(android.R.color.black));
+//                return tv;
+//            }
+//            @Override public View getDropDownView(int pos, View cv, ViewGroup parent) {
+//                TextView tv = (TextView) super.getDropDownView(pos, cv, parent);
+//                tv.setTextColor(getResources().getColor(android.R.color.darker_gray));
+//                return tv;
+//            }
+//        };
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        genderSpinner.setAdapter(adapter);
+//    }
+//
+//    private void resetFields() {
+//        etLastName.setText("");
+//        etFirstName.setText("");
+//        etMI.setText("");
+//        etStreet.setText("");
+//        etAge.setText("");
+//        etPhone.setText("");
+//        genderSpinner.setSelection(0);
+//        provinceSpinner.setSelection(0);
+//        municipalitySpinner.setSelection(0);
+//        barangaySpinner.setSelection(0);
+//        ccp.resetToDefaultCountry();
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
+
 //package com.example.resort;
 //
 //import android.content.Intent;
@@ -167,348 +815,6 @@
 //    }
 //}
 //
-
-
-package com.example.resort;
-
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.hbb20.CountryCodePicker;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-/**
- * SignUpNext Activity now supports all Philippine provinces.
- * Ensure AndroidManifest.xml contains:
- * <uses-permission android:name="android.permission.INTERNET" />
- */
-public class SignUpNext extends AppCompatActivity {
-
-    private static final String LOCATIONS_URL =
-            "https://raw.githubusercontent.com/xemasiv/psgc2/master/tree.json";
-
-    private EditText etLastName, etFirstName, etMI, etStreet, etAge, etPhone;
-    private Spinner genderSpinner, provinceSpinner, municipalitySpinner, barangaySpinner, streetSpinner ;
-    private CountryCodePicker ccp;
-    private RequestQueue requestQueue;
-    private JSONObject locationsJson;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        EdgeToEdge.enable(this);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up_next);
-
-        // Initialize views
-        etLastName         = findViewById(R.id.editTextText6);
-        etFirstName        = findViewById(R.id.editTextText15);
-        etMI               = findViewById(R.id.editTextText11);
-        streetSpinner           = findViewById(R.id.editTextText32);
-        etAge              = findViewById(R.id.editTextTextPassword);
-        etPhone            = findViewById(R.id.editTextTextPassword2);
-
-        genderSpinner      = findViewById(R.id.genderSpinner);
-        provinceSpinner    = findViewById(R.id.editTextText33);
-        municipalitySpinner = findViewById(R.id.editTextText30);
-        barangaySpinner    = findViewById(R.id.editTextText31);
-
-        ccp                = findViewById(R.id.ccp);
-        Button btnNext     = findViewById(R.id.button);
-
-        /// Network queue
-        requestQueue = Volley.newRequestQueue(this);
-
-        /// Setup gender and start loading locations
-        setupGenderSpinner();
-        fetchLocationsJson();
-        setupPurokSpinner();
-
-        provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                if (view instanceof TextView) {
-                    ((TextView) view).setTextColor(Color.BLACK); // Set to black
-                }
-
-                if (pos > 0) {
-                    String provName = provinceSpinner.getSelectedItem().toString();
-                    populateMunicipalities(provName);
-                } else {
-                    resetSpinner(municipalitySpinner, "Select Municipality...");
-                    resetSpinner(barangaySpinner, "Select Barangay...");
-                }
-            }
-
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-        municipalitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                if (view instanceof TextView) {
-                    ((TextView) view).setTextColor(Color.BLACK); // Set to black
-                }
-
-                if (pos > 0) {
-                    String provName = provinceSpinner.getSelectedItem().toString();
-                    String muniName = municipalitySpinner.getSelectedItem().toString();
-                    populateBarangays(provName, muniName);
-                } else {
-                    resetSpinner(barangaySpinner, "Select Barangay...");
-                }
-            }
-
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-        barangaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                if (view instanceof TextView) {
-                    ((TextView) view).setTextColor(Color.BLACK); // Set to black
-                }
-
-                /// Add any additional logic here if needed
-            }
-
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-
-        btnNext.setOnClickListener(v -> {
-            if (isInputValid()) {
-                navigateToSummary();
-            } else {
-                Toast.makeText(SignUpNext.this, "Please fill in all required fields.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void fetchLocationsJson() {
-        JsonObjectRequest req = new JsonObjectRequest(
-                Request.Method.GET,
-                LOCATIONS_URL,
-                null,
-                response -> {
-                    locationsJson = response;
-                    populateProvinces();
-                },
-                error -> Toast.makeText(this, "Failed to load location data.", Toast.LENGTH_SHORT).show()
-        );
-        requestQueue.add(req);
-    }
-
-    private void populateProvinces() {
-        List<String> provinces = new ArrayList<>();
-        provinces.add("Select Province...");
-        // Flatten provinces under each region
-        Iterator<String> regionKeys = locationsJson.keys();
-        while (regionKeys.hasNext()) {
-            String regionName = regionKeys.next();
-            JSONObject regionObj = locationsJson.optJSONObject(regionName);
-            if (regionObj == null) continue;
-            Iterator<String> provKeys = regionObj.keys();
-            while (provKeys.hasNext()) {
-                String prov = provKeys.next();
-                if ("population".equals(prov)) continue;
-                provinces.add(prov);
-            }
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, provinces);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        provinceSpinner.setAdapter(adapter);
-    }
-
-
-
-    private void populateMunicipalities(String provName) {
-        try {
-            JSONObject provObj = null;
-            Iterator<String> regionKeys = locationsJson.keys();
-            while (regionKeys.hasNext()) {
-                JSONObject region = locationsJson.optJSONObject(regionKeys.next());
-                if (region != null && region.has(provName)) {
-                    provObj = region.optJSONObject(provName);
-                    break;
-                }
-            }
-            if (provObj == null) {
-                resetSpinner(municipalitySpinner, "Select Municipality...");
-                return;
-            }
-            List<String> munis = new ArrayList<>();
-            munis.add("Select Municipality...");
-            Iterator<String> muniKeys = provObj.keys();
-            while (muniKeys.hasNext()) {
-                String mun = muniKeys.next();
-                if ("population".equals(mun)) continue;
-                munis.add(mun);
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, munis);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            municipalitySpinner.setAdapter(adapter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        resetSpinner(barangaySpinner, "Select Barangay...");
-    }
-
-    private void populateBarangays(String provName, String muniName) {
-        try {
-            JSONObject provObj = null;
-            Iterator<String> regionKeys = locationsJson.keys();
-            while (regionKeys.hasNext()) {
-                JSONObject region = locationsJson.optJSONObject(regionKeys.next());
-                if (region != null && region.has(provName)) {
-                    provObj = region.optJSONObject(provName);
-                    break;
-                }
-            }
-            if (provObj == null) return;
-            JSONObject muniObj = provObj.optJSONObject(muniName);
-            if (muniObj == null) return;
-            List<String> barangays = new ArrayList<>();
-            barangays.add("Select Barangay...");
-            Iterator<String> keys = muniObj.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                if ("class".equals(key) || "population".equals(key)) continue;
-                barangays.add(key);
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, barangays);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            barangaySpinner.setAdapter(adapter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /** Populate Purok spinner with 1–100 **/
-    private void setupPurokSpinner() {
-        List<String> puroks = new ArrayList<>();
-        puroks.add("Select Purok...");
-        for (int i = 1; i <= 100; i++) {
-            puroks.add("Purok " + i);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, puroks);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        streetSpinner.setAdapter(adapter);
-
-        streetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                if (view instanceof TextView) ((TextView) view).setTextColor(Color.BLACK);
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }
-
-    private void resetSpinner(Spinner spinner, String prompt) {
-        List<String> list = new ArrayList<>();
-        list.add(prompt);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-    }
-
-    private boolean isInputValid() {
-        return !TextUtils.isEmpty(etLastName.getText().toString().trim()) &&
-                !TextUtils.isEmpty(etFirstName.getText().toString().trim()) &&
-                provinceSpinner.getSelectedItemPosition() > 0 &&
-                municipalitySpinner.getSelectedItemPosition() > 0 &&
-                barangaySpinner.getSelectedItemPosition() > 0 &&
-                !TextUtils.isEmpty(etStreet.getText().toString().trim()) &&
-                !TextUtils.isEmpty(etAge.getText().toString().trim()) &&
-                !TextUtils.isEmpty(etPhone.getText().toString().trim()) &&
-                genderSpinner.getSelectedItemPosition() > 0;
-    }
-
-    private void navigateToSummary() {
-        Intent intent = new Intent(SignUpNext.this, SignUp.class);
-        intent.putExtra("lastName", etLastName.getText().toString().trim());
-        intent.putExtra("firstName", etFirstName.getText().toString().trim());
-        intent.putExtra("middleInitial", etMI.getText().toString().trim());
-        intent.putExtra("province", provinceSpinner.getSelectedItem().toString());
-        intent.putExtra("municipality", municipalitySpinner.getSelectedItem().toString());
-        intent.putExtra("barangay", barangaySpinner.getSelectedItem().toString());
-        intent.putExtra("street", etStreet.getText().toString().trim());
-        intent.putExtra("age", etAge.getText().toString().trim());
-        String rawPhone = etPhone.getText().toString().trim();
-        String formattedPhone = formatPhoneNumber(rawPhone);
-        intent.putExtra("phoneNumber", ccp.getSelectedCountryCodeWithPlus() + formattedPhone);
-        intent.putExtra("gender", genderSpinner.getSelectedItem().toString());
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-        resetFields();
-    }
-
-    private String formatPhoneNumber(String phone) {
-        phone = phone.replaceAll("[^\\d+]", "");
-        if (phone.startsWith("+63")) return phone.substring(3);
-        if (phone.startsWith("63")) return phone.substring(2);
-        if (phone.startsWith("0")) return phone.substring(1);
-        return phone;
-    }
-
-    private void setupGenderSpinner() {
-        List<String> genders = new ArrayList<>();
-        genders.add("Select Gender");
-        genders.add("Male");
-        genders.add("Female");
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
-            @Override public View getView(int pos, View cv, ViewGroup parent) {
-                TextView tv = (TextView) super.getView(pos, cv, parent);
-                tv.setTextColor(getResources().getColor(android.R.color.black));
-                return tv;
-            }
-            @Override public View getDropDownView(int pos, View cv, ViewGroup parent) {
-                TextView tv = (TextView) super.getDropDownView(pos, cv, parent);
-                tv.setTextColor(getResources().getColor(android.R.color.darker_gray));
-                return tv;
-            }
-        };
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        genderSpinner.setAdapter(adapter);
-    }
-
-    private void resetFields() {
-        etLastName.setText("");
-        etFirstName.setText("");
-        etMI.setText("");
-        etStreet.setText("");
-        etAge.setText("");
-        etPhone.setText("");
-        genderSpinner.setSelection(0);
-        provinceSpinner.setSelection(0);
-        municipalitySpinner.setSelection(0);
-        barangaySpinner.setSelection(0);
-        ccp.resetToDefaultCountry();
-    }
-}
 
 ///Fix Current
 //package com.example.resort;

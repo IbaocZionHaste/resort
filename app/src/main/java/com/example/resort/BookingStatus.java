@@ -209,6 +209,7 @@ public class BookingStatus extends AppCompatActivity {
         // Initially hide message texts.
         messageText.setVisibility(View.GONE);
         messageText2.setVisibility(View.GONE);
+        refreshButton .setVisibility(View.GONE);
         paymentMessageText.setVisibility(View.GONE);
         messageText4.setVisibility(View.GONE);
         messageText5.setVisibility(View.GONE);
@@ -690,6 +691,7 @@ public class BookingStatus extends AppCompatActivity {
         messageFramedot5.setVisibility(View.VISIBLE);
         messageText5.setVisibility(View.VISIBLE);
         downloadDetails.setVisibility(View.VISIBLE);
+        refreshButton.setVisibility(View.VISIBLE);
         String msg = "&quot;Congratulations! Your Booking has been Approved. Click the refresh now!&quot;<br>";
         String currentTime = getCurrentTime();
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
@@ -706,11 +708,13 @@ public class BookingStatus extends AppCompatActivity {
         /// Update UI for decline branch
         messageFramedot2.setVisibility(View.VISIBLE);
         messageText2.setVisibility(View.VISIBLE);
+        refreshButton.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
         String msg = "&quot;Sorry, your booking has been declined. Click the refresh now!&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         messageText2.setText(Html.fromHtml(msg + redTime));
         sendNotificationToFirebase(messageText2.getText().toString(), "BookingDecline");
+
 
         ///moveAllBookingsToHistory();
         ///clearBookingMessageUI();
@@ -718,16 +722,20 @@ public class BookingStatus extends AppCompatActivity {
 
     }
 
+
+
     ///Payment Refunded
     private void showRefund() {
         /// Update UI for refund branch.
         messageFramedot4.setVisibility(View.VISIBLE);
         messageText4.setVisibility(View.VISIBLE);
+        refreshButton.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
         String msg = "&quot;Sorry, your payment has been refunded. Click the refresh now!&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
         messageText4.setText(Html.fromHtml(msg + redTime));
         sendNotificationToFirebase(messageText4.getText().toString(), "PaymentRefunded");
+
 
         ///moveAllBookingsToHistory();
         ///clearBookingMessageUI();
@@ -739,6 +747,7 @@ public class BookingStatus extends AppCompatActivity {
     private void showRefundMessage() {
         messageFramedot2.setVisibility(View.VISIBLE);
         messageText2.setVisibility(View.VISIBLE);
+        refreshButton.setVisibility(View.VISIBLE);
         String currentTime = getCurrentTime();
         String approvalMessage = "&quot;Booking has been Reviewed. Please proceed to the payment by clicking the Pay Now button.&quot;<br>";
         String redTime = String.format("<font color='#FF0000'>%s</font>", currentTime);
@@ -1301,6 +1310,7 @@ public class BookingStatus extends AppCompatActivity {
         messageText5.setText("");
         viewDetails.setVisibility(View.GONE);
         downloadDetails.setVisibility(View.GONE);
+        refreshButton .setVisibility(View.GONE);
 
         dot1.setBackgroundResource(R.drawable.drawable_dot_clear);
         dot2.setBackgroundResource(R.drawable.drawable_dot_clear);

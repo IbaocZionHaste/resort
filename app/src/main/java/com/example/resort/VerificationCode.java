@@ -266,7 +266,6 @@ public class VerificationCode extends AppCompatActivity {
         }
     }
 
-
     /**
      * Displays a professional custom alert dialog informing the user that verification was successful.
      * When the user clicks the "OK" button, they are redirected to the Login activity.
