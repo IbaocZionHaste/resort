@@ -751,7 +751,7 @@ public class BookingReceipt extends AppCompatActivity {
      * @param bookingDate The booking date provided by the user.
      */
     private void updateBookedItemsStatus(Map<String, Object> orderItems, String bookingDate) {
-        // Process accommodations (e.g., Boat, Cottage)
+        /// Process accommodations (e.g., Boat, Cottage)
         Object accommodationsObj = orderItems.get("accommodations");
         if (accommodationsObj instanceof List<?>) {
             List<?> accommodations = (List<?>) accommodationsObj;
@@ -783,7 +783,8 @@ public class BookingReceipt extends AppCompatActivity {
             appendAvailableDate(itemName, bookingDate);
         }
     }
-//        // Process package item if available
+
+///        // Process package item if available
 //        Object packageObj = orderItems.get("package");
 //        if (packageObj instanceof Map<?, ?>) {
 //            Map<?, ?> packageItem = (Map<?, ?>) packageObj;
