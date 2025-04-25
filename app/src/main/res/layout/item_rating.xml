@@ -16,6 +16,8 @@
         android:text="Item Name"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:justificationMode="inter_word"
+        android:textAlignment="viewStart"
         android:textColor="@android:color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
