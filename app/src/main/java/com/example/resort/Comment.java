@@ -1,3 +1,331 @@
+//package com.example.resort;
+//
+//import android.content.Context;
+//import android.content.res.ColorStateList;
+//import android.graphics.Color;
+//import android.graphics.drawable.ColorDrawable;
+//import android.net.ConnectivityManager;
+//import android.net.NetworkInfo;
+//import android.os.Bundle;
+//import android.view.LayoutInflater;
+//import android.view.View;
+//import android.widget.ArrayAdapter;
+//import android.widget.Button;
+//import android.widget.EditText;
+//import android.widget.LinearLayout;
+//import android.widget.ListView;
+//import android.widget.RatingBar;
+//import android.widget.TextView;
+//import android.widget.Toast;
+//
+//import androidx.activity.EdgeToEdge;
+//import androidx.appcompat.app.AlertDialog;
+//import androidx.appcompat.app.AppCompatActivity;
+//
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.database.DataSnapshot;
+//import com.google.firebase.database.DatabaseError;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.database.ValueEventListener;
+//
+//import java.text.SimpleDateFormat;
+//import java.util.ArrayList;
+//import java.util.Date;
+//import java.util.List;
+//import java.util.Locale;
+//import java.util.Map;
+//import java.util.HashMap;
+//import java.util.TimeZone;
+//
+//public class Comment extends AppCompatActivity {
+//    private EditText recentEditText, commentEditText;
+//    private TextView messageTextView;
+//    private RatingBar ratingBar5, ratingBar4, ratingBar3, ratingBar2, ratingBar1;
+//
+//    // List of booking snapshots fetched from Firebase
+//    private final List<DataSnapshot> bookingSnapshots = new ArrayList<>();
+//    private int selectedBookingIndex = -1;
+//    private int selectedRating = 0;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        EdgeToEdge.enable(this);
+//        setContentView(R.layout.activity_comment);
+//
+//        // Back button
+//        findViewById(R.id.back2).setOnClickListener(v -> finish());
+//
+//        // RatingBars
+//        ratingBar5 = findViewById(R.id.ratingBar5);
+//        ratingBar4 = findViewById(R.id.ratingBar4);
+//        ratingBar3 = findViewById(R.id.ratingBar3);
+//        ratingBar2 = findViewById(R.id.ratingBar2);
+//        ratingBar1 = findViewById(R.id.ratingBar1);
+//
+//        // Rate buttons
+//        setupRateButtons();
+//
+//        // Recent booking selector
+//        recentEditText = findViewById(R.id.Recent);
+//        recentEditText.setText("Tap to select booking");
+//        recentEditText.setFocusable(false);
+//        recentEditText.setOnClickListener(v -> showBookingSelectionDialog());
+//
+//        // Message prompt & comment field
+//        messageTextView = findViewById(R.id.textView2);
+//        commentEditText = findViewById(R.id.Comment);
+//
+//        // Fetch bookings
+//        fetchBookings();
+//
+//        // Submit rating
+//        findViewById(R.id.Submit).setOnClickListener(v -> submitRating());
+//    }
+//
+//    private void setupRateButtons() {
+//        int yellow = getResources().getColor(R.color.yellow);
+//        int grey   = getResources().getColor(R.color.grey);
+//
+//        findViewById(R.id.rate5).setOnClickListener(v -> selectRating(5, ratingBar5, yellow, grey));
+//        findViewById(R.id.rate4).setOnClickListener(v -> selectRating(4, ratingBar4, yellow, grey));
+//        findViewById(R.id.rate3).setOnClickListener(v -> selectRating(3, ratingBar3, yellow, grey));
+//        findViewById(R.id.rate2).setOnClickListener(v -> selectRating(2, ratingBar2, yellow, grey));
+//        findViewById(R.id.rate1).setOnClickListener(v -> selectRating(1, ratingBar1, yellow, grey));
+//    }
+//
+//    private void selectRating(int stars, RatingBar bar, int selColor, int defColor) {
+//        selectedRating = stars;
+//        ratingBar5.setRating(0);
+//        ratingBar4.setRating(0);
+//        ratingBar3.setRating(0);
+//        ratingBar2.setRating(0);
+//        ratingBar1.setRating(0);
+//        ratingBar5.setProgressTintList(ColorStateList.valueOf(defColor));
+//        ratingBar4.setProgressTintList(ColorStateList.valueOf(defColor));
+//        ratingBar3.setProgressTintList(ColorStateList.valueOf(defColor));
+//        ratingBar2.setProgressTintList(ColorStateList.valueOf(defColor));
+//        ratingBar1.setProgressTintList(ColorStateList.valueOf(defColor));
+//        bar.setRating(stars);
+//        bar.setProgressTintList(ColorStateList.valueOf(selColor));
+//    }
+//
+//    private void fetchBookings() {
+//        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        DatabaseReference ref = FirebaseDatabase.getInstance()
+//                .getReference("users").child(userId).child("MyReviewDone");
+//        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                bookingSnapshots.clear();
+//                for (DataSnapshot snap : snapshot.getChildren()) {
+//                    bookingSnapshots.add(snap);
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                Toast.makeText(Comment.this, "Error fetching bookings", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//
+////    private void showBookingSelectionDialog() {
+////        if (bookingSnapshots.isEmpty()) {
+////            Toast.makeText(this, "No bookings available", Toast.LENGTH_SHORT).show();
+////            return;
+////        }
+////        String[] labels = new String[bookingSnapshots.size()];
+////        for (int i = 0; i < bookingSnapshots.size(); i++) {
+////            labels[i] = "Booking " + (i+1);
+////        }
+////        final int[] selectedIndex = {-1};
+////        new AlertDialog.Builder(this)
+////                .setTitle("Select Booking")
+////                .setSingleChoiceItems(labels, -1, (dialog, which) -> selectedIndex[0] = which)
+////                .setPositiveButton("View Details", (dialog, which) -> {
+////                    if (selectedIndex[0] >= 0) {
+////                        showBookingDetailsDialog(selectedIndex[0]);
+////                    } else {
+////                        Toast.makeText(this, "Please select a booking", Toast.LENGTH_SHORT).show();
+////                    }
+////                })
+////                .setNegativeButton("Cancel", null)
+////                .show();
+////    }
+//
+//    private void showBookingSelectionDialog() {
+//        if (bookingSnapshots.isEmpty()) {
+//            Toast.makeText(this, "No bookings available", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_booking_selection, null);
+//        ListView listView = dialogView.findViewById(R.id.bookingListView);
+//        Button btnViewDetails = dialogView.findViewById(R.id.btnViewDetails);
+//        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+//
+//        String[] labels = new String[bookingSnapshots.size()];
+//        for (int i = 0; i < bookingSnapshots.size(); i++) {
+//            labels[i] = "Booking " + (i + 1);
+//        }
+//
+//        final int[] selectedIndex = {-1};
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_booking_label, labels);
+//        listView.setAdapter(adapter);
+//        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+//        listView.setOnItemClickListener((parent, view, position, id) -> selectedIndex[0] = position);
+//
+//        AlertDialog dialog = new AlertDialog.Builder(this)
+//                .setView(dialogView)
+//                .create();
+//
+//        btnViewDetails.setOnClickListener(v -> {
+//            if (selectedIndex[0] >= 0) {
+//                showBookingDetailsDialog(selectedIndex[0]);
+//                dialog.dismiss();
+//            } else {
+//                Toast.makeText(this, "Please select a booking", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        btnCancel.setOnClickListener(v -> dialog.dismiss());
+//
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        dialog.show();
+//    }
+//
+//
+//
+//    private void showBookingDetailsDialog(int index) {
+//        DataSnapshot booking = bookingSnapshots.get(index);
+//
+//        View dialogView = LayoutInflater.from(this)
+//                .inflate(R.layout.dialog_booking_details, null);
+//        LinearLayout container = dialogView.findViewById(R.id.itemContainer);
+//        Button okButton = dialogView.findViewById(R.id.btnOk);
+//
+//        populateDetails(booking, container);
+//
+//        AlertDialog alertDialog = new AlertDialog.Builder(this)
+//                .setView(dialogView)
+//                .setCancelable(false) // prevent outside dismiss
+//                .create();
+//
+//        okButton.setOnClickListener(v -> {
+//            // Prevent double tap or network fail chaos
+//            okButton.setEnabled(false); // Disable button after click
+//
+//            selectedBookingIndex = index;
+//            recentEditText.setText("Booking " + (index + 1));
+//
+//            alertDialog.dismiss(); // Close the dialog safely
+//        });
+//
+//        alertDialog.show();
+//        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+//    }
+//
+//
+//    private void populateDetails(DataSnapshot booking, LinearLayout container) {
+//        container.removeAllViews();
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        // Accommodations
+//        DataSnapshot acc = booking.child("accommodations");
+//        if (acc.exists()) for (DataSnapshot item : acc.getChildren()) inflateItem(item, inflater, container);
+//        // Food & Drinks
+//        DataSnapshot food = booking.child("foodAndDrinks");
+//        if (food.exists()) for (DataSnapshot item : food.getChildren()) inflateItem(item, inflater, container);
+//        // Package
+//        DataSnapshot pkg = booking.child("package");
+//        if (pkg.exists()) inflateItem(pkg, inflater, container);
+//    }
+//
+//    private void inflateItem(DataSnapshot itemSnap, LayoutInflater inflater, LinearLayout container) {
+//        String name  = itemSnap.child("name").getValue(String.class);
+//        Long qty     = itemSnap.child("quantity").getValue(Long.class);
+//        Double price = itemSnap.child("price").getValue(Double.class);
+//        if (name != null && qty != null && price != null) {
+//            View row = inflater.inflate(R.layout.item_row, container, false);
+//            ((TextView) row.findViewById(R.id.tvProductName)).setText(name);
+//            ((TextView) row.findViewById(R.id.tvQty)).setText(String.valueOf(qty));
+//            ((TextView) row.findViewById(R.id.tvPrice))
+//                    .setText(String.format("₱%.2f", price));
+//            container.addView(row);
+//        }
+//    }
+//
+//    /// at top of class
+//    private boolean isSubmitting = false;
+//
+//    /// helper to check connectivity
+//    private boolean isNetworkAvailable() {
+//        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo net = cm.getActiveNetworkInfo();
+//        return net != null && net.isConnected();
+//    }
+//
+//   /// in Comment.java, replace submitRating() with:
+//    private void submitRating() {
+//        if (isSubmitting) return;
+//        if (!isNetworkAvailable()) {
+//            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (selectedBookingIndex < 0) {
+//            Toast.makeText(this, "Please select a booking first", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (selectedRating == 0) {
+//            Toast.makeText(this, "Please select a rating", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        String commentText = commentEditText.getText().toString().trim();
+//        if (commentText.isEmpty()) {
+//            Toast.makeText(this, "Please add a comment", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        isSubmitting = true;
+//        Button submitBtn = findViewById(R.id.Submit);
+//        submitBtn.setEnabled(false);
+//
+//        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        String bookingKey = bookingSnapshots.get(selectedBookingIndex).getKey();
+//        Map<String, Object> record = new HashMap<>();
+//        record.put("user", userId);
+//        record.put("bookingKey", bookingKey);
+//        record.put("rate", selectedRating);
+//        record.put("comment", commentText);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a", Locale.getDefault());
+//        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+//        record.put("date", sdf.format(new Date()));
+//
+//        DatabaseReference ratingRef = FirebaseDatabase.getInstance()
+//                .getReference("users").child(userId).child("MyRating");
+//        ratingRef.push().setValue(record, (error, ref) -> {
+//            isSubmitting = false;
+//            submitBtn.setEnabled(true);
+//            if (error == null) {
+//                Toast.makeText(Comment.this, "Rating submitted", Toast.LENGTH_SHORT).show();
+//                FirebaseDatabase.getInstance()
+//                        .getReference("users").child(userId)
+//                        .child("MyReviewDone").child(bookingKey)
+//                        .removeValue();
+//                bookingSnapshots.remove(selectedBookingIndex);
+//                recentEditText.setText("Tap to select booking");
+//                commentEditText.setText("");
+//                selectRating(0, ratingBar1,
+//                        getResources().getColor(R.color.yellow),
+//                        getResources().getColor(R.color.grey));
+//            } else {
+//                Toast.makeText(Comment.this, "Failed to submit rating", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//}
+//
+
 package com.example.resort;
 
 import android.content.Context;
@@ -7,6 +335,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -34,19 +363,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.function.Consumer;
 
 public class Comment extends AppCompatActivity {
     private EditText recentEditText, commentEditText;
     private TextView messageTextView;
     private RatingBar ratingBar5, ratingBar4, ratingBar3, ratingBar2, ratingBar1;
 
-    // List of booking snapshots fetched from Firebase
     private final List<DataSnapshot> bookingSnapshots = new ArrayList<>();
     private int selectedBookingIndex = -1;
     private int selectedRating = 0;
+    private boolean isSubmitting = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,40 +384,31 @@ public class Comment extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_comment);
 
-        // Back button
         findViewById(R.id.back2).setOnClickListener(v -> finish());
 
-        // RatingBars
         ratingBar5 = findViewById(R.id.ratingBar5);
         ratingBar4 = findViewById(R.id.ratingBar4);
         ratingBar3 = findViewById(R.id.ratingBar3);
         ratingBar2 = findViewById(R.id.ratingBar2);
         ratingBar1 = findViewById(R.id.ratingBar1);
-
-        // Rate buttons
         setupRateButtons();
 
-        // Recent booking selector
         recentEditText = findViewById(R.id.Recent);
         recentEditText.setText("Tap to select booking");
         recentEditText.setFocusable(false);
         recentEditText.setOnClickListener(v -> showBookingSelectionDialog());
 
-        // Message prompt & comment field
         messageTextView = findViewById(R.id.textView2);
         commentEditText = findViewById(R.id.Comment);
 
-        // Fetch bookings
         fetchBookings();
 
-        // Submit rating
         findViewById(R.id.Submit).setOnClickListener(v -> submitRating());
     }
 
     private void setupRateButtons() {
         int yellow = getResources().getColor(R.color.yellow);
         int grey   = getResources().getColor(R.color.grey);
-
         findViewById(R.id.rate5).setOnClickListener(v -> selectRating(5, ratingBar5, yellow, grey));
         findViewById(R.id.rate4).setOnClickListener(v -> selectRating(4, ratingBar4, yellow, grey));
         findViewById(R.id.rate3).setOnClickListener(v -> selectRating(3, ratingBar3, yellow, grey));
@@ -97,10 +418,8 @@ public class Comment extends AppCompatActivity {
 
     private void selectRating(int stars, RatingBar bar, int selColor, int defColor) {
         selectedRating = stars;
-        ratingBar5.setRating(0);
-        ratingBar4.setRating(0);
-        ratingBar3.setRating(0);
-        ratingBar2.setRating(0);
+        ratingBar5.setRating(0); ratingBar4.setRating(0);
+        ratingBar3.setRating(0); ratingBar2.setRating(0);
         ratingBar1.setRating(0);
         ratingBar5.setProgressTintList(ColorStateList.valueOf(defColor));
         ratingBar4.setProgressTintList(ColorStateList.valueOf(defColor));
@@ -116,90 +435,58 @@ public class Comment extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users").child(userId).child("MyReviewDone");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            @Override public void onDataChange(DataSnapshot snapshot) {
                 bookingSnapshots.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     bookingSnapshots.add(snap);
                 }
             }
-            @Override
-            public void onCancelled(DatabaseError error) {
+            @Override public void onCancelled(DatabaseError error) {
                 Toast.makeText(Comment.this, "Error fetching bookings", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-//    private void showBookingSelectionDialog() {
-//        if (bookingSnapshots.isEmpty()) {
-//            Toast.makeText(this, "No bookings available", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        String[] labels = new String[bookingSnapshots.size()];
-//        for (int i = 0; i < bookingSnapshots.size(); i++) {
-//            labels[i] = "Booking " + (i+1);
-//        }
-//        final int[] selectedIndex = {-1};
-//        new AlertDialog.Builder(this)
-//                .setTitle("Select Booking")
-//                .setSingleChoiceItems(labels, -1, (dialog, which) -> selectedIndex[0] = which)
-//                .setPositiveButton("View Details", (dialog, which) -> {
-//                    if (selectedIndex[0] >= 0) {
-//                        showBookingDetailsDialog(selectedIndex[0]);
-//                    } else {
-//                        Toast.makeText(this, "Please select a booking", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .setNegativeButton("Cancel", null)
-//                .show();
-//    }
 
     private void showBookingSelectionDialog() {
         if (bookingSnapshots.isEmpty()) {
             Toast.makeText(this, "No bookings available", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_booking_selection, null);
-        ListView listView = dialogView.findViewById(R.id.bookingListView);
-        Button btnViewDetails = dialogView.findViewById(R.id.btnViewDetails);
-        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+        View dialogView = LayoutInflater.from(this)
+                .inflate(R.layout.dialog_booking_selection, null);
+        ListView listView       = dialogView.findViewById(R.id.bookingListView);
+        Button btnViewDetails   = dialogView.findViewById(R.id.btnViewDetails);
+        Button btnCancel        = dialogView.findViewById(R.id.btnCancel);
 
         String[] labels = new String[bookingSnapshots.size()];
         for (int i = 0; i < bookingSnapshots.size(); i++) {
             labels[i] = "Booking " + (i + 1);
         }
-
-        final int[] selectedIndex = {-1};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_booking_label, labels);
+        final int[] sel = {-1};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, R.layout.item_booking_label, labels);
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setOnItemClickListener((parent, view, position, id) -> selectedIndex[0] = position);
+        listView.setOnItemClickListener((p, v, pos, id) -> sel[0] = pos);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(dialogView)
-                .create();
+                .setView(dialogView).create();
 
         btnViewDetails.setOnClickListener(v -> {
-            if (selectedIndex[0] >= 0) {
-                showBookingDetailsDialog(selectedIndex[0]);
+            if (sel[0] >= 0) {
+                showBookingDetailsDialog(sel[0]);
                 dialog.dismiss();
             } else {
                 Toast.makeText(this, "Please select a booking", Toast.LENGTH_SHORT).show();
             }
         });
-
         btnCancel.setOnClickListener(v -> dialog.dismiss());
-
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 
-
-
     private void showBookingDetailsDialog(int index) {
         DataSnapshot booking = bookingSnapshots.get(index);
-
         View dialogView = LayoutInflater.from(this)
                 .inflate(R.layout.dialog_booking_details, null);
         LinearLayout container = dialogView.findViewById(R.id.itemContainer);
@@ -209,63 +496,57 @@ public class Comment extends AppCompatActivity {
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setView(dialogView)
-                .setCancelable(false) // prevent outside dismiss
+                .setCancelable(false)
                 .create();
 
         okButton.setOnClickListener(v -> {
-            // Prevent double tap or network fail chaos
-            okButton.setEnabled(false); // Disable button after click
-
+            okButton.setEnabled(false);
             selectedBookingIndex = index;
             recentEditText.setText("Booking " + (index + 1));
-
-            alertDialog.dismiss(); // Close the dialog safely
+            alertDialog.dismiss();
         });
 
         alertDialog.show();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
     }
 
-
     private void populateDetails(DataSnapshot booking, LinearLayout container) {
         container.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
-        // Accommodations
-        DataSnapshot acc = booking.child("accommodations");
-        if (acc.exists()) for (DataSnapshot item : acc.getChildren()) inflateItem(item, inflater, container);
-        // Food & Drinks
+        DataSnapshot acc  = booking.child("accommodations");
         DataSnapshot food = booking.child("foodAndDrinks");
+        DataSnapshot pkg  = booking.child("package");
+
+        if (acc.exists())  for (DataSnapshot item : acc.getChildren())  inflateItem(item, inflater, container);
         if (food.exists()) for (DataSnapshot item : food.getChildren()) inflateItem(item, inflater, container);
-        // Package
-        DataSnapshot pkg = booking.child("package");
-        if (pkg.exists()) inflateItem(pkg, inflater, container);
+        if (pkg.exists())  inflateItem(pkg, inflater, container);
     }
 
     private void inflateItem(DataSnapshot itemSnap, LayoutInflater inflater, LinearLayout container) {
-        String name  = itemSnap.child("name").getValue(String.class);
-        Long qty     = itemSnap.child("quantity").getValue(Long.class);
-        Double price = itemSnap.child("price").getValue(Double.class);
-        if (name != null && qty != null && price != null) {
+        String category = itemSnap.child("category").getValue(String.class);
+        String name     = itemSnap.child("name").getValue(String.class);
+        Long   qty      = itemSnap.child("quantity").getValue(Long.class);
+        Double price    = itemSnap.child("price").getValue(Double.class);
+
+        if (category != null && name != null && qty != null && price != null) {
             View row = inflater.inflate(R.layout.item_row, container, false);
+
+            ((TextView) row.findViewById(R.id.tvCategory)).setText(category);
             ((TextView) row.findViewById(R.id.tvProductName)).setText(name);
             ((TextView) row.findViewById(R.id.tvQty)).setText(String.valueOf(qty));
             ((TextView) row.findViewById(R.id.tvPrice))
                     .setText(String.format("₱%.2f", price));
+
             container.addView(row);
         }
     }
 
-    /// at top of class
-    private boolean isSubmitting = false;
-
-    /// helper to check connectivity
     private boolean isNetworkAvailable() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo net = cm.getActiveNetworkInfo();
         return net != null && net.isConnected();
     }
 
-   /// in Comment.java, replace submitRating() with:
     private void submitRating() {
         if (isSubmitting) return;
         if (!isNetworkAvailable()) {
@@ -286,43 +567,93 @@ public class Comment extends AppCompatActivity {
             return;
         }
 
+        // Prevent double submits
         isSubmitting = true;
         Button submitBtn = findViewById(R.id.Submit);
         submitBtn.setEnabled(false);
 
+        // Get userId and booking snapshot
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String bookingKey = bookingSnapshots.get(selectedBookingIndex).getKey();
-        Map<String, Object> record = new HashMap<>();
-        record.put("user", userId);
-        record.put("bookingKey", bookingKey);
-        record.put("rate", selectedRating);
-        record.put("comment", commentText);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
-        record.put("date", sdf.format(new Date()));
+        DataSnapshot bookingSnap = bookingSnapshots.get(selectedBookingIndex);
 
-        DatabaseReference ratingRef = FirebaseDatabase.getInstance()
-                .getReference("users").child(userId).child("MyRating");
-        ratingRef.push().setValue(record, (error, ref) -> {
-            isSubmitting = false;
-            submitBtn.setEnabled(true);
-            if (error == null) {
-                Toast.makeText(Comment.this, "Rating submitted", Toast.LENGTH_SHORT).show();
-                FirebaseDatabase.getInstance()
-                        .getReference("users").child(userId)
-                        .child("MyReviewDone").child(bookingKey)
-                        .removeValue();
-                bookingSnapshots.remove(selectedBookingIndex);
-                recentEditText.setText("Tap to select booking");
-                commentEditText.setText("");
-                selectRating(0, ratingBar1,
-                        getResources().getColor(R.color.yellow),
-                        getResources().getColor(R.color.grey));
-            } else {
-                Toast.makeText(Comment.this, "Failed to submit rating", Toast.LENGTH_SHORT).show();
+        // --- GATHER ONLY ACCOMMODATION NAMES ---
+        List<String> names = new ArrayList<>();
+        DataSnapshot accSection = bookingSnap.child("accommodations");
+        if (accSection.exists()) {
+            for (DataSnapshot item : accSection.getChildren()) {
+                String n = item.child("name").getValue(String.class);
+                if (n != null) names.add(n);
+            }
+        }
+
+        // Join into single string or fallback
+        final String allNames = names.isEmpty()
+                ? "No Accommodation"
+                : TextUtils.join(", ", names);
+
+        // Category is always "Accommodation"
+        final String allCategories = "Accommodation";
+
+        // Fetch username then push record
+        DatabaseReference userRef = FirebaseDatabase.getInstance()
+                .getReference("users").child(userId).child("username");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(DataSnapshot snap) {
+                String username = snap.getValue(String.class);
+                if (username == null || username.isEmpty()) {
+                    username = "Unknown User";
+                }
+
+                Map<String, Object> record = new HashMap<>();
+                record.put("user",     username);
+                record.put("category", allCategories);
+                record.put("itemName", allNames);
+                record.put("rate",     selectedRating);
+                record.put("comment",  commentText);
+
+                SimpleDateFormat sdf = new SimpleDateFormat(
+                        "yyyy-MM-dd hh:mm:ss a", Locale.getDefault());
+                sdf.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+                record.put("date", sdf.format(new Date()));
+
+                DatabaseReference ratingRef = FirebaseDatabase.getInstance()
+                        .getReference("users").child(userId).child("MyRating");
+                ratingRef.push().setValue(record, (error, ref) -> {
+                    isSubmitting = false;
+                    submitBtn.setEnabled(true);
+                    if (error == null) {
+                        Toast.makeText(Comment.this,
+                                "Rating submitted", Toast.LENGTH_SHORT).show();
+
+                        // Remove from MyReviewDone
+                        String bookingKey = bookingSnapshots
+                                .get(selectedBookingIndex).getKey();
+                        FirebaseDatabase.getInstance()
+                                .getReference("users").child(userId)
+                                .child("MyReviewDone").child(bookingKey)
+                                .removeValue();
+
+                        bookingSnapshots.remove(selectedBookingIndex);
+                        recentEditText.setText("Tap to select booking");
+                        commentEditText.setText("");
+                        selectRating(0, ratingBar1,
+                                getResources().getColor(R.color.yellow),
+                                getResources().getColor(R.color.grey));
+                    } else {
+                        Toast.makeText(Comment.this,
+                                "Failed to submit rating", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            @Override public void onCancelled(DatabaseError error) {
+                isSubmitting = false;
+                submitBtn.setEnabled(true);
+                Toast.makeText(Comment.this,
+                        "Unable to get user info", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }
 
 //package com.example.resort;
@@ -1064,7 +1395,7 @@ public class Comment extends AppCompatActivity {
 //                if (username == null || username.isEmpty()) {
 //                    username = "Unknown User";
 //                }
-//
+
 //                Map<String, Object> ratingRecord = new HashMap<>();
 //                ratingRecord.put("user", username);
 //                ratingRecord.put("rate", selectedRating);

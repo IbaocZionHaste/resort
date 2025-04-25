@@ -5,16 +5,29 @@
     android:paddingVertical="8dp"
     android:background="#f9f9f9">
 
+    <!-- Category -->
+    <TextView
+        android:id="@+id/tvCategory"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Category"
+        android:textStyle="italic"
+        android:textSize="12sp"
+        android:textColor="@color/black" />
+
+    <!-- Product Name -->
     <TextView
         android:id="@+id/tvProductName"
         android:layout_width="0dp"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="Product A"
         android:textStyle="bold"
         android:textSize="12sp"
         android:textColor="@color/black" />
 
+    <!-- Quantity -->
     <TextView
         android:id="@+id/tvQty"
         android:layout_width="60dp"
@@ -25,6 +38,7 @@
         android:textStyle="bold"
         android:textColor="@color/black" />
 
+    <!-- Price -->
     <TextView
         android:id="@+id/tvPrice"
         android:layout_width="80dp"
@@ -36,3 +50,42 @@
         android:textColor="@color/black" />
 
 </LinearLayout>
+
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:orientation="horizontal"-->
+<!--    android:paddingVertical="8dp"-->
+<!--    android:background="#f9f9f9">-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvProductName"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_weight="1"-->
+<!--        android:text="Product A"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="12sp"-->
+<!--        android:textColor="@color/black" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvQty"-->
+<!--        android:layout_width="60dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center"-->
+<!--        android:text="1"-->
+<!--        android:textSize="12sp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textColor="@color/black" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvPrice"-->
+<!--        android:layout_width="80dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="end"-->
+<!--        android:text="$25.00"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="12sp"-->
+<!--        android:textColor="@color/black" />-->
+
+<!--</LinearLayout>-->
