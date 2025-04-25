@@ -201,7 +201,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.92" />
 
-        <EditText
+        <Spinner
             android:id="@+id/editTextText32"
             android:layout_width="0dp"
             android:layout_height="49dp"

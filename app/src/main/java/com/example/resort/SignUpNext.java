@@ -211,7 +211,7 @@ public class SignUpNext extends AppCompatActivity {
             "https://raw.githubusercontent.com/xemasiv/psgc2/master/tree.json";
 
     private EditText etLastName, etFirstName, etMI, etStreet, etAge, etPhone;
-    private Spinner genderSpinner, provinceSpinner, municipalitySpinner, barangaySpinner;
+    private Spinner genderSpinner, provinceSpinner, municipalitySpinner, barangaySpinner, streetSpinner ;
     private CountryCodePicker ccp;
     private RequestQueue requestQueue;
     private JSONObject locationsJson;
@@ -226,7 +226,7 @@ public class SignUpNext extends AppCompatActivity {
         etLastName         = findViewById(R.id.editTextText6);
         etFirstName        = findViewById(R.id.editTextText15);
         etMI               = findViewById(R.id.editTextText11);
-        etStreet           = findViewById(R.id.editTextText32);
+        streetSpinner           = findViewById(R.id.editTextText32);
         etAge              = findViewById(R.id.editTextTextPassword);
         etPhone            = findViewById(R.id.editTextTextPassword2);
 
@@ -244,6 +244,7 @@ public class SignUpNext extends AppCompatActivity {
         /// Setup gender and start loading locations
         setupGenderSpinner();
         fetchLocationsJson();
+        setupPurokSpinner();
 
         provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -341,6 +342,8 @@ public class SignUpNext extends AppCompatActivity {
         provinceSpinner.setAdapter(adapter);
     }
 
+
+
     private void populateMunicipalities(String provName) {
         try {
             JSONObject provObj = null;
@@ -401,6 +404,27 @@ public class SignUpNext extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    /** Populate Purok spinner with 1–100 **/
+    private void setupPurokSpinner() {
+        List<String> puroks = new ArrayList<>();
+        puroks.add("Select Purok...");
+        for (int i = 1; i <= 100; i++) {
+            puroks.add("Purok " + i);
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, puroks);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        streetSpinner.setAdapter(adapter);
+
+        streetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                if (view instanceof TextView) ((TextView) view).setTextColor(Color.BLACK);
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
     }
 
     private void resetSpinner(Spinner spinner, String prompt) {
