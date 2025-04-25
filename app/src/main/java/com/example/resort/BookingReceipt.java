@@ -497,8 +497,13 @@ public class BookingReceipt extends AppCompatActivity {
         orderItems.put("accommodations", cartItemsToMapList(accommodations));
         orderItems.put("foodAndDrinks", cartItemsToMapList(foodAndDrinks));
         if (!packages.isEmpty()) {
-            orderItems.put("package", cartItemToMap(packages.get(0)));
+            orderItems.put("package", cartItemsToMapList(packages));
         }
+
+//        if (!packages.isEmpty()) {
+//            orderItems.put("package", cartItemToMap(packages.get(0)));
+//        }
+
         bookingReview.put("orderItems", orderItems);
 
         /// Build paymentTransaction map.
@@ -758,14 +763,34 @@ public class BookingReceipt extends AppCompatActivity {
                 }
             }
         }
-        // Process package item if available
+
+        /// --- Updated package handling ---
         Object packageObj = orderItems.get("package");
-        if (packageObj instanceof Map<?, ?>) {
+        if (packageObj instanceof List<?>) {
+            /// If package is now a list of maps
+            List<?> packages = (List<?>) packageObj;
+            for (Object obj : packages) {
+                if (obj instanceof Map<?, ?>) {
+                    Map<?, ?> itemMap = (Map<?, ?>) obj;
+                    String itemName = (String) itemMap.get("name");
+                    appendAvailableDate(itemName, bookingDate);
+                }
+            }
+        } else if (packageObj instanceof Map<?, ?>) {
+            /// Fallback if it's still a single map
             Map<?, ?> packageItem = (Map<?, ?>) packageObj;
             String itemName = (String) packageItem.get("name");
             appendAvailableDate(itemName, bookingDate);
         }
     }
+//        // Process package item if available
+//        Object packageObj = orderItems.get("package");
+//        if (packageObj instanceof Map<?, ?>) {
+//            Map<?, ?> packageItem = (Map<?, ?>) packageObj;
+//            String itemName = (String) packageItem.get("name");
+//            appendAvailableDate(itemName, bookingDate);
+//        }
+//    }
 
     /**
      * Updates the booked item by setting its status to "Unavailable" and copying the

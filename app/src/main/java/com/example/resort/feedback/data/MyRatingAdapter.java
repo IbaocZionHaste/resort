@@ -32,7 +32,7 @@ public class MyRatingAdapter extends RecyclerView.Adapter<MyRatingAdapter.MyRati
     @Override
     public void onBindViewHolder(MyRatingViewHolder holder, int position) {
         RatingItem item = ratingList.get(position);
-        holder.nameTextView.setText(item.getItemName());
+        holder.nameTextView.setText('"' + item.getItemName() + '"');
         holder.categoryTextView.setText(item.getCategory());
         ///holder.commentTextView.setText(item.getComment());
         holder.dateTextView.setText(item.getDate());
