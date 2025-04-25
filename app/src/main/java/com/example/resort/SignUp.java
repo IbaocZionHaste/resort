@@ -13,6 +13,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +37,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -47,12 +49,8 @@ import java.util.Objects;
 
 public class SignUp extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
-
     private EditText etEmail, etUsername, etPassword, etConfirmPassword;
     private CheckBox termsCheckBox;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +58,8 @@ public class SignUp extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sign_up);
 
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         etEmail = findViewById(R.id.editTextTextEmailAddress);
         etUsername = findViewById(R.id.editTextText6);
@@ -97,19 +95,16 @@ public class SignUp extends AppCompatActivity {
         btnSignUp.setOnClickListener(v -> registerUser());
 
         ///CheckBox Term
-        termsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    showAgreementDialog();
-                }
+        termsCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                showAgreementDialog();
             }
         });
 
     }
 
     private void setupPasswordToggle(final EditText passwordField) {
-        final int DRAWABLE_END = 2; // Compound drawable right
+        final int DRAWABLE_END = 2; /// Compound drawable right
 
         passwordField.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -135,10 +130,10 @@ public class SignUp extends AppCompatActivity {
                                         passwordField.getCompoundDrawables()[3]);
                             }
                         } else {
-                            // Hide password
+                            /// Hide password
                             passwordField.setTransformationMethod(PasswordTransformationMethod.getInstance());
 
-                            // Clear the color filter or reset to default color
+                            /// Clear the color filter or reset to default color
                             Drawable eyeDrawable = passwordField.getCompoundDrawables()[DRAWABLE_END];
                             if (eyeDrawable != null) {
                                 eyeDrawable.clearColorFilter();
@@ -149,7 +144,7 @@ public class SignUp extends AppCompatActivity {
                                         passwordField.getCompoundDrawables()[3]);
                             }
                         }
-                        // Move cursor to the end so the user experience remains natural
+                        /// Move cursor to the end so the user experience remains natural
                         passwordField.setSelection(passwordField.getText().length());
                         return true;
                     }
@@ -158,7 +153,7 @@ public class SignUp extends AppCompatActivity {
             }
         });
     }
-
+///This code uername is taken
 ///    private void registerUser() {
 //        String email = etEmail.getText().toString().trim();
 //        String username = etUsername.getText().toString().trim();
@@ -268,114 +263,179 @@ public class SignUp extends AppCompatActivity {
 //    }
 
 
-    private void registerUser() {
-        String email = etEmail.getText().toString().trim();
-        String username = etUsername.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-        String confirmPassword = etConfirmPassword.getText().toString().trim();
+private void registerUser() {
+    String email = etEmail.getText().toString().trim();
+    String username = etUsername.getText().toString().trim();
+    String password = etPassword.getText().toString().trim();
+    String confirmPassword = etConfirmPassword.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(username) ||
-                TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
-            Toast.makeText(SignUp.this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!isValidEmail(email)) {
-            Toast.makeText(SignUp.this, "Please enter a valid email address.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!password.equals(confirmPassword)) {
-            Toast.makeText(SignUp.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!termsCheckBox.isChecked()) {
-            Toast.makeText(SignUp.this, "You must agree to the terms and conditions.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        showProgressDialog();
-
-        /// 🔍 First check if username already exists
-        mDatabase.child("Users").orderByChild("username").equalTo(username)
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().exists()) {
-                            progressDialog.dismiss();
-                            Toast.makeText(SignUp.this, "Sorry, username is already taken.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            /// Proceed with registration since username is unique
-                            mAuth.createUserWithEmailAndPassword(email, password)
-                                    .addOnCompleteListener(task1 -> {
-                                        progressDialog.dismiss();
-                                        if (task1.isSuccessful()) {
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            if (user != null) {
-                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                                        .setDisplayName(username)
-                                                        .build();
-                                                user.updateProfile(profileUpdates)
-                                                        .addOnCompleteListener(profileTask -> {
-                                                            if (profileTask.isSuccessful()) {
-                                                                Bundle extras = getIntent().getExtras();
-                                                                String lastName = extras != null ? extras.getString("lastName") : "";
-                                                                String firstName = extras != null ? extras.getString("firstName") : "";
-                                                                String middleInitial = extras != null ? extras.getString("middleInitial") : "";
-                                                                String barangay = extras != null ? extras.getString("barangay") : "";
-                                                                String municipality = extras != null ? extras.getString("municipality") : "";
-                                                                String province = extras != null ? extras.getString("province") : "";
-                                                                String street = extras != null ? extras.getString("street") : "";
-                                                                String age = extras != null ? extras.getString("age") : "";
-                                                                String phoneNumber = extras != null ? extras.getString("phoneNumber") : "";
-                                                                String gender = extras != null ? extras.getString("gender") : "";
-                                                                boolean phoneVerified = extras.getBoolean("phoneVerified", false);
-
-                                                                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
-                                                                String registrationDate = sdf.format(new Date());
-
-                                                                Map<String, Object> userData = new HashMap<>();
-                                                                userData.put("firstName", firstName);
-                                                                userData.put("lastName", lastName);
-                                                                userData.put("middleInitial", middleInitial);
-                                                                userData.put("barangay", barangay);
-                                                                userData.put("municipality", municipality);
-                                                                userData.put("province", province);
-                                                                userData.put("street", street);
-                                                                userData.put("age", age);
-                                                                userData.put("phoneNumber", phoneNumber);
-                                                                userData.put("phoneVerified", phoneVerified);
-                                                                userData.put("gender", gender);
-                                                                userData.put("email", email);
-                                                                userData.put("username", username);
-                                                                userData.put("imageUrl", "default_image_url");
-                                                                userData.put("registrationDate", registrationDate);
-
-                                                                mDatabase.child("Users").child(user.getUid()).setValue(userData)
-                                                                        .addOnCompleteListener(dbTask -> {
-                                                                            if (dbTask.isSuccessful()) {
-                                                                                Toast.makeText(SignUp.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                                                                                Intent intent = new Intent(SignUp.this, Login.class);
-                                                                                startActivity(intent);
-                                                                                finish();
-                                                                            } else {
-                                                                                Toast.makeText(SignUp.this, "Failed to save user data.", Toast.LENGTH_SHORT).show();
-                                                                            }
-                                                                        });
-                                                            }
-                                                        });
-                                            }
-                                        } else {
-                                            Toast.makeText(SignUp.this, "Registration failed: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        }
-                    } else {
-                        progressDialog.dismiss();
-                        Toast.makeText(SignUp.this, "Error checking username: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+    if (TextUtils.isEmpty(email) || TextUtils.isEmpty(username) ||
+            TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+        Toast.makeText(SignUp.this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
+        return;
     }
+
+
+    if (!isValidEmail(email)) {
+        Toast.makeText(SignUp.this, "Please enter a valid email address.", Toast.LENGTH_SHORT).show();
+        return;
+    }
+
+    /// Ensure email is a gmail.com address
+    if (!email.toLowerCase(Locale.getDefault()).endsWith("@gmail.com")) {
+        Toast.makeText(SignUp.this, "Please use a @gmail.com email address.", Toast.LENGTH_SHORT).show();
+        return;
+    }
+
+    /// Ensure password is at least 6 characters
+    if (password.length() < 6) {
+        Toast.makeText(SignUp.this, "Password must be at least 6 characters.", Toast.LENGTH_SHORT).show();
+        return;
+    }
+
+    if (!password.equals(confirmPassword)) {
+        Toast.makeText(SignUp.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
+        return;
+    }
+
+    if (!termsCheckBox.isChecked()) {
+        Toast.makeText(SignUp.this, "You must agree to the terms and conditions.", Toast.LENGTH_SHORT).show();
+        return;
+    }
+
+    ProgressDialog progressDialog = new ProgressDialog(this);
+    progressDialog.setMessage("Registering...");
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    String currentUid = mAuth.getCurrentUser() != null
+            ? mAuth.getCurrentUser().getUid()
+            : null;
+
+    /// First check if username already exists under "users"
+    mDatabase.child("users").orderByChild("username").equalTo(username)
+            .get().addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    progressDialog.dismiss();
+                    Log.e("SignUp", "Error checking username", task.getException());
+                    Toast.makeText(SignUp.this,
+                            "Error checking username: " + Objects.requireNonNull(task.getException()).getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                DataSnapshot snapshot = task.getResult();
+                Log.d("SignUp", "Username check completed, exists=" + snapshot.exists());
+
+                if (snapshot.exists()) {
+                    boolean onlyCurrentUser = true;
+                    for (DataSnapshot userSnap : snapshot.getChildren()) {
+                        String foundUid = userSnap.getKey();
+                        Log.d("SignUp", "Found UID: " + foundUid);
+                        if (currentUid == null || !foundUid.equals(currentUid)) {
+                            onlyCurrentUser = false;
+                            break;
+                        }
+                    }
+                    if (!onlyCurrentUser) {
+                        progressDialog.dismiss();
+                        Log.i("SignUp", "Username already taken by another user");
+                        Toast.makeText(SignUp.this,
+                                "Sorry, username is already taken.",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Log.d("SignUp", "Username belongs to current user, proceeding");
+                }
+
+                /// Username is unique (or only on this user) → proceed with registration
+                Log.d("SignUp", "Proceeding with registration for username: " + username);
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task1 -> {
+                            progressDialog.dismiss();
+                            if (!task1.isSuccessful()) {
+                                Log.e("SignUp", "Registration failed", task1.getException());
+                                Toast.makeText(SignUp.this,
+                                        "Registration failed: " + Objects.requireNonNull(task1.getException()).getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                Log.d("SignUp", "User created with UID: " + user.getUid());
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(username)
+                                        .build();
+                                user.updateProfile(profileUpdates)
+                                        .addOnCompleteListener(profileTask -> {
+                                            if (!profileTask.isSuccessful()) {
+                                                Log.w("SignUp", "Profile update failed", profileTask.getException());
+                                            }
+                                            Log.d("SignUp", "Profile updated, preparing user data");
+
+                                            /// Retrieve extras
+                                            Bundle extras = getIntent().getExtras();
+                                            String lastName = extras != null ? extras.getString("lastName") : "";
+                                            String firstName = extras != null ? extras.getString("firstName") : "";
+                                            String middleInitial = extras != null ? extras.getString("middleInitial") : "";
+                                            String barangay = extras != null ? extras.getString("barangay") : "";
+                                            String municipality = extras != null ? extras.getString("municipality") : "";
+                                            String province = extras != null ? extras.getString("province") : "";
+                                            String street = extras != null ? extras.getString("street") : "";
+                                            String age = extras != null ? extras.getString("age") : "";
+                                            String phoneNumber = extras != null ? extras.getString("phoneNumber") : "";
+                                            String gender = extras != null ? extras.getString("gender") : "";
+                                            boolean phoneVerified = extras != null && extras.getBoolean("phoneVerified");
+
+                                            String registrationDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+                                                    .format(new Date());
+
+                                            /// Populate userData map
+                                            Map<String, Object> userData = new HashMap<>();
+                                            userData.put("firstName", firstName);
+                                            userData.put("lastName", lastName);
+                                            userData.put("middleInitial", middleInitial);
+                                            userData.put("barangay", barangay);
+                                            userData.put("municipality", municipality);
+                                            userData.put("province", province);
+                                            userData.put("street", street);
+                                            userData.put("age", age);
+                                            userData.put("phoneNumber", phoneNumber);
+                                            userData.put("phoneVerified", phoneVerified);
+                                            userData.put("gender", gender);
+                                            userData.put("email", email);
+                                            userData.put("username", username);
+                                            userData.put("imageUrl", "default_image_url");
+                                            userData.put("registrationDate", registrationDate);
+                                            userData.put("isOnline", true);
+
+                                            Log.d("SignUp", "Writing user data to DB");
+                                            mDatabase.child("users").child(user.getUid())
+                                                    .setValue(userData)
+                                                    .addOnCompleteListener(dbTask -> {
+                                                        if (dbTask.isSuccessful()) {
+                                                            Log.d("SignUp", "User data saved successfully");
+                                                            Toast.makeText(SignUp.this,
+                                                                    "Registration successful!",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(SignUp.this, Login.class));
+                                                            finish();
+                                                        } else {
+                                                            Log.e("SignUp", "Failed to save user data", dbTask.getException());
+                                                            Toast.makeText(SignUp.this,
+                                                                    "Failed to save user data.",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                        });
+                            }
+                        });
+            });
+}
+
 
 
     ///Agreement Data
@@ -442,7 +502,7 @@ public class SignUp extends AppCompatActivity {
 
     /// Method to show progress dialog
     private void showProgressDialog() {
-        progressDialog = new ProgressDialog(this);
+        ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Registering...");
         progressDialog.setCancelable(false);
         progressDialog.show();
