@@ -152,8 +152,8 @@
             android:paddingLeft="10dp"
             android:textColor="@color/black"
             android:textColorHint="@color/grey"
-            android:textSize="20sp"
 
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/genderSpinner"
             app:layout_constraintHorizontal_bias="0.0"
