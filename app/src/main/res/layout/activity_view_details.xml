@@ -118,6 +118,16 @@
                 android:textColor="@color/black" />
 
             <TextView
+                android:id="@+id/tvStatusReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status Review:"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black" />
+
+
+            <TextView
                 android:id="@+id/tvDownPayment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -134,14 +144,6 @@
                 android:layout_marginTop="8dp"
                 android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/tvStatusReview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Status Review:"
-                android:textSize="16sp"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/black" />
 
             <!-- Order Items Header -->
             <TextView
@@ -181,54 +183,6 @@
                 android:orientation="vertical"
                 android:layout_marginTop="5dp">
 
-                <!-- Dynamic Payment Method Fields -->
-                <TextView
-                    android:id="@+id/tvPayment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Payment Method: "
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="8dp" />
-
-
-                <TextView
-                    android:id="@+id/tvTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total: "
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:id="@+id/tvAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Amount: "
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:id="@+id/tvBalance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Balance: "
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="8dp" />
-
-
-                <TextView
-                    android:id="@+id/tvDates"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Date: "
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="8dp" />
-
                 <TextView
                     android:id="@+id/tvFirstname"
                     android:layout_width="wrap_content"
@@ -246,7 +200,6 @@
                     android:textSize="16sp"
                     android:textColor="@color/black"
                     android:layout_marginTop="8dp" />
-
                 <TextView
                     android:id="@+id/tvPhones"
                     android:layout_width="wrap_content"
@@ -255,6 +208,49 @@
                     android:textSize="16sp"
                     android:textColor="@color/black"
                     android:layout_marginTop="8dp" />
+
+
+
+                <!-- Dynamic Payment Method Fields -->
+                <TextView
+                    android:id="@+id/tvPayment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Payment Method: "
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/tvAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amount: "
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp" />
+
+
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total: "
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp" />
+
+
+                <TextView
+                    android:id="@+id/tvBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Balance: "
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp" />
+
 
                 <TextView
                     android:id="@+id/tvReference"
@@ -265,15 +261,6 @@
                     android:textColor="@color/black"
                     android:layout_marginTop="8dp" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/tvPaymentDate"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Pay Date: "-->
-<!--                    android:textSize="16sp"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:layout_marginTop="8dp" />-->
-
 
                 <TextView
                     android:id="@+id/tvStatus"
@@ -283,6 +270,29 @@
                     android:textSize="16sp"
                     android:textColor="@color/black"
                     android:layout_marginTop="8dp" />
+
+
+                <TextView
+                    android:id="@+id/tvDates"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date: "
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp" />
+
+
+
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tvPaymentDate"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Pay Date: "-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:layout_marginTop="8dp" />-->
+
 
             </LinearLayout>
         </LinearLayout>

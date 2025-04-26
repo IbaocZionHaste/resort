@@ -153,8 +153,9 @@ public class SignUp extends AppCompatActivity {
             }
         });
     }
-///This code username is taken
-///    private void registerUser() {
+
+///This code username is taken original
+//    private void registerUser() {
 //        String email = etEmail.getText().toString().trim();
 //        String username = etUsername.getText().toString().trim();
 //        String password = etPassword.getText().toString().trim();
@@ -261,7 +262,6 @@ public class SignUp extends AppCompatActivity {
 //                });
 //
 //    }
-
 
 private void registerUser() {
     String email = etEmail.getText().toString().trim();

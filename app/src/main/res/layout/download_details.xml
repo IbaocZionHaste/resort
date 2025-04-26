@@ -130,7 +130,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Item Name"
+                        android:text="Booking Name"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:textSize="14sp" />
@@ -179,7 +179,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Thank you for ordering!"
+                    android:text="Thank you for booking with us!"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="16sp"

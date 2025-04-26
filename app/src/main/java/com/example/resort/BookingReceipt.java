@@ -105,20 +105,20 @@ public class BookingReceipt extends AppCompatActivity {
         detailBooking = findViewById(R.id.DetailBooking);
         totalPaymentText = findViewById(R.id.Totalpayment);
         downPaymentText = findViewById(R.id.Downpayment);
-        TextView dateTextView = findViewById(R.id.date); // For booking date/time info
+        TextView dateTextView = findViewById(R.id.date); /// For booking date/time info
 
         // Initialize user details TextViews.
         nameTextView = findViewById(R.id.name);
         phoneTextView = findViewById(R.id.phone);
         emailTextView = findViewById(R.id.email);
 
-        // Initialize the thank you message TextView.
+        /// Initialize the thank you message TextView.
         messageTextView = findViewById(R.id.message);
 
-        // Set a bold monospace typeface for the receipt details.
+        /// Set a bold monospace typeface for the receipt details.
         detailBooking.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
 
-        // Retrieve and display the formatted booking info passed from Booking activity.
+        /// Retrieve and display the formatted booking info passed from Booking activity.
         String bookingDate = getIntent().getStringExtra("BOOKING_DATE");
         if (bookingDate != null && !bookingDate.isEmpty()) {
             dateTextView.setText(bookingDate);
@@ -142,87 +142,87 @@ public class BookingReceipt extends AppCompatActivity {
     }
 
     /// --------------------- Receipt & UI Helper Methods ---------------------
-//    private void setupSaveReceiptFunction() {
-//        ImageButton btnSaveReceipt = findViewById(R.id.SaveReceipt);
-//        btnSaveReceipt.setOnClickListener(v -> {
-//            // Inflate the custom layout
-//            LayoutInflater inflater = LayoutInflater.from(BookingReceipt.this);
-//            View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
-//
-//            // Build the AlertDialog using the custom layout
-//            AlertDialog.Builder builder = new AlertDialog.Builder(BookingReceipt.this)
-//                    .setView(dialogView);
-//            final AlertDialog dialog = builder.create();
-//
-//            // Get references to buttons in the custom layout
-//            Button btnSave = dialogView.findViewById(R.id.btnSave);
-//            Button btnCancel = dialogView.findViewById(R.id.btnCancel);
-//
-//            // Save button functionality (using your existing logic)
-//            btnSave.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    final Button submitButton = findViewById(R.id.submit);
-//
-//                    // Hide buttons temporarily.
-//                    btnSaveReceipt.setVisibility(View.INVISIBLE);
-//                    submitButton.setVisibility(View.INVISIBLE);
-//
-//                    btnSaveReceipt.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            // --- Temporarily update UI for the saved receipt ---
-//                            final ImageView arrowView = findViewById(R.id.arrow);
-//                            final int originalArrowVisibility = arrowView.getVisibility();
-//                            arrowView.setVisibility(View.INVISIBLE);
-//
-//                            final String originalMessage = messageTextView.getText().toString();
-//                            final Drawable[] originalDrawables = messageTextView.getCompoundDrawables();
-//                            messageTextView.setText("Thank you for purchasing Sir/Ma'am.");
-//                            messageTextView.setCompoundDrawables(null, null, null, null);
-//
-//                            View contentView = findViewById(android.R.id.content);
-//                            Bitmap screenshot = getScreenShot(contentView);
-//
-//                            // --- Restore UI elements ---
-//                            messageTextView.setText(originalMessage);
-//                            messageTextView.setCompoundDrawables(
-//                                    originalDrawables[0],
-//                                    originalDrawables[1],
-//                                    originalDrawables[2],
-//                                    originalDrawables[3]);
-//                            arrowView.setVisibility(originalArrowVisibility);
-//
-//                            btnSaveReceipt.setVisibility(View.VISIBLE);
-//                            btnSaveReceipt.setEnabled(true);
-//                            submitButton.setVisibility(View.VISIBLE);
-//                            submitButton.setEnabled(true);
-//
-//                            boolean isSaved = saveReceiptImage(screenshot);
-//                            if (isSaved) {
-//                                Toast.makeText(BookingReceipt.this, "Receipt saved to gallery", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                Toast.makeText(BookingReceipt.this, "Error saving receipt", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    }, 200); // 200ms delay for UI update
-//
-//                    dialog.dismiss();
-//                }
-//            });
-//
-//            // Cancel button simply dismisses the dialog
-//            btnCancel.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    dialog.dismiss();
-//                }
-//            });
-//
-//            // Show the custom dialog
-//            dialog.show();
-//        });
-//    }
+    private void setupSaveReceiptFunction() {
+        ImageButton btnSaveReceipt = findViewById(R.id.SaveReceipt);
+        btnSaveReceipt.setOnClickListener(v -> {
+            // Inflate the custom layout
+            LayoutInflater inflater = LayoutInflater.from(BookingReceipt.this);
+            View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+
+            // Build the AlertDialog using the custom layout
+            AlertDialog.Builder builder = new AlertDialog.Builder(BookingReceipt.this)
+                    .setView(dialogView);
+            final AlertDialog dialog = builder.create();
+
+            // Get references to buttons in the custom layout
+            Button btnSave = dialogView.findViewById(R.id.btnSave);
+            Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+
+            // Save button functionality (using your existing logic)
+            btnSave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Button submitButton = findViewById(R.id.submit);
+
+                    // Hide buttons temporarily.
+                    btnSaveReceipt.setVisibility(View.INVISIBLE);
+                    submitButton.setVisibility(View.INVISIBLE);
+
+                    btnSaveReceipt.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // --- Temporarily update UI for the saved receipt ---
+                            final ImageView arrowView = findViewById(R.id.arrow);
+                            final int originalArrowVisibility = arrowView.getVisibility();
+                            arrowView.setVisibility(View.INVISIBLE);
+
+                            final String originalMessage = messageTextView.getText().toString();
+                            final Drawable[] originalDrawables = messageTextView.getCompoundDrawables();
+                            messageTextView.setText("Thank you for booking with us, Sir/Ma'am");
+                            messageTextView.setCompoundDrawables(null, null, null, null);
+
+                            View contentView = findViewById(android.R.id.content);
+                            Bitmap screenshot = getScreenShot(contentView);
+
+                            // --- Restore UI elements ---
+                            messageTextView.setText(originalMessage);
+                            messageTextView.setCompoundDrawables(
+                                    originalDrawables[0],
+                                    originalDrawables[1],
+                                    originalDrawables[2],
+                                    originalDrawables[3]);
+                            arrowView.setVisibility(originalArrowVisibility);
+
+                            btnSaveReceipt.setVisibility(View.VISIBLE);
+                            btnSaveReceipt.setEnabled(true);
+                            submitButton.setVisibility(View.VISIBLE);
+                            submitButton.setEnabled(true);
+
+                            boolean isSaved = saveReceiptImage(screenshot);
+                            if (isSaved) {
+                                Toast.makeText(BookingReceipt.this, "Receipt saved to gallery", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(BookingReceipt.this, "Error saving receipt", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }, 200); /// 200ms delay for UI update
+
+                    dialog.dismiss();
+                }
+            });
+
+            /// Cancel button simply dismisses the dialog
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
+            /// Show the custom dialog
+            dialog.show();
+        });
+    }
 
 
 

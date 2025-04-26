@@ -38,14 +38,14 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
     public void onBindViewHolder(@NonNull BookingAdapter.ViewHolder holder, int position) {
         BookingData booking = bookingList.get(position);
 
-        // Display the booking date
+        /// Display the booking date
         if (booking.getBookingReview() != null && booking.getBookingReview().bookingDate != null) {
             holder.tvBookingDate.setText(booking.getBookingReview().bookingDate); // Set booking date
         } else {
             holder.tvBookingDate.setText(""); // Set it empty if no booking date
         }
 
-        // Display the payment method and set the text color to blue
+        /// Display the payment method and set the text color to blue
         if (booking.getPaymentMethod() != null) {
             holder.tvPaymentMethod.setText("Payment Method: " + booking.getPaymentMethod().Payment);
             holder.tvPaymentMethod.setTextColor(Color.BLACK); // Set color to blue
@@ -53,15 +53,15 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
             holder.tvPaymentMethod.setText("");
         }
 
-        // Display the refNo (without "Reference:") in red color
+        /// Display the refNo (without "Reference:") in red color
         if (booking.getBookingReview() != null && booking.getBookingReview().refNo != null) {
-            holder.tvRefNo.setText("Ref.No" + booking.getBookingReview().refNo);
+            holder.tvRefNo.setText("Booking Ref: " + booking.getBookingReview().refNo);
             holder.tvRefNo.setTextColor(context.getResources().getColor(R.color.black));
         } else {
             holder.tvRefNo.setText(""); /// Set empty if no reference number is available
         }
 
-        // Check the payment transaction status and update the status and color
+        /// Check the payment transaction status and update the status and color
         if (booking.getPaymentTransaction() != null) {
             String paymentStatus = booking.getPaymentTransaction().paymentStatus;
             holder.tvStatus.setText("Status: " + paymentStatus);
@@ -94,7 +94,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
         }
 
 
-        // When "View Details" is clicked, open the detail activity
+        /// When "View Details" is clicked, open the detail activity
         holder.btnViewDetails.setOnClickListener(v -> {
             Intent intent = new Intent(context, ViewDetailsActivity.class);
             String bookingJson = new Gson().toJson(booking);

@@ -2,27 +2,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
+    android:padding="12dp"
     android:background="@color/white">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:gravity="center_vertical">
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/tvDialogTitle"
+        <!-- Title and Logo Row -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Payment Receipt Details"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:fontFamily="@font/arial_th"
-            android:textColor="@color/black"
-            android:paddingBottom="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical|end"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvDialogTitle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Payment Receipt Details"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:fontFamily="@font/arial_th"
+                android:textColor="@color/black" />
+
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/image2"
+                android:layout_marginStart="0dp"
+                android:contentDescription="Logo"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
+
+
+
+<!--        &lt;!&ndash; Title &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvDialogTitle"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Payment Receipt Details"-->
+<!--            android:textAppearance="?attr/textAppearanceHeadline6"-->
+<!--            android:textStyle="bold"-->
+<!--            android:gravity="center"-->
+<!--            android:fontFamily="@font/arial_th"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:paddingBottom="8dp" />-->
 
         <!-- Underline -->
         <View
@@ -246,6 +278,17 @@
                         android:textColor="@color/black"
                         android:fontFamily="@font/arial_th" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvFooter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Thank you for your payment!"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:paddingTop="20dp" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

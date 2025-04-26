@@ -1639,6 +1639,7 @@ public class BookingStatus extends AppCompatActivity {
      * @param dialogToDismiss the dialog to dismiss after saving
      * @param onDone callback that receives true if saved successfully
      */
+
 //    public void downloadAsPDF(View contentView, AlertDialog dialogToDismiss, Consumer<Boolean> onDone) {
 //        // --- 1) ensure the view has a size by measuring+laying out
 //        int specW = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -1663,6 +1664,7 @@ public class BookingStatus extends AppCompatActivity {
 //        PdfDocument.Page page = pdf.startPage(pageInfo);
 //        page.getCanvas().drawBitmap(bitmap, 0, 0, null);
 //        pdf.finishPage(page);
+
         public void downloadAsPDF(View contentView, AlertDialog dialogToDismiss, Consumer<Boolean> onDone) {
         // 0) Force software layer so everything (images, shapes) draws into the Canvas
         contentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); // <<<====
@@ -1707,7 +1709,7 @@ public class BookingStatus extends AppCompatActivity {
             pdf.finishPage(page);
         }
 
-        // --- 4) save to the public Downloads directory
+        /// --- 4) save to the public Downloads directory
         File downloads;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // For Android 10+ use MediaStore

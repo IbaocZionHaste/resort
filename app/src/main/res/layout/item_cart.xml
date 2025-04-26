@@ -22,7 +22,7 @@
             android:layout_height="90dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="0dp"
             android:layout_marginEnd="5dp">
 
 
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="2dp"
             android:orientation="vertical">
 
 
@@ -49,7 +49,7 @@
                 android:id="@+id/itemName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Item Name"
+                android:text="Name"
                 android:fontFamily="@font/arial_th"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
@@ -64,7 +64,7 @@
                 android:text="Category"
                 android:fontFamily="@font/arial_th"
                 android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -75,7 +75,7 @@
                 android:text="Capacity"
                 android:fontFamily="@font/arial_th"
                 android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -96,8 +96,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="40dp"
-            android:layout_marginStart="1dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginStart="0dp"
             android:gravity="center_vertical">
 
             <Button
@@ -105,8 +105,10 @@
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Ons"
+                android:text="Add-Ons"
                 android:clickable="true"
+                app:strokeColor="@color/black"
+                app:strokeWidth="1dp"
                 app:cardElevation="8dp"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/light_blue" />
@@ -144,7 +146,7 @@
                 android:layout_width="27dp"
                 android:layout_height="27dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="0dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:src="@drawable/ic_delete"

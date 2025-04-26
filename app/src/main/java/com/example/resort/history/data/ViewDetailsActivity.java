@@ -108,6 +108,7 @@ public class ViewDetailsActivity extends AppCompatActivity {
             TextView tvReference = findViewById(R.id.tvReference);
             TextView tvStatus = findViewById(R.id.tvStatus);
 
+
             tvPayment.setText("Payment: " + pm.Payment);
             tvAmount.setText("Paid Amount: " + pm.Amount);
             tvBalance.setText("Balance: " + (pm.Balance == null ? "N/A" : pm.Balance));
@@ -118,6 +119,7 @@ public class ViewDetailsActivity extends AppCompatActivity {
             tvPhones.setText("Phone: " + pm.Phone);
             tvReference.setText("Reference: " + pm.Reference);
             tvStatus.setText("Status: " + pm.Status);
+
         }
     }
 
