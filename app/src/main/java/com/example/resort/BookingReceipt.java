@@ -134,7 +134,7 @@ public class BookingReceipt extends AppCompatActivity {
 
         /// Set up the SaveReceipt (print) button.
 
-        //setupSaveReceiptFunction();
+        setupSaveReceiptFunction();
 
         /// Set up the submit button to show the custom confirmation dialog.
         Button submitButton = findViewById(R.id.submit);
@@ -149,7 +149,7 @@ public class BookingReceipt extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(BookingReceipt.this);
             View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
 
-            // Build the AlertDialog using the custom layout
+            /// Build the AlertDialog using the custom layout
             AlertDialog.Builder builder = new AlertDialog.Builder(BookingReceipt.this)
                     .setView(dialogView);
             final AlertDialog dialog = builder.create();
@@ -158,7 +158,7 @@ public class BookingReceipt extends AppCompatActivity {
             Button btnSave = dialogView.findViewById(R.id.btnSave);
             Button btnCancel = dialogView.findViewById(R.id.btnCancel);
 
-            // Save button functionality (using your existing logic)
+            /// Save button functionality (using your existing logic)
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
