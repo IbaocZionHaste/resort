@@ -13,8 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No Internet Connection.\nPlease check your connection and try again."
-        android:textColor="@color/black"
+        android:textColor="@color/red"
         android:textSize="18sp"
+       android:textStyle="bold"
         android:gravity="center"/>
 
     <Button

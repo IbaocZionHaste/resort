@@ -89,6 +89,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <!-- CardView containing boat details with horizontal margins -->

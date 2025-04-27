@@ -49,7 +49,6 @@ public class MyRatingAdapter extends RecyclerView.Adapter<MyRatingAdapter.MyRati
         }
     }
 
-
     @Override
     public int getItemCount() {
         return ratingList.size();

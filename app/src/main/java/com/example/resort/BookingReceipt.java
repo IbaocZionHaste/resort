@@ -2,6 +2,7 @@ package com.example.resort;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -138,7 +141,7 @@ public class BookingReceipt extends AppCompatActivity {
 
         /// Set up the submit button to show the custom confirmation dialog.
         Button submitButton = findViewById(R.id.submit);
-        submitButton.setOnClickListener(v -> submitBookingToFirebase());
+        submitButton.setOnClickListener(v ->  sendBookingData());
     }
 
     /// --------------------- Receipt & UI Helper Methods ---------------------
@@ -171,14 +174,14 @@ public class BookingReceipt extends AppCompatActivity {
                     btnSaveReceipt.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            // --- Temporarily update UI for the saved receipt ---
+                            /// --- Temporarily update UI for the saved receipt ---
                             final ImageView arrowView = findViewById(R.id.arrow);
                             final int originalArrowVisibility = arrowView.getVisibility();
                             arrowView.setVisibility(View.INVISIBLE);
 
                             final String originalMessage = messageTextView.getText().toString();
                             final Drawable[] originalDrawables = messageTextView.getCompoundDrawables();
-                            messageTextView.setText("Thank you for booking with us, Sir/Ma'am");
+                            ///messageTextView.setText("Thank you for booking with us, Sir/Ma'am");
                             messageTextView.setCompoundDrawables(null, null, null, null);
 
                             View contentView = findViewById(android.R.id.content);
@@ -405,26 +408,100 @@ public class BookingReceipt extends AppCompatActivity {
 
     /// --------------------- Firebase Booking Submission Methods ---------------------
 
-    /// Shows the custom confirmation dialog using your layout (dialog_submission.xml)
-    private void submitBookingToFirebase() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(BookingReceipt.this);
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_submission, null);
-        builder.setView(dialogView);
+// Shows the custom confirmation dialog using your layout (dialog_submission.xml)
+//    private void submitBookingToFirebase() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(BookingReceipt.this);
+//        View dialogView = getLayoutInflater().inflate(R.layout.dialog_submission, null);
+//        builder.setView(dialogView);
+//
+//        AlertDialog alertDialog = builder.create();
+//        Button submissionButton = dialogView.findViewById(R.id.Submission);
+//        submissionButton.setOnClickListener(v -> {
+//            sendBookingData();
+//            alertDialog.dismiss();
+//        });
+//
+//        alertDialog.show();
+//    }
 
-        AlertDialog alertDialog = builder.create();
-        Button submissionButton = dialogView.findViewById(R.id.Submission);
-        submissionButton.setOnClickListener(v -> {
-            sendBookingData();
-            alertDialog.dismiss();
-        });
-
-        alertDialog.show();
-    }
 
 
     ///Send Booking Data
+    private boolean isBookingSubmitting = false;
+
     private void sendBookingData() {
-        // Retrieve user details from TextViews.
+
+        /// 2) Prevent dupes
+        if (isBookingSubmitting) return;
+
+        /// 3) Offline check → AlertDialog retry/cancel
+        if (!isNetworkAvailable()) {
+            /// 1) Inflate your custom layout
+            View dialogView = getLayoutInflater()
+                    .inflate(R.layout.custom_no_internet, null);
+
+            /// 2) Grab the Retry button (you only defined one)
+            Button retryBtn = dialogView.findViewById(R.id.btnRetry);
+
+            /// 3) Build and show the AlertDialog
+            AlertDialog noNetDialog = new AlertDialog.Builder(this)
+                    .setView(dialogView)
+                    .setCancelable(false)
+                    .create();
+
+            /// 4) Retry → re-invoke sendBookingData(), dismiss dialog
+            retryBtn.setOnClickListener(v -> {
+                noNetDialog.dismiss();
+                sendBookingData();
+            });
+
+            noNetDialog.show();
+            return;
+        }
+
+        /// 4) Lock out further taps & ask for confirmation
+        isBookingSubmitting = true;
+
+        /// Inflate the custom “Confirm Booking” dialog view
+        View confirmView = getLayoutInflater()
+                .inflate(R.layout.dialog_confirm_booking, null);
+
+        /// Grab your buttons
+        Button submitBtn = confirmView.findViewById(R.id.btnSubmit);
+        Button cancelBtn = confirmView.findViewById(R.id.btnCancel);
+
+        /// Build the AlertDialog around that view
+        AlertDialog confirmDialog = new AlertDialog.Builder(this)
+                .setView(confirmView)
+                .setCancelable(false)
+                .create();
+
+        /// Wire up “Submit” → fire off your real method
+        submitBtn.setOnClickListener(v -> {
+            confirmDialog.dismiss();
+            actuallySendBookingData();
+        });
+
+        /// Wire up “Cancel” → reset the flag and dismiss
+        cancelBtn.setOnClickListener(v -> {
+            confirmDialog.dismiss();
+            isBookingSubmitting = false;
+        });
+
+        confirmDialog.show();
+    }
+
+    private void actuallySendBookingData() {
+        /// 5) Show loading indicator
+        final ProgressDialog progress = ProgressDialog.show(
+                this,
+                "Submitting Booking",
+                "Please wait…",
+                true,
+                false
+        );
+
+        /// Retrieve user details from TextViews.
         String name = nameTextView.getText().toString().replace("Name: ", "").trim();
         String phone = phoneTextView.getText().toString().replace("Phone: ", "").trim();
         String email = emailTextView.getText().toString().replace("Email: ", "").trim();
@@ -443,6 +520,10 @@ public class BookingReceipt extends AppCompatActivity {
         // Calculate total amount from cart items.
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
+
+            progress.dismiss();
+            isBookingSubmitting = false; /// NEW
+
             Toast.makeText(BookingReceipt.this, "User not logged in", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -541,6 +622,10 @@ public class BookingReceipt extends AppCompatActivity {
                 preferences.getBoolean("paymentApproved", false) ||
                 preferences.getBoolean("reviewApproved", false) ||
                 preferences.getBoolean("finalApproved", false)) {
+
+                progress.dismiss();
+                isBookingSubmitting = false; ///NEW
+
             Toast.makeText(BookingReceipt.this, "Sorry, your booking is still in progress.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -559,7 +644,11 @@ public class BookingReceipt extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // If any booking exists, abort the submission.
+
+                    progress.dismiss();
+                    isBookingSubmitting = false; ///NEW
+
+                    /// If any booking exists, abort the submission.
                     Toast.makeText(BookingReceipt.this,
                             "Sorry, you already have an active booking.", Toast.LENGTH_SHORT).show();
                 } else {
@@ -568,6 +657,10 @@ public class BookingReceipt extends AppCompatActivity {
                     if (bookingId != null) {
                         bookingRef.child(bookingId).setValue(bookingData)
                                 .addOnCompleteListener(task -> {
+
+                                    progress.dismiss();
+                                    isBookingSubmitting = false;  ///NEW
+
                                     if (task.isSuccessful()) {
                                         Toast.makeText(BookingReceipt.this, "Booking submitted successfully", Toast.LENGTH_SHORT).show();
 
@@ -664,8 +757,15 @@ public class BookingReceipt extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(BookingReceipt.this, "Error submitting booking", Toast.LENGTH_SHORT).show();
                                     }
+                                })
+                                .addOnFailureListener(e -> {
+                                    progress.dismiss();
+                                    isBookingSubmitting = false;
+                                    Toast.makeText(BookingReceipt.this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
+                        progress.dismiss();
+                        isBookingSubmitting = false;
                         Toast.makeText(BookingReceipt.this, "Error generating booking ID", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -673,6 +773,8 @@ public class BookingReceipt extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                progress.dismiss();
+                isBookingSubmitting = false;
                 Toast.makeText(BookingReceipt.this, "Error checking booking status", Toast.LENGTH_SHORT).show();
             }
         });
@@ -711,6 +813,21 @@ public class BookingReceipt extends AppCompatActivity {
                 Log.e("Telegram", "Error: ", e);
             }
         }).start();
+    }
+
+
+    /**
+     * Returns true if the device is currently connected to any network.
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            @SuppressWarnings("deprecation")
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnected();
+        }
+        return false;
     }
 
     /// --------------------- Helper Methods ---------------------

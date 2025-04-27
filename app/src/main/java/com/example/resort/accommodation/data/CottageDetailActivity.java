@@ -138,7 +138,7 @@ public class CottageDetailActivity extends AppCompatActivity {
         }
     }
 
-    // ----- Asynchronous Album Data Fetching -----
+    /// ----- Asynchronous Album Data Fetching -----
     // Fetches album data from Firebase. If an album's productName matches the cottage name,
     // then its photo1, photo2, and photo3 are assumed to be Firebase Storage URLs and replace the default images.
     private void fetchAlbumData(final String cottageName) {
@@ -478,7 +478,6 @@ public class CottageDetailActivity extends AppCompatActivity {
                                             .getValue(String.class);
                                     String category = ratingSnapshot.child("category")
                                             .getValue(String.class);
-
                                     Review review = new Review(
                                             user, rate, comment, date, category, cottageName
                                     );

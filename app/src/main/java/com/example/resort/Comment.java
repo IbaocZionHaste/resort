@@ -233,9 +233,25 @@ public class Comment extends AppCompatActivity {
             Toast.makeText(this, "Please select a rating", Toast.LENGTH_SHORT).show();
             return;
         }
+
+//        String commentText = commentEditText.getText().toString().trim();
+//        if (commentText.isEmpty()) {
+//            Toast.makeText(this, "Please add a comment", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+
+        /// 1) Get and trim the user’s comment
         String commentText = commentEditText.getText().toString().trim();
         if (commentText.isEmpty()) {
             Toast.makeText(this, "Please add a comment", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        /// 2) **New:** Enforce 360-character limit (including spaces)
+        if (commentText.length() > 360) {
+            Toast.makeText(this,
+                    "Comment cannot exceed 360 characters",
+                    Toast.LENGTH_SHORT
+            ).show();
             return;
         }
 
