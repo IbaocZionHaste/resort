@@ -804,12 +804,18 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 
+
     /// Payment Submitted
     private boolean bookingPayProcessed = false;
+    private Handler handler;
+    private Runnable pollTaskSubmitted;
 
     private void listenForPaymentMethodStatus() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) return;
+
+        /// Reset the flag for this specific user
+        bookingPayProcessed = false;
 
         String userId = currentUser.getUid();
         DatabaseReference bookingRef = FirebaseDatabase.getInstance()
@@ -817,50 +823,77 @@ public class BookingStatus extends AppCompatActivity {
                 .child(userId)
                 .child("MyBooking");
 
-        final Handler handler = new Handler(Looper.getMainLooper());
-        final Runnable[] pollTask = new Runnable[1];
+        handler = new Handler(Looper.getMainLooper());
 
-        pollTask[0] = new Runnable() {
+        pollTaskSubmitted = new Runnable() {
             @Override
             public void run() {
+                /// If we've already processed, bail out
+                if (bookingPayProcessed) return;
+
                 bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists() && !bookingPayProcessed) {
+                        if (snapshot.exists()) {
                             for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
-                                String paymentStatus = bookingSnapshot
+                                String status = bookingSnapshot
                                         .child("paymentMethod")
                                         .child("Status")
                                         .getValue(String.class);
 
-                                if (paymentStatus != null && paymentStatus.equalsIgnoreCase("Done")) {
+                                if ("Done".equalsIgnoreCase(status)) {
+                                    /// Mark processed so we don't re-show across users
+                                    bookingPayProcessed = true;
+
+                                    // Advance UI, show message
                                     progress = Math.max(progress, 3);
-                                    bookingPayProcessed = false;
                                     updateDots();
                                     showPaymentSubmittedMessage();
                                     break;
                                 }
                             }
                         } else {
-                            Log.d("BookingCheck", "MyBooking does not exist for the user.");
+                            Log.d("BookingCheck", "No bookings for this user.");
                         }
 
-                        // Only continue polling if payment hasn't been processed
+                        // Only re-post if still not processed
                         if (!bookingPayProcessed) {
-                            handler.postDelayed(pollTask[0], 1000); /// Poll every second
+                            handler.postDelayed(pollTaskSubmitted, 1000);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("BookingCheck", "Error reading MyBooking data", error.toException());
+                        Log.e("BookingCheck", "Error reading MyBooking", error.toException());
+                        // Retry on error
+                        if (!bookingPayProcessed) {
+                            handler.postDelayed(pollTaskSubmitted, 2000);
+                        }
                     }
                 });
             }
         };
 
-        handler.post(pollTask[0]); // Start polling
+        /// Start polling
+        handler.post(pollTaskSubmitted);
+
+        /// Listen for sign-out or user change so we can clean up
+        FirebaseAuth.getInstance().addAuthStateListener(auth -> {
+            FirebaseUser newUser = auth.getCurrentUser();
+            /// If the user has signed out or switched
+            if (newUser == null || !newUser.getUid().equals(userId)) {
+                stopPaymentStatusPolling();
+            }
+        });
     }
+
+    private void stopPaymentStatusPolling() {
+        if (handler != null && pollTask != null) {
+            handler.removeCallbacks(pollTask);
+        }
+        bookingPayProcessed = false;
+    }
+
 
 /// Payment Submitted Original
 //    private boolean bookingPayProcessed = false;
@@ -925,6 +958,7 @@ public class BookingStatus extends AppCompatActivity {
 //            handler.post(pollTask[0]);  // Start polling
 //        }
 //    }
+
 
     ///Booking Review Admin
     private void listenForApproval() {
