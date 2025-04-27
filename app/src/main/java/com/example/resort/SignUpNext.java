@@ -304,7 +304,6 @@ public class SignUpNext extends AppCompatActivity {
         genderSpinner.setAdapter(ad);
     }
 
-
     private void resetSpinner(Spinner spinner, String prompt) {
         List<String> list = new ArrayList<>();
         list.add(prompt);
