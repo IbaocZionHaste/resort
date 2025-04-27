@@ -1,6 +1,7 @@
 package com.example.resort;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbb20.CountryCodePicker;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -41,6 +43,8 @@ import java.util.List;
 public class SignUpNext extends AppCompatActivity {
     private static final String LOCATIONS_URL =
             "https://raw.githubusercontent.com/xemasiv/psgc2/master/tree.json";
+    private static final String PREFS_NAME = "locations_cache";
+    private static final String KEY_LOCATIONS_JSON = "locations_json";
 
     private EditText etLastName;
     private EditText etFirstName;
@@ -84,6 +88,7 @@ public class SignUpNext extends AppCompatActivity {
         setupPurokSpinner();
         fetchLocationsJson();
 
+
         /// Listener for province spinner
         provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -116,19 +121,6 @@ public class SignUpNext extends AppCompatActivity {
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        /// Listener for barangay spinner
-        barangaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                if (view instanceof TextView) ((TextView) view).setTextColor(Color.BLACK);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // no-op
-            }
-        });
-
 
         /// Next button click: validate and forward to OTP
         btnNext.setOnClickListener(v -> {
@@ -155,6 +147,18 @@ public class SignUpNext extends AppCompatActivity {
     }
 
     private void fetchLocationsJson() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String cached = prefs.getString(KEY_LOCATIONS_JSON, null);
+        if (cached != null) {
+            try {
+                locationsJson = new JSONObject(cached);
+                populateProvinces();
+                return;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         JsonObjectRequest req = new JsonObjectRequest(
                 Request.Method.GET,
                 LOCATIONS_URL,
@@ -162,11 +166,16 @@ public class SignUpNext extends AppCompatActivity {
                 response -> {
                     locationsJson = response;
                     populateProvinces();
+                    prefs.edit()
+                            .putString(KEY_LOCATIONS_JSON, response.toString())
+                            .apply();
                 },
                 error -> Toast.makeText(this, "Failed to load locations.", Toast.LENGTH_SHORT).show()
         );
+        req.setShouldCache(true);
         requestQueue.add(req);
     }
+
 
     private void populateProvinces() {
         List<String> list = new ArrayList<>();
@@ -218,32 +227,6 @@ public class SignUpNext extends AppCompatActivity {
         resetSpinner(barangaySpinner, "Select Barangay...");
     }
 
-//    private void populateBarangays(String province, String municipality) {
-//        try {
-//            JSONObject provObj = null;
-//            Iterator<String> regions = locationsJson.keys();
-//            while (regions.hasNext()) {
-//                JSONObject reg = locationsJson.optJSONObject(regions.next());
-//                if (reg != null && reg.has(province)) provObj = reg.optJSONObject(province);
-//            }
-//            if (provObj == null) return;
-//            JSONObject munObj = provObj.optJSONObject(municipality);
-//            if (munObj == null) return;
-//            List<String> list = new ArrayList<>();
-//            list.add("Select Barangay...");
-//            Iterator<String> bars = munObj.keys();
-//            while (bars.hasNext()) {
-//                String b = bars.next();
-//                if (!"population".equals(b) && !"class".equals(b)) list.add(b);
-//            }
-//            ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
-//            ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            barangaySpinner.setAdapter(ad);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     private void populateBarangays(String province, String municipality) {
         try {
             JSONObject provObj = null;
@@ -255,7 +238,6 @@ public class SignUpNext extends AppCompatActivity {
             if (provObj == null) return;
             JSONObject munObj = provObj.optJSONObject(municipality);
             if (munObj == null) return;
-
             List<String> list = new ArrayList<>();
             list.add("Select Barangay...");
             Iterator<String> bars = munObj.keys();
@@ -264,31 +246,26 @@ public class SignUpNext extends AppCompatActivity {
                 if (!"population".equals(b) && !"class".equals(b)) list.add(b);
             }
 
-            ArrayAdapter<String> ad = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list) {
+            ArrayAdapter<String> ad = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_spinner_item,
+                    list
+            ) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getView(position, convertView, parent);
-                    TextView text = (TextView) view.findViewById(android.R.id.text1);
-                    text.setTextColor(Color.BLACK);
-                    return view;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView text = (TextView) view.findViewById(android.R.id.text1);
-                    text.setTextColor(Color.BLACK);
-                    return view;
+                    TextView tv = (TextView) super.getView(position, convertView, parent);
+                    tv.setTextColor(Color.BLACK);
+                    return tv;
                 }
             };
 
             ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             barangaySpinner.setAdapter(ad);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     private void setupPurokSpinner() {
         List<String> list = new ArrayList<>();
@@ -310,7 +287,7 @@ public class SignUpNext extends AppCompatActivity {
         list.add("Select Gender");
         list.add("Male");
         list.add("Female");
-        ArrayAdapter<String> ad = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list) {
+        ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list) {
             @Override public View getView(int pos, View cv, ViewGroup parent) {
                 TextView tv = (TextView) super.getView(pos, cv, parent);
                 tv.setTextColor(Color.BLACK);
@@ -318,7 +295,8 @@ public class SignUpNext extends AppCompatActivity {
             }
             @Override public View getDropDownView(int pos, View cv, ViewGroup parent) {
                 TextView tv = (TextView) super.getDropDownView(pos, cv, parent);
-                tv.setTextColor(Color.BLUE);
+                tv.setTextColor(Color.BLACK);
+                tv.setBackgroundColor(Color.WHITE);
                 return tv;
             }
         };
@@ -357,7 +335,10 @@ public class SignUpNext extends AppCompatActivity {
     }
 }
 
-
+///This barangay the data original
+//            ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+//            ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            barangaySpinner.setAdapter(ad);
 
 ///This the original
 //package com.example.resort;

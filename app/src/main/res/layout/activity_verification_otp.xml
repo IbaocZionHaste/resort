@@ -71,7 +71,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button"
             style="@android:style/Widget.Button"
-            android:layout_width="310dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:background="@drawable/buttongetstarted"
             android:backgroundTint="@color/light_blue"

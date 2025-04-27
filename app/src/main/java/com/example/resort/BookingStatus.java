@@ -743,7 +743,7 @@ public class BookingStatus extends AppCompatActivity {
 
     }
 
-    ///Not Use
+    ///Payment Refunded 2
     private void showRefundMessage() {
         messageFramedot2.setVisibility(View.VISIBLE);
         messageText2.setVisibility(View.VISIBLE);
@@ -755,7 +755,7 @@ public class BookingStatus extends AppCompatActivity {
         messageText2.setText(Html.fromHtml(fullMessage));
         prefs.edit().putString("bookingStatus", "reviewApproved").apply();
 
-        // Disable the cancel button.
+        /// Disable the cancel button.
         cancelButton.setEnabled(false);
         cancelButton.setClickable(false);
         cancelButton.setAlpha(0.5f);
@@ -806,14 +806,14 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 
-    /// Payment Submitted
+    /// Payment Submitted Original
     private boolean bookingPayProcessed = false;
     private DatabaseReference bookingRef;
 
     private void listenForPaymentMethodStatus() {
         // Get the current user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) return;  // Exit if no user is logged in
+        if (currentUser == null) return;
         String userId = currentUser.getUid();
 
         // Ensure that bookingRef is only initialized once
@@ -1640,31 +1640,6 @@ public class BookingStatus extends AppCompatActivity {
      * @param onDone callback that receives true if saved successfully
      */
 
-//    public void downloadAsPDF(View contentView, AlertDialog dialogToDismiss, Consumer<Boolean> onDone) {
-//        // --- 1) ensure the view has a size by measuring+laying out
-//        int specW = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-//        int specH = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-//        contentView.measure(specW, specH);
-//        contentView.layout(0, 0, contentView.getMeasuredWidth(), contentView.getMeasuredHeight());
-//
-//        // --- 2) render the view to a bitmap
-//        Bitmap bitmap = Bitmap.createBitmap(
-//                contentView.getMeasuredWidth(),
-//                contentView.getMeasuredHeight(),
-//                Bitmap.Config.ARGB_8888
-//        );
-//        Canvas canvas = new Canvas(bitmap);
-//        contentView.draw(canvas);
-//
-//        // --- 3) build the PDF
-//        PdfDocument pdf = new PdfDocument();
-//        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(
-//                bitmap.getWidth(), bitmap.getHeight(), 1
-//        ).create();
-//        PdfDocument.Page page = pdf.startPage(pageInfo);
-//        page.getCanvas().drawBitmap(bitmap, 0, 0, null);
-//        pdf.finishPage(page);
-
         public void downloadAsPDF(View contentView, AlertDialog dialogToDismiss, Consumer<Boolean> onDone) {
         // 0) Force software layer so everything (images, shapes) draws into the Canvas
         contentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); // <<<====
@@ -1771,13 +1746,36 @@ public class BookingStatus extends AppCompatActivity {
 }
 
 
+
+//    public void downloadAsPDF(View contentView, AlertDialog dialogToDismiss, Consumer<Boolean> onDone) {
+//        // --- 1) ensure the view has a size by measuring+laying out
+//        int specW = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+//        int specH = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+//        contentView.measure(specW, specH);
+//        contentView.layout(0, 0, contentView.getMeasuredWidth(), contentView.getMeasuredHeight());
+//
+//        // --- 2) render the view to a bitmap
+//        Bitmap bitmap = Bitmap.createBitmap(
+//                contentView.getMeasuredWidth(),
+//                contentView.getMeasuredHeight(),
+//                Bitmap.Config.ARGB_8888
+//        );
+//        Canvas canvas = new Canvas(bitmap);
+//        contentView.draw(canvas);
+//
+//        // --- 3) build the PDF
+//        PdfDocument pdf = new PdfDocument();
+//        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(
+//                bitmap.getWidth(), bitmap.getHeight(), 1
+//        ).create();
+//        PdfDocument.Page page = pdf.startPage(pageInfo);
+//        page.getCanvas().drawBitmap(bitmap, 0, 0, null);
+//        pdf.finishPage(page);
+
 ///Fix Current
 //package com.example.resort;
-//
 //import static android.app.Service.START_STICKY;
 //import static android.content.ContentValues.TAG;
-//
-//
 //import android.annotation.SuppressLint;
 //import android.app.ActivityManager;
 //import android.app.NotificationChannel;
