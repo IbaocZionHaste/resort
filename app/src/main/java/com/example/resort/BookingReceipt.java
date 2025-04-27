@@ -144,6 +144,7 @@ public class BookingReceipt extends AppCompatActivity {
         submitButton.setOnClickListener(v ->  sendBookingData());
     }
 
+
     /// --------------------- Receipt & UI Helper Methods ---------------------
     private void setupSaveReceiptFunction() {
         ImageButton btnSaveReceipt = findViewById(R.id.SaveReceipt);
@@ -182,7 +183,7 @@ public class BookingReceipt extends AppCompatActivity {
                             final String originalMessage = messageTextView.getText().toString();
                             final Drawable[] originalDrawables = messageTextView.getCompoundDrawables();
                             ///messageTextView.setText("Thank you for booking with us, Sir/Ma'am");
-                            messageTextView.setCompoundDrawables(null, null, null, null);
+                            ///messageTextView.setCompoundDrawables(null, null, null, null);
 
                             View contentView = findViewById(android.R.id.content);
                             Bitmap screenshot = getScreenShot(contentView);

@@ -141,7 +141,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             holder.button.setVisibility(View.GONE);
         } else {
             holder.button.setVisibility(View.VISIBLE);
-            holder.button.setText("Add ons");
+            holder.button.setText("Add-Ons");
             holder.button.setOnClickListener(v -> {
                 Intent intent = new Intent(context, AccommodationAddons.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
