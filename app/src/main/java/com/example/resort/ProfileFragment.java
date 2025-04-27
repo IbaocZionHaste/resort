@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -447,8 +448,6 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-
-
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         /// Inflate the custom layout
@@ -468,11 +467,22 @@ public class ProfileFragment extends Fragment {
 
         /// Set click listener for Exit button: perform logout and dismiss the dialog.
         btnExit.setOnClickListener(v -> {
-            logoutUser();  // Your logoutUser() method should handle logout actions.
             dialog.dismiss();
+            /// 1) Show a modal ProgressDialog
+            final ProgressDialog loadingDialog = new ProgressDialog(getActivity());
+            loadingDialog.setMessage("Logging out…");
+            loadingDialog.setCancelable(false);
+            loadingDialog.show();
+
+            /// 2) Wait 1 second, then do the real logout & dismiss everything
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                logoutUser();
+                loadingDialog.dismiss();
+                dialog.dismiss();
+            }, 2000);
         });
 
-        // Show the dialog.
+        /// Show the dialog.
         dialog.show();
     }
 
@@ -485,8 +495,8 @@ public class ProfileFragment extends Fragment {
                     redirectToLoginScreen();
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(getActivity(), "Failed to update login status", Toast.LENGTH_SHORT).show()
-                );
+                 Toast.makeText(getActivity(), "Failed to update login status", Toast.LENGTH_SHORT).show()
+        );
     }
 
     private void redirectToLoginScreen() {

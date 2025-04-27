@@ -2,10 +2,13 @@ package com.example.resort;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -51,7 +54,6 @@ public class BottomNavigation extends AppCompatActivity {
             loadFragment(new HomeFragment());
         }
 
-
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
@@ -78,16 +80,28 @@ public class BottomNavigation extends AppCompatActivity {
         });
     }
 
-
     boolean loadFragment(Fragment fragment) {
-        if (fragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_layout, fragment) // Updated to frame_layout
-                    .commit();
-            return true;
+        if (!isNetworkAvailable()) {
+            showNoInternetDialog();
+            return false;
         }
-        return false;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_layout, fragment)
+                .commit();
+        return true;
     }
+
+
+//    boolean loadFragment(Fragment fragment) {
+//        if (fragment != null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.frame_layout, fragment) // Updated to frame_layout
+//                    .commit();
+//            return true;
+//        }
+//        return false;
+//    }
 
     ///exit the app no need to logout
     @SuppressLint("MissingSuperCall")
@@ -115,6 +129,39 @@ public class BottomNavigation extends AppCompatActivity {
 
         /// Show the custom alert dialog.
         dialog.show();
+    }
+
+    private void showNoInternetDialog() {
+        /// 1) Inflate the XML layout you provided
+        View dialogView = getLayoutInflater().inflate(
+                R.layout.custom_no_internet,
+                null
+        );
+
+        /// 2) Build a non-cancelable AlertDialog
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(false)  // user MUST tap Retry
+                .create();
+
+        /// 3) Wire up the Retry button
+        Button btnRetry = dialogView.findViewById(R.id.btnRetry);
+        btnRetry.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (!isNetworkAvailable()) {
+                showNoInternetDialog();
+            }
+        });
+
+        /// 4) Finally, show it
+        dialog.show();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 
 }
