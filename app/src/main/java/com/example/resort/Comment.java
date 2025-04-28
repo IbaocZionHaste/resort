@@ -1,5 +1,6 @@
 package com.example.resort;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -7,6 +8,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,12 +41,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.function.Consumer;
 
 public class Comment extends AppCompatActivity {
     private EditText recentEditText, commentEditText;
-    private TextView messageTextView;
+
+    ///private TextView messageTextView;
     private RatingBar ratingBar5, ratingBar4, ratingBar3, ratingBar2, ratingBar1;
 
     private final List<DataSnapshot> bookingSnapshots = new ArrayList<>();
@@ -69,18 +75,16 @@ public class Comment extends AppCompatActivity {
         recentEditText.setText("Recent Booking");
         recentEditText.setFocusable(false);
         recentEditText.setOnClickListener(v -> showBookingSelectionDialog());
-
-        messageTextView = findViewById(R.id.textView2);
+        ///messageTextView = findViewById(R.id.textView2);
         commentEditText = findViewById(R.id.Comment);
 
         fetchBookings();
-
         findViewById(R.id.Submit).setOnClickListener(v -> submitRating());
     }
 
     private void setupRateButtons() {
         int yellow = getResources().getColor(R.color.yellow);
-        int grey   = getResources().getColor(R.color.grey);
+        int grey = getResources().getColor(R.color.grey);
         findViewById(R.id.rate5).setOnClickListener(v -> selectRating(5, ratingBar5, yellow, grey));
         findViewById(R.id.rate4).setOnClickListener(v -> selectRating(4, ratingBar4, yellow, grey));
         findViewById(R.id.rate3).setOnClickListener(v -> selectRating(3, ratingBar3, yellow, grey));
@@ -90,8 +94,10 @@ public class Comment extends AppCompatActivity {
 
     private void selectRating(int stars, RatingBar bar, int selColor, int defColor) {
         selectedRating = stars;
-        ratingBar5.setRating(0); ratingBar4.setRating(0);
-        ratingBar3.setRating(0); ratingBar2.setRating(0);
+        ratingBar5.setRating(0);
+        ratingBar4.setRating(0);
+        ratingBar3.setRating(0);
+        ratingBar2.setRating(0);
         ratingBar1.setRating(0);
         ratingBar5.setProgressTintList(ColorStateList.valueOf(defColor));
         ratingBar4.setProgressTintList(ColorStateList.valueOf(defColor));
@@ -107,13 +113,16 @@ public class Comment extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users").child(userId).child("MyReviewDone");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override public void onDataChange(DataSnapshot snapshot) {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
                 bookingSnapshots.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     bookingSnapshots.add(snap);
                 }
             }
-            @Override public void onCancelled(DatabaseError error) {
+
+            @Override
+            public void onCancelled(DatabaseError error) {
                 Toast.makeText(Comment.this, "Error fetching bookings", Toast.LENGTH_SHORT).show();
             }
         });
@@ -126,9 +135,9 @@ public class Comment extends AppCompatActivity {
         }
         View dialogView = LayoutInflater.from(this)
                 .inflate(R.layout.dialog_booking_selection, null);
-        ListView listView       = dialogView.findViewById(R.id.bookingListView);
-        Button btnViewDetails   = dialogView.findViewById(R.id.btnViewDetails);
-        Button btnCancel        = dialogView.findViewById(R.id.btnCancel);
+        ListView listView = dialogView.findViewById(R.id.bookingListView);
+        Button btnViewDetails = dialogView.findViewById(R.id.btnViewDetails);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
 
         String[] labels = new String[bookingSnapshots.size()];
         for (int i = 0; i < bookingSnapshots.size(); i++) {
@@ -185,20 +194,22 @@ public class Comment extends AppCompatActivity {
     private void populateDetails(DataSnapshot booking, LinearLayout container) {
         container.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
-        DataSnapshot acc  = booking.child("accommodations");
+        DataSnapshot acc = booking.child("accommodations");
         DataSnapshot food = booking.child("foodAndDrinks");
-        DataSnapshot pkg  = booking.child("package");
+        DataSnapshot pkg = booking.child("package");
 
-        if (acc.exists())  for (DataSnapshot item : acc.getChildren())  inflateItem(item, inflater, container);
-        if (food.exists()) for (DataSnapshot item : food.getChildren()) inflateItem(item, inflater, container);
-        if (pkg.exists())  inflateItem(pkg, inflater, container);
+        if (acc.exists())
+            for (DataSnapshot item : acc.getChildren()) inflateItem(item, inflater, container);
+        if (food.exists())
+            for (DataSnapshot item : food.getChildren()) inflateItem(item, inflater, container);
+        if (pkg.exists()) inflateItem(pkg, inflater, container);
     }
 
     private void inflateItem(DataSnapshot itemSnap, LayoutInflater inflater, LinearLayout container) {
         String category = itemSnap.child("category").getValue(String.class);
-        String name     = itemSnap.child("name").getValue(String.class);
-        Long   qty      = itemSnap.child("quantity").getValue(Long.class);
-        Double price    = itemSnap.child("price").getValue(Double.class);
+        String name = itemSnap.child("name").getValue(String.class);
+        Long qty = itemSnap.child("quantity").getValue(Long.class);
+        Double price = itemSnap.child("price").getValue(Double.class);
 
         if (category != null && name != null && qty != null && price != null) {
             View row = inflater.inflate(R.layout.item_row, container, false);
@@ -234,19 +245,11 @@ public class Comment extends AppCompatActivity {
             return;
         }
 
-//        String commentText = commentEditText.getText().toString().trim();
-//        if (commentText.isEmpty()) {
-//            Toast.makeText(this, "Please add a comment", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-
-        /// 1) Get and trim the user’s comment
         String commentText = commentEditText.getText().toString().trim();
         if (commentText.isEmpty()) {
             Toast.makeText(this, "Please add a comment", Toast.LENGTH_SHORT).show();
             return;
         }
-        /// 2) **New:** Enforce 360-character limit (including spaces)
         if (commentText.length() > 360) {
             Toast.makeText(this,
                     "Comment cannot exceed 360 characters",
@@ -260,111 +263,275 @@ public class Comment extends AppCompatActivity {
         Button submitBtn = findViewById(R.id.Submit);
         submitBtn.setEnabled(false);
 
-        // Get userId and booking snapshot
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DataSnapshot bookingSnap = bookingSnapshots.get(selectedBookingIndex);
+        /// ─── SHOW LOADING DIALOG ──────────────────────────────────────────────────
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Submitting rating…");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-        // 1) Gather all item names
-        List<String> names = new ArrayList<>();
-        DataSnapshot accSection  = bookingSnap.child("accommodations");
-        DataSnapshot foodSection = bookingSnap.child("foodAndDrinks");
-        DataSnapshot pkgSection  = bookingSnap.child("package");
+        /// ─── DELAY FIREBASE CALL BY 1 SECOND ───────────────────────────────────────
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            // ==== YOUR ORIGINAL FIREBASE LOGIC STARTS HERE ====
+            String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+            DataSnapshot bookingSnap = bookingSnapshots.get(selectedBookingIndex);
 
-        if (accSection.exists()) {
-            for (DataSnapshot item : accSection.getChildren()) {
-                String n = item.child("name").getValue(String.class);
+            /// Gather item names
+            List<String> names = new ArrayList<>();
+            DataSnapshot accSection = bookingSnap.child("accommodations");
+            DataSnapshot foodSection = bookingSnap.child("foodAndDrinks");
+            DataSnapshot pkgSection = bookingSnap.child("package");
+
+            if (accSection.exists()) {
+                for (DataSnapshot item : accSection.getChildren()) {
+                    String n = item.child("name").getValue(String.class);
+                    if (n != null) names.add(n);
+                }
+            }
+            if (foodSection.exists()) {
+                for (DataSnapshot item : foodSection.getChildren()) {
+                    String n = item.child("name").getValue(String.class);
+                    if (n != null) names.add(n);
+                }
+            }
+            if (pkgSection.exists()) {
+                String n = pkgSection.child("name").getValue(String.class);
                 if (n != null) names.add(n);
             }
-        }
-        if (foodSection.exists()) {
-            for (DataSnapshot item : foodSection.getChildren()) {
-                String n = item.child("name").getValue(String.class);
-                if (n != null) names.add(n);
-            }
-        }
-        if (pkgSection.exists()) {
-            String n = pkgSection.child("name").getValue(String.class);
-            if (n != null) names.add(n);
-        }
 
-        // 2) Join names or fallback
-        final String allNames = names.isEmpty()
-                ? "No Items"
-                : TextUtils.join(", ", names);
+            final String allNames = names.isEmpty()
+                    ? "No Items"
+                    : TextUtils.join(", ", names);
+            final String allCategories = "Accommodation";
 
-        // 3) Category always "Accommodation"
-        final String allCategories = "Accommodation";
+            DatabaseReference userRef = FirebaseDatabase.getInstance()
+                    .getReference("users")
+                    .child(userId)
+                    .child("username");
 
-        // 4) Fetch username then build & push record
-        DatabaseReference userRef = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child(userId)
-                .child("username");
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snap) {
+                    String username = snap.getValue(String.class);
+                    if (username == null || username.isEmpty()) {
+                        username = "Unknown User";
+                    }
 
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override public void onDataChange(DataSnapshot snap) {
-                String username = snap.getValue(String.class);
-                if (username == null || username.isEmpty()) {
-                    username = "Unknown User";
+                    Map<String, Object> record = new HashMap<>();
+                    record.put("user", username);
+                    record.put("category", allCategories);
+                    record.put("itemName", allNames);
+                    record.put("rate", selectedRating);
+                    record.put("comment", commentText);
+
+                    SimpleDateFormat sdf = new SimpleDateFormat(
+                            "yyyy-MM-dd hh:mm:ss a", Locale.getDefault());
+                    sdf.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+                    record.put("date", sdf.format(new Date()));
+
+                    DatabaseReference ratingRef = FirebaseDatabase.getInstance()
+                            .getReference("users")
+                            .child(userId)
+                            .child("MyRating");
+
+                    ratingRef.push().setValue(record, (error, ref) -> {
+                        /// ── DISMISS & RESTORE UI ───────────────────
+                        progressDialog.dismiss();
+                        isSubmitting = false;
+                        submitBtn.setEnabled(true);
+
+                        if (error == null) {
+                            Toast.makeText(Comment.this,
+                                    "Rating submitted", Toast.LENGTH_SHORT).show();
+
+                            /// Clean up after success
+                            String bookingKey = bookingSnapshots
+                                    .get(selectedBookingIndex).getKey();
+                            FirebaseDatabase.getInstance()
+                                    .getReference("users")
+                                    .child(userId)
+                                    .child("MyReviewDone")
+                                    .child(bookingKey)
+                                    .removeValue();
+
+                            bookingSnapshots.remove(selectedBookingIndex);
+                            recentEditText.setText("Tap to select booking");
+                            commentEditText.setText("");
+                            selectRating(0, ratingBar1,
+                                    getResources().getColor(R.color.yellow),
+                                    getResources().getColor(R.color.grey));
+                        } else {
+                            Toast.makeText(Comment.this,
+                                    "Failed to submit rating", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
-                Map<String, Object> record = new HashMap<>();
-                record.put("user",     username);
-                record.put("category", allCategories);
-                record.put("itemName", allNames);
-                record.put("rate",     selectedRating);
-                record.put("comment",  commentText);
-
-                SimpleDateFormat sdf = new SimpleDateFormat(
-                        "yyyy-MM-dd hh:mm:ss a", Locale.getDefault());
-                sdf.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
-                record.put("date", sdf.format(new Date()));
-
-                DatabaseReference ratingRef = FirebaseDatabase.getInstance()
-                        .getReference("users")
-                        .child(userId)
-                        .child("MyRating");
-
-                ratingRef.push().setValue(record, (error, ref) -> {
-                    // Restore UI state
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    /// ── DISMISS & RESTORE ON CANCEL ────────────
+                    progressDialog.dismiss();
                     isSubmitting = false;
                     submitBtn.setEnabled(true);
-
-                    if (error == null) {
-                        Toast.makeText(Comment.this,
-                                "Rating submitted", Toast.LENGTH_SHORT).show();
-
-                        // Remove from MyReviewDone
-                        String bookingKey = bookingSnapshots
-                                .get(selectedBookingIndex).getKey();
-                        FirebaseDatabase.getInstance()
-                                .getReference("users")
-                                .child(userId)
-                                .child("MyReviewDone")
-                                .child(bookingKey)
-                                .removeValue();
-
-                        bookingSnapshots.remove(selectedBookingIndex);
-                        recentEditText.setText("Tap to select booking");
-                        commentEditText.setText("");
-                        selectRating(0, ratingBar1,
-                                getResources().getColor(R.color.yellow),
-                                getResources().getColor(R.color.grey));
-                    } else {
-                        Toast.makeText(Comment.this,
-                                "Failed to submit rating", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-            @Override public void onCancelled(DatabaseError error) {
-                isSubmitting = false;
-                submitBtn.setEnabled(true);
-                Toast.makeText(Comment.this,
-                        "Unable to get user info", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    Toast.makeText(Comment.this,
+                            "Unable to get user info", Toast.LENGTH_SHORT).show();
+                }
+            });
+            /// ==== YOUR ORIGINAL FIREBASE LOGIC ENDS HERE ====
+        }, 1000);
     }
+
 }
+
+
+///Original submit
+//    private void submitRating() {
+//        if (isSubmitting) return;
+//        if (!isNetworkAvailable()) {
+//            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (selectedBookingIndex < 0) {
+//            Toast.makeText(this, "Please select a booking first", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (selectedRating == 0) {
+//            Toast.makeText(this, "Please select a rating", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+
+
+////        String commentText = commentEditText.getText().toString().trim();
+////        if (commentText.isEmpty()) {
+////            Toast.makeText(this, "Please add a comment", Toast.LENGTH_SHORT).show();
+////            return;
+////        }
+
+//
+//        /// 1) Get and trim the user’s comment
+//        String commentText = commentEditText.getText().toString().trim();
+//        if (commentText.isEmpty()) {
+//            Toast.makeText(this, "Please add a comment", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        /// 2) **New:** Enforce 360-character limit (including spaces)
+//        if (commentText.length() > 360) {
+//            Toast.makeText(this,
+//                    "Comment cannot exceed 360 characters",
+//                    Toast.LENGTH_SHORT
+//            ).show();
+//            return;
+//        }
+//
+//        // Prevent double submits
+//        isSubmitting = true;
+//        Button submitBtn = findViewById(R.id.Submit);
+//        submitBtn.setEnabled(false);
+//
+//        // Get userId and booking snapshot
+//        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        DataSnapshot bookingSnap = bookingSnapshots.get(selectedBookingIndex);
+//
+//        // 1) Gather all item names
+//        List<String> names = new ArrayList<>();
+//        DataSnapshot accSection  = bookingSnap.child("accommodations");
+//        DataSnapshot foodSection = bookingSnap.child("foodAndDrinks");
+//        DataSnapshot pkgSection  = bookingSnap.child("package");
+//
+//        if (accSection.exists()) {
+//            for (DataSnapshot item : accSection.getChildren()) {
+//                String n = item.child("name").getValue(String.class);
+//                if (n != null) names.add(n);
+//            }
+//        }
+//        if (foodSection.exists()) {
+//            for (DataSnapshot item : foodSection.getChildren()) {
+//                String n = item.child("name").getValue(String.class);
+//                if (n != null) names.add(n);
+//            }
+//        }
+//        if (pkgSection.exists()) {
+//            String n = pkgSection.child("name").getValue(String.class);
+//            if (n != null) names.add(n);
+//        }
+//
+//        // 2) Join names or fallback
+//        final String allNames = names.isEmpty()
+//                ? "No Items"
+//                : TextUtils.join(", ", names);
+//
+//        // 3) Category always "Accommodation"
+//        final String allCategories = "Accommodation";
+//
+//        // 4) Fetch username then build & push record
+//        DatabaseReference userRef = FirebaseDatabase.getInstance()
+//                .getReference("users")
+//                .child(userId)
+//                .child("username");
+//
+//        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override public void onDataChange(DataSnapshot snap) {
+//                String username = snap.getValue(String.class);
+//                if (username == null || username.isEmpty()) {
+//                    username = "Unknown User";
+//                }
+//
+//                Map<String, Object> record = new HashMap<>();
+//                record.put("user",     username);
+//                record.put("category", allCategories);
+//                record.put("itemName", allNames);
+//                record.put("rate",     selectedRating);
+//                record.put("comment",  commentText);
+//
+//                SimpleDateFormat sdf = new SimpleDateFormat(
+//                        "yyyy-MM-dd hh:mm:ss a", Locale.getDefault());
+//                sdf.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+//                record.put("date", sdf.format(new Date()));
+//
+//                DatabaseReference ratingRef = FirebaseDatabase.getInstance()
+//                        .getReference("users")
+//                        .child(userId)
+//                        .child("MyRating");
+//
+//                ratingRef.push().setValue(record, (error, ref) -> {
+//                    // Restore UI state
+//                    isSubmitting = false;
+//                    submitBtn.setEnabled(true);
+//
+//                    if (error == null) {
+//                        Toast.makeText(Comment.this,
+//                                "Rating submitted", Toast.LENGTH_SHORT).show();
+//
+//                        // Remove from MyReviewDone
+//                        String bookingKey = bookingSnapshots
+//                                .get(selectedBookingIndex).getKey();
+//                        FirebaseDatabase.getInstance()
+//                                .getReference("users")
+//                                .child(userId)
+//                                .child("MyReviewDone")
+//                                .child(bookingKey)
+//                                .removeValue();
+//
+//                        bookingSnapshots.remove(selectedBookingIndex);
+//                        recentEditText.setText("Tap to select booking");
+//                        commentEditText.setText("");
+//                        selectRating(0, ratingBar1,
+//                                getResources().getColor(R.color.yellow),
+//                                getResources().getColor(R.color.grey));
+//                    } else {
+//                        Toast.makeText(Comment.this,
+//                                "Failed to submit rating", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//            @Override public void onCancelled(DatabaseError error) {
+//                isSubmitting = false;
+//                submitBtn.setEnabled(true);
+//                Toast.makeText(Comment.this,
+//                        "Unable to get user info", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
 
 
 

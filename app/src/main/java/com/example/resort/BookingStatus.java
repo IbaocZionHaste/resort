@@ -266,7 +266,7 @@ public class BookingStatus extends AppCompatActivity {
             showSubmissionMessage();
         }
         if (prefs.contains("paymentSubmitted") && prefs.getBoolean("paymentSubmitted", false)) {
-            progress = Math.max(progress, 3);
+            progress = 3;
             updateDots();
             if (paymentMessageText.getVisibility() != View.VISIBLE) {
                 showPaymentSubmittedMessage();
@@ -630,6 +630,8 @@ public class BookingStatus extends AppCompatActivity {
         clearNotification(102);
         clearNotification(103);
         clearNotification(104);
+        clearNotification(105);
+        clearNotification(106);
 
     }
 
@@ -806,87 +808,78 @@ public class BookingStatus extends AppCompatActivity {
 
 
     /// Payment Submitted
-    private boolean bookingPayProcessed = false;
     private Handler handler;
-    private Runnable pollTaskSubmitted;
+    private boolean bookingPayProcessed = false;
+    private DatabaseReference bookingRef;
 
     private void listenForPaymentMethodStatus() {
+        /// Get the current user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) return;
-
-        /// Reset the flag for this specific user
-        bookingPayProcessed = false;
-
         String userId = currentUser.getUid();
-        DatabaseReference bookingRef = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child(userId)
-                .child("MyBooking");
 
-        handler = new Handler(Looper.getMainLooper());
+        /// Ensure that bookingRef is only initialized once
+        if (bookingRef == null) {
+            bookingRef = FirebaseDatabase.getInstance()
+                    .getReference("users").child(userId).child("MyBooking");
 
-        pollTaskSubmitted = new Runnable() {
-            @Override
-            public void run() {
-                /// If we've already processed, bail out
-                if (bookingPayProcessed) return;
+            final Handler handler = new Handler(Looper.getMainLooper());
+            final Runnable[] pollTask = new Runnable[1];
+            pollTask[0] = new Runnable() {
+                @Override
+                public void run() {
+                    // Use a listener to check the payment status
+                    bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            /// Check if MyBooking exists for the current user
+                            if (snapshot.exists() && !bookingPayProcessed) {
+                                for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
+                                    /// Access the payment status
+                                    String paymentStatus = bookingSnapshot.child("paymentMethod")
+                                            .child("Status")
+                                            .getValue(String.class);
 
-                bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
-                                String status = bookingSnapshot
-                                        .child("paymentMethod")
-                                        .child("Status")
-                                        .getValue(String.class);
-
-                                if ("Done".equalsIgnoreCase(status)) {
-                                    /// Mark processed so we don't re-show across users
-                                    bookingPayProcessed = true;
-
-                                    // Advance UI, show message
-                                    progress = Math.max(progress, 3);
-                                    updateDots();
-                                    showPaymentSubmittedMessage();
-                                    break;
+                                    /// If paymentStatus is "Done", update progress to 3 and show the message
+                                    /// Inside the loop that checks each bookingSnapshot
+                                    if (paymentStatus != null && paymentStatus.equalsIgnoreCase("Done")) {
+                                        progress = Math.max(progress, 3);
+                                        bookingPayProcessed = false;
+                                        updateDots();
+                                        showPaymentSubmittedMessage();
+                                        break;
+                                    }
                                 }
+                            } else {
+                                Log.d("BookingCheck", "MyBooking does not exist for the user.");
                             }
-                        } else {
-                            Log.d("BookingCheck", "No bookings for this user.");
+
+                            // Only re-poll if the payment hasn't been processed yet.
+                            if (!bookingPayProcessed) {
+                                handler.postDelayed(pollTask[0], 1000);  // Poll every second
+                            }
                         }
 
-                        // Only re-post if still not processed
-                        if (!bookingPayProcessed) {
-                            handler.postDelayed(pollTaskSubmitted, 1000);
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("BookingCheck", "Error reading MyBooking data", error.toException());
                         }
-                    }
+                    });
+                }
+            };
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("BookingCheck", "Error reading MyBooking", error.toException());
-                        // Retry on error
-                        if (!bookingPayProcessed) {
-                            handler.postDelayed(pollTaskSubmitted, 2000);
-                        }
-                    }
-                });
-            }
-        };
+            handler.post(pollTask[0]);  // Start polling
+              /// Listen for sign-out or user change so we can clean up
+            FirebaseAuth.getInstance().addAuthStateListener(auth -> {
+                FirebaseUser newUser = auth.getCurrentUser();
+                /// If the user has signed out or switched
+                if (newUser == null || !newUser.getUid().equals(userId)) {
+                    stopPaymentStatusPolling();
+                }
+            });
 
-        /// Start polling
-        handler.post(pollTaskSubmitted);
-
-        /// Listen for sign-out or user change so we can clean up
-        FirebaseAuth.getInstance().addAuthStateListener(auth -> {
-            FirebaseUser newUser = auth.getCurrentUser();
-            /// If the user has signed out or switched
-            if (newUser == null || !newUser.getUid().equals(userId)) {
-                stopPaymentStatusPolling();
-            }
-        });
+        }
     }
-
     private void stopPaymentStatusPolling() {
         if (handler != null && pollTask != null) {
             handler.removeCallbacks(pollTask);
@@ -894,70 +887,6 @@ public class BookingStatus extends AppCompatActivity {
         bookingPayProcessed = false;
     }
 
-
-/// Payment Submitted Original
-//    private boolean bookingPayProcessed = false;
-//    private DatabaseReference bookingRef;
-//
-//    private void listenForPaymentMethodStatus() {
-//        // Get the current user
-//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if (currentUser == null) return;
-//        String userId = currentUser.getUid();
-//
-//        // Ensure that bookingRef is only initialized once
-//        if (bookingRef == null) {
-//            bookingRef = FirebaseDatabase.getInstance()
-//                    .getReference("users").child(userId).child("MyBooking");
-//
-//            final Handler handler = new Handler(Looper.getMainLooper());
-//            final Runnable[] pollTask = new Runnable[1];
-//            pollTask[0] = new Runnable() {
-//                @Override
-//                public void run() {
-//                    // Use a listener to check the payment status
-//                    bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            // Check if MyBooking exists for the current user
-//                            if (snapshot.exists() && !bookingPayProcessed) {
-//                                for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
-//                                    // Access the payment status
-//                                    String paymentStatus = bookingSnapshot.child("paymentMethod")
-//                                            .child("Status")
-//                                            .getValue(String.class);
-//
-//                                    // If paymentStatus is "Done", update progress to 3 and show the message
-//                                    // Inside the loop that checks each bookingSnapshot
-//                                    if (paymentStatus != null && paymentStatus.equalsIgnoreCase("Done")) {
-//                                        progress = Math.max(progress, 3);
-//                                        bookingPayProcessed = false;
-//                                        updateDots();
-//                                        showPaymentSubmittedMessage();
-//                                        break;
-//                                    }
-//                                }
-//                            } else {
-//                                Log.d("BookingCheck", "MyBooking does not exist for the user.");
-//                            }
-//
-//                            // Only re-poll if the payment hasn't been processed yet.
-//                            if (!bookingPayProcessed) {
-//                                handler.postDelayed(pollTask[0], 1000);  // Poll every second
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//                            Log.e("BookingCheck", "Error reading MyBooking data", error.toException());
-//                        }
-//                    });
-//                }
-//            };
-//
-//            handler.post(pollTask[0]);  // Start polling
-//        }
-//    }
 
 
     ///Booking Review Admin
