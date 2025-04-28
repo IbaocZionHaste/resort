@@ -2,6 +2,7 @@ package com.example.resort;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -93,9 +94,9 @@ public class Payment extends AppCompatActivity {
         /// Single-select logic
         checkBoxGcash.setOnCheckedChangeListener((b, checked) -> { if (checked) checkBoxPalawan.setChecked(false); });
         checkBoxPalawan.setOnCheckedChangeListener((b, checked) -> { if (checked) checkBoxGcash.setChecked(false); });
-        /// Single-select logic & hide counterpart
 
-///        checkBoxGcash.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        /// Single-select logic & hide counterpart
+//        checkBoxGcash.setOnCheckedChangeListener((buttonView, isChecked) -> {
 //            if (isChecked) {
 //                checkBoxPalawan.setChecked(false);
 //                checkBoxPalawan.setVisibility(View.GONE);
@@ -111,7 +112,6 @@ public class Payment extends AppCompatActivity {
 //                checkBoxGcash.setVisibility(View.VISIBLE);
 //            }
 //        });
-
 
 ///        // Payment information dialog (unchanged)
 //        ImageView messageIcon = findViewById(R.id.messageIcon);
@@ -182,7 +182,6 @@ public class Payment extends AppCompatActivity {
                         informationAdapter.notifyDataSetChanged();  /// Error state update :contentReference[oaicite:13]{index=13}
                     }
                 });
-
 
 
         /// Auth and booking ref setup
@@ -337,6 +336,9 @@ public class Payment extends AppCompatActivity {
             String phone = phoneNumber.getText().toString().trim();
             String amtStr = amount.getText().toString().trim();
             String payMethod = checkBoxGcash.isChecked()?"Gcash": checkBoxPalawan.isChecked()?"Palawan":"";
+
+
+
 
             myBookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override public void onDataChange(@NonNull DataSnapshot snap) {
