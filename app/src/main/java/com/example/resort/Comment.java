@@ -866,7 +866,6 @@ public class Comment extends AppCompatActivity {
 //
 
 
-
 ///Original
 //package com.example.resort;
 //

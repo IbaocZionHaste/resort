@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -58,6 +59,11 @@ public class Payment extends AppCompatActivity {
     private CheckBox checkBoxGcash, checkBoxPalawan;
     private Button submitButton, backButton;
     private double fullPayment = 0.0;  // store full amount from transaction
+    private double minDownPayment = 0.0;  // store min amount from transaction
+
+    private RecyclerView informationRecyclerView;
+    private InformationAdapter informationAdapter;
+    private List<String> informationList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +71,12 @@ public class Payment extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_payment);
 
-        // Insets handling
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets sys = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(sys.left, sys.top, sys.right, sys.bottom);
-            return insets;
-        });
+        /// Insets handling
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.scrollView), (v, insets) -> {
+//            Insets sys = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(sys.left, sys.top, sys.right, sys.bottom);
+//            return insets;
+//        });
 
         // Initialize views
         firstName = findViewById(R.id.firstName);
@@ -82,6 +88,7 @@ public class Payment extends AppCompatActivity {
         checkBoxPalawan = findViewById(R.id.checkBoxPalawan);
         submitButton = findViewById(R.id.submit);
         backButton = findViewById(R.id.back2);
+
 
         /// Single-select logic
         //checkBoxGcash.setOnCheckedChangeListener((b, checked) -> { if (checked) checkBoxPalawan.setChecked(false); });
@@ -106,34 +113,77 @@ public class Payment extends AppCompatActivity {
         });
 
 
-        // Payment information dialog (unchanged)
-        ImageView messageIcon = findViewById(R.id.messageIcon);
-        TextView badge = findViewById(R.id.badge);
-        messageIcon.setOnClickListener(view -> {
-            View dialogView = LayoutInflater.from(Payment.this).inflate(R.layout.dialog_information, null);
-            RecyclerView rv = dialogView.findViewById(R.id.dialogRecyclerView);
-            rv.setLayoutManager(new LinearLayoutManager(Payment.this));
-            List<String> dataList = new ArrayList<>();
-            InformationAdapter adapter = new InformationAdapter(dataList);
-            rv.setAdapter(adapter);
-            FirebaseDatabase.getInstance().getReference("paymentdescription")
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override public void onDataChange(@NonNull DataSnapshot snap) {
-                            if (snap.exists() && snap.child("description").getValue() != null) {
-                                String msg = snap.child("description").getValue(String.class);
-                                dataList.add(msg); adapter.notifyDataSetChanged(); badge.setText("1"); badge.setVisibility(View.VISIBLE);
-                            } else {
-                                dataList.add("No info available."); adapter.notifyDataSetChanged(); badge.setVisibility(View.GONE);
-                            }
+///        // Payment information dialog (unchanged)
+//        ImageView messageIcon = findViewById(R.id.messageIcon);
+//        TextView badge = findViewById(R.id.badge);
+//        messageIcon.setOnClickListener(view -> {
+//            View dialogView = LayoutInflater.from(Payment.this).inflate(R.layout.dialog_information, null);
+//            RecyclerView rv = dialogView.findViewById(R.id.dialogRecyclerView);
+//            rv.setLayoutManager(new LinearLayoutManager(Payment.this));
+//            List<String> dataList = new ArrayList<>();
+//            InformationAdapter adapter = new InformationAdapter(dataList);
+//            rv.setAdapter(adapter);
+//            FirebaseDatabase.getInstance().getReference("paymentdescription")
+//                    .addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override public void onDataChange(@NonNull DataSnapshot snap) {
+//                            if (snap.exists() && snap.child("description").getValue() != null) {
+//                                String msg = snap.child("description").getValue(String.class);
+//                                dataList.add(msg); adapter.notifyDataSetChanged(); badge.setText("1"); badge.setVisibility(View.VISIBLE);
+//                            } else {
+//                                dataList.add("No info available."); adapter.notifyDataSetChanged(); badge.setVisibility(View.GONE);
+//                            }
+//                        }
+//                        @Override public void onCancelled(@NonNull DatabaseError e) { dataList.add("Error loading info."); adapter.notifyDataSetChanged(); badge.setVisibility(View.GONE);}
+//                    });
+//            AlertDialog dlg = new AlertDialog.Builder(Payment.this, R.style.CustomDialog)
+//                    .setView(dialogView).create();
+//            dlg.setCanceledOnTouchOutside(true);
+//            Objects.requireNonNull(dlg.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//            dlg.show();
+//        });
+
+        /// 1) Initialize RecyclerView
+        informationRecyclerView = findViewById(R.id.Information);
+
+        /// 2) Use a vertical LinearLayoutManager
+        informationRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        /// 3) Allow dynamic heights & disable nested scrolling
+        informationRecyclerView.setHasFixedSize(false);
+        informationRecyclerView.setNestedScrollingEnabled(false);
+
+        /// 4) Prepare data list and adapter
+        informationList = new ArrayList<>();
+        informationAdapter = new InformationAdapter(informationList);
+        informationRecyclerView.setAdapter(informationAdapter);
+        informationRecyclerView.setNestedScrollingEnabled(true);
+
+        /// 5) Fetch from Firebase and update adapter
+        FirebaseDatabase.getInstance()
+                .getReference("paymentdescription")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        informationList.clear();
+                        if (snapshot.exists() && snapshot.child("description").getValue() != null) {
+                            String description = snapshot.child("description").getValue(String.class);
+                            informationList.add(description);
+                        } else {
+                            informationList.add("No info available.");
                         }
-                        @Override public void onCancelled(@NonNull DatabaseError e) { dataList.add("Error loading info."); adapter.notifyDataSetChanged(); badge.setVisibility(View.GONE);}
-                    });
-            AlertDialog dlg = new AlertDialog.Builder(Payment.this, R.style.CustomDialog)
-                    .setView(dialogView).create();
-            dlg.setCanceledOnTouchOutside(true);
-            Objects.requireNonNull(dlg.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dlg.show();
-        });
+                        informationAdapter.notifyDataSetChanged();  /// Refresh the list :contentReference[oaicite:12]{index=12}
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        informationList.clear();
+                        informationList.add("Error loading information.");
+                        informationAdapter.notifyDataSetChanged();  /// Error state update :contentReference[oaicite:13]{index=13}
+                    }
+                });
+
+
 
         /// Auth and booking ref setup
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -184,33 +234,96 @@ public class Payment extends AppCompatActivity {
                     @Override public void onDataChange(@NonNull DataSnapshot txSnap) {
                         Double txnAmount = txSnap.child("amount").getValue(Double.class);
                         Double txnDown = txSnap.child("downPayment").getValue(Double.class);
-                        if (txnAmount != null) fullPayment = txnAmount;
-                        if (txnDown != null) amount.setText(String.valueOf(txnDown.intValue()));
+
+                        ///if (txnAmount != null) fullPayment = txnAmount;
+                        ///if (txnDown != null) amount.setText(String.valueOf(txnDown.intValue()));
+
+                        if (txnAmount != null) {
+                            fullPayment = txnAmount;
+                        }
+                        if (txnDown != null) {
+                            minDownPayment = txnDown;
+                            amount.setText(String.valueOf(txnDown.intValue()));
+                        }
                     }
                     @Override public void onCancelled(@NonNull DatabaseError e) {}
                 });
 
-                /// Real-time guard: prevent input > fullPayment
-                amount.addTextChangedListener(new TextWatcher() {
-                    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-                    @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-                    @Override public void afterTextChanged(Editable s) {
-                        if (s == null || s.length() == 0) return;
-                        try {
-                            double input = Double.parseDouble(s.toString());
-                            if (input > fullPayment) {
+              /// Real-time guard: prevent input > fullPayment and downPayment
+                amount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus) {
+                            String inputText = amount.getText().toString().trim();
+                            if (inputText.isEmpty()) return;
+
+                            try {
+                                double input = Double.parseDouble(inputText);
+
+                                if (input < minDownPayment) {
+                                    Toast.makeText(Payment.this,
+                                            "You can’t go below your last down-payment of " +
+                                                    String.format(Locale.getDefault(), "%.2f", minDownPayment),
+                                            Toast.LENGTH_LONG).show();
+                                    // Optional: you can reset to minDownPayment if you want
+                                    // amount.setText(String.format(Locale.getDefault(), "%.0f", minDownPayment));
+                                    // amount.setSelection(amount.getText().length());
+                                }
+
+                                if (input > fullPayment) {
+                                    Toast.makeText(Payment.this,
+                                            "Sorry, your full amount input is " +
+                                                    String.format(Locale.getDefault(), "%.2f", fullPayment) + " only",
+                                            Toast.LENGTH_LONG).show();
+                                    // Optional: you can reset to fullPayment if you want
+                                    // amount.setText(String.valueOf((int) fullPayment));
+                                    // amount.setSelection(amount.getText().length());
+                                }
+
+                            } catch (NumberFormatException e) {
                                 Toast.makeText(Payment.this,
-                                        "Sorry, your full amount input is " + String.format(Locale.getDefault(),"%.2f", fullPayment) + " only",
-                                        Toast.LENGTH_LONG).show();
-                                amount.setText(String.valueOf((int) fullPayment));
-                                amount.setSelection(amount.getText().length());
+                                        "Please enter a valid number.",
+                                        Toast.LENGTH_SHORT).show();
                             }
-                        } catch (NumberFormatException ignored) {}
+                        }
                     }
                 });
+
+//                amount.addTextChangedListener(new TextWatcher() {
+//                    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//                    @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+//                    @Override public void afterTextChanged(Editable s) {
+//                        if (s == null || s.length() == 0) return;
+//                        try {
+//                            double input = Double.parseDouble(s.toString());
+//
+//                            /// — Prevent decreasing below existing down-payment
+//                            if (input < minDownPayment) {
+//                                Toast.makeText(Payment.this,
+//                                        "You can’t go below your last down-payment of " +
+//                                                String.format(Locale.getDefault(),"%.2f", minDownPayment),
+//                                        Toast.LENGTH_LONG).show();
+//
+//                                amount.setText(String.format(Locale.getDefault(),"%.0f", minDownPayment));
+//                                amount.setSelection(amount.getText().length());
+//                                return;
+//                            }
+//
+//                            /// — Prevent exceeding the full payment
+//                            if (input > fullPayment) {
+//                                Toast.makeText(Payment.this,
+//                                        "Sorry, your full amount input is " + String.format(Locale.getDefault(),"%.2f", fullPayment) + " only",
+//                                        Toast.LENGTH_LONG).show();
+//                                amount.setText(String.valueOf((int) fullPayment));
+//                                amount.setSelection(amount.getText().length());
+//                            }
+//                        } catch (NumberFormatException ignored) {}
+//                    }
+//                });
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
+
 
         // Submit payment data
         submitButton.setOnClickListener(v -> {
@@ -232,16 +345,29 @@ public class Payment extends AppCompatActivity {
                     if (bookingId == null) { Toast.makeText(Payment.this, "Booking ID missing!", Toast.LENGTH_SHORT).show(); return; }
                     DatabaseReference bookingRef = myBookingRef.child(bookingId);
 
+
                     /// Parse and guard
                     double down;
                     try { down = Double.parseDouble(amtStr); }
                     catch(NumberFormatException e) { Toast.makeText(Payment.this, "Invalid amount!", Toast.LENGTH_SHORT).show(); return; }
+
+                    /// NEW: don’t let ’em lower the down-payment
+                    if (down < minDownPayment) {
+                        Toast.makeText(Payment.this,
+                                "You can’t go below your last down-payment of " +
+                                        String.format(Locale.getDefault(),"%.2f", minDownPayment),
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    /// existing guard: no over-payment
                     if (down > fullPayment) {
                         Toast.makeText(Payment.this,
                                 "Sorry, your full amount input is " + String.format(Locale.getDefault(),"%.2f", fullPayment)+" only",
                                 Toast.LENGTH_LONG).show();
                         return;
                     }
+
                     double balance = fullPayment - down;
                     double total = down + balance;
                     String now = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()).format(new Date());

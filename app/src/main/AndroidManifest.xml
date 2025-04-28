@@ -107,7 +107,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Payment"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".Feedback"
             android:exported="false" />
