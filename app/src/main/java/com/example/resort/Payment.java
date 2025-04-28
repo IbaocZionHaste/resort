@@ -91,26 +91,26 @@ public class Payment extends AppCompatActivity {
 
 
         /// Single-select logic
-        //checkBoxGcash.setOnCheckedChangeListener((b, checked) -> { if (checked) checkBoxPalawan.setChecked(false); });
-        //checkBoxPalawan.setOnCheckedChangeListener((b, checked) -> { if (checked) checkBoxGcash.setChecked(false); });
-        // Single-select logic & hide counterpart
+        checkBoxGcash.setOnCheckedChangeListener((b, checked) -> { if (checked) checkBoxPalawan.setChecked(false); });
+        checkBoxPalawan.setOnCheckedChangeListener((b, checked) -> { if (checked) checkBoxGcash.setChecked(false); });
+        /// Single-select logic & hide counterpart
 
-        checkBoxGcash.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                checkBoxPalawan.setChecked(false);
-                checkBoxPalawan.setVisibility(View.GONE);
-            } else {
-                checkBoxPalawan.setVisibility(View.VISIBLE);
-            }
-        });
-        checkBoxPalawan.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                checkBoxGcash.setChecked(false);
-                checkBoxGcash.setVisibility(View.GONE);
-            } else {
-                checkBoxGcash.setVisibility(View.VISIBLE);
-            }
-        });
+///        checkBoxGcash.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (isChecked) {
+//                checkBoxPalawan.setChecked(false);
+//                checkBoxPalawan.setVisibility(View.GONE);
+//            } else {
+//                checkBoxPalawan.setVisibility(View.VISIBLE);
+//            }
+//        });
+//        checkBoxPalawan.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (isChecked) {
+//                checkBoxGcash.setChecked(false);
+//                checkBoxGcash.setVisibility(View.GONE);
+//            } else {
+//                checkBoxGcash.setVisibility(View.VISIBLE);
+//            }
+//        });
 
 
 ///        // Payment information dialog (unchanged)
