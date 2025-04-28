@@ -239,7 +239,7 @@
                         android:id="@+id/tvPackageItems"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Item1:"
+                        android:text="Item 1:"
                         android:textSize="20sp"
                         android:layout_marginBottom="4dp" />
 
@@ -247,7 +247,7 @@
                         android:id="@+id/tvPackageItems2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Item2:"
+                        android:text="Item 2:"
                         android:textSize="20sp"
                         android:layout_marginBottom="4dp" />
 
@@ -255,7 +255,7 @@
                         android:id="@+id/tvPackageItems3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Item3:"
+                        android:text="Item 3:"
                         android:textSize="20sp"
                         android:layout_marginBottom="4dp" />
 
@@ -263,7 +263,7 @@
                         android:id="@+id/tvPackageItems4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Item4:"
+                        android:text="Item 4:"
                         android:textSize="20sp"
                         android:layout_marginBottom="4dp" />
 
@@ -271,7 +271,7 @@
                         android:id="@+id/tvPackageItems5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Item5:"
+                        android:text="Item 5:"
                         android:textSize="20sp"
                         android:layout_marginBottom="4dp" />
 
@@ -279,7 +279,7 @@
                         android:id="@+id/tvPackageItems6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Item6:"
+                        android:text="Item 6:"
                         android:textSize="20sp"
                         android:layout_marginBottom="4dp" />
 
