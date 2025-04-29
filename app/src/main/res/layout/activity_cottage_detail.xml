@@ -273,9 +273,11 @@
                         android:layout_height="wrap_content"
                         android:text="Reminder: "
                         android:textSize="20sp"
+                        android:drawablePadding="5dp"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="4dp"
+                        app:drawableStartCompat="@drawable/ic_profile_about" />
 
 
                     <!-- Review Section -->
