@@ -1,5 +1,6 @@
 package com.example.resort;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -56,6 +57,7 @@ public class Comment extends AppCompatActivity {
     private int selectedRating = 0;
     private boolean isSubmitting = false;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,12 +111,12 @@ public class Comment extends AppCompatActivity {
     }
 
     private void fetchBookings() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users").child(userId).child("MyReviewDone");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 bookingSnapshots.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     bookingSnapshots.add(snap);
@@ -162,10 +164,11 @@ public class Comment extends AppCompatActivity {
             }
         });
         btnCancel.setOnClickListener(v -> dialog.dismiss());
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 
+    @SuppressLint("SetTextI18n")
     private void showBookingDetailsDialog(int index) {
         DataSnapshot booking = bookingSnapshots.get(index);
         View dialogView = LayoutInflater.from(this)
@@ -188,7 +191,7 @@ public class Comment extends AppCompatActivity {
         });
 
         alertDialog.show();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.WHITE));
     }
 
     private void populateDetails(DataSnapshot booking, LinearLayout container) {
@@ -202,9 +205,11 @@ public class Comment extends AppCompatActivity {
             for (DataSnapshot item : acc.getChildren()) inflateItem(item, inflater, container);
         if (food.exists())
             for (DataSnapshot item : food.getChildren()) inflateItem(item, inflater, container);
-        if (pkg.exists()) inflateItem(pkg, inflater, container);
+        if (pkg.exists())
+            for (DataSnapshot item : pkg.getChildren()) inflateItem(item, inflater, container);
     }
 
+    @SuppressLint("DefaultLocale")
     private void inflateItem(DataSnapshot itemSnap, LayoutInflater inflater, LinearLayout container) {
         String category = itemSnap.child("category").getValue(String.class);
         String name = itemSnap.child("name").getValue(String.class);
@@ -258,7 +263,7 @@ public class Comment extends AppCompatActivity {
             return;
         }
 
-        // Prevent double submits
+        /// Prevent double submits
         isSubmitting = true;
         Button submitBtn = findViewById(R.id.Submit);
         submitBtn.setEnabled(false);
@@ -294,8 +299,10 @@ public class Comment extends AppCompatActivity {
                 }
             }
             if (pkgSection.exists()) {
-                String n = pkgSection.child("name").getValue(String.class);
-                if (n != null) names.add(n);
+                for (DataSnapshot item : pkgSection.getChildren()) {
+                    String n = item.child("name").getValue(String.class);
+                    if (n != null) names.add(n);
+                }
             }
 
             final String allNames = names.isEmpty()
@@ -309,6 +316,7 @@ public class Comment extends AppCompatActivity {
                     .child("username");
 
             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snap) {
                     String username = snap.getValue(String.class);
@@ -346,6 +354,8 @@ public class Comment extends AppCompatActivity {
                             /// Clean up after success
                             String bookingKey = bookingSnapshots
                                     .get(selectedBookingIndex).getKey();
+                            /// Null The ID
+                            assert bookingKey != null;
                             FirebaseDatabase.getInstance()
                                     .getReference("users")
                                     .child(userId)
@@ -376,7 +386,7 @@ public class Comment extends AppCompatActivity {
                             "Unable to get user info", Toast.LENGTH_SHORT).show();
                 }
             });
-            /// ==== YOUR ORIGINAL FIREBASE LOGIC ENDS HERE ====
+
         }, 1000);
     }
 
