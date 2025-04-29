@@ -213,6 +213,12 @@ public class BoatDetailActivity extends AppCompatActivity {
         String status = intent.getStringExtra("accommodationStat");
         rawPrice = intent.getStringExtra("accommodationPrice");
         String amenities = intent.getStringExtra("accommodationAmenities");
+
+        String reminder = intent.getStringExtra("accommodationReminder");
+        String addOns = intent.getStringExtra("accommodationAddOns");
+        String boatName = intent.getStringExtra("accommodationBoatName");
+        String destination = intent.getStringExtra("accommodationDestination");
+
         //String imageUrl = intent.getStringExtra("accommodationImage");
         // Get the available date extra (if provided)
         availableDate = intent.getStringExtra("accommodationAvailableDate");
@@ -225,6 +231,12 @@ public class BoatDetailActivity extends AppCompatActivity {
         TextView tvStatus = findViewById(R.id.tvBoatStatus);
         TextView tvAmenities = findViewById(R.id.tvBoatAmenities);
         TextView tvPrice = findViewById(R.id.tvBoatPrice);
+
+        TextView tvReminder = findViewById(R.id.tvReminder);
+        TextView tvAddOns = findViewById(R.id.tvAddOns);
+        TextView tvNameBoat = findViewById(R.id.tvNameBoat);
+        TextView tvDestination = findViewById(R.id.tvDestination);
+
         // New: TextView to display available date separately
         TextView tvAvailableDate = findViewById(R.id.tvAvailableDate);
         ivImageSwipe = findViewById(R.id.ivBoatImage);
@@ -443,6 +455,11 @@ public class BoatDetailActivity extends AppCompatActivity {
         tvAmenities.setText("Amenities: " + amenities);
         tvCapacity.setText("Capacity: " + capacity);
         tvDesign.setText("Design: " + design);
+
+        tvAddOns.setText("Included Addon : " + addOns);
+        tvReminder.setText("Reminder: " + reminder);
+        tvNameBoat.setText("Boat Name: " + boatName);
+        tvDestination.setText("Destination: " + destination);
 
 
 

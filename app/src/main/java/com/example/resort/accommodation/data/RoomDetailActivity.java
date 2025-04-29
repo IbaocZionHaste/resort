@@ -217,6 +217,11 @@ public class RoomDetailActivity extends AppCompatActivity {
         // Get the available date extra (if provided)
         availableDate = intent.getStringExtra("accommodationAvailableDate");
 
+        String reminder = intent.getStringExtra("accommodationReminder");
+        String entrance = intent.getStringExtra("accommodationEntrance");
+
+
+
         // Find views in the layout.
         TextView tvName = findViewById(R.id.tvBoatName);
         TextView tvDescription = findViewById(R.id.tvBoatDescription);
@@ -225,6 +230,10 @@ public class RoomDetailActivity extends AppCompatActivity {
         TextView tvStatus = findViewById(R.id.tvBoatStatus);
         TextView tvAmenities = findViewById(R.id.tvBoatAmenities);
         TextView tvPrice = findViewById(R.id.tvBoatPrice);
+
+        TextView tvReminder = findViewById(R.id.tvReminder);
+        TextView tvEntrance = findViewById(R.id.tvEntrance);
+
         // New: TextView to display available date separately
         TextView tvAvailableDate = findViewById(R.id.tvAvailableDate);
         ivImageSwipe = findViewById(R.id.ivBoatImage);
@@ -443,6 +452,9 @@ public class RoomDetailActivity extends AppCompatActivity {
         tvAmenities.setText("Amenities: " + amenities);
         tvCapacity.setText("Capacity: " + capacity);
         tvDesign.setText("Design: " + design);
+
+        tvEntrance.setText("Entrance Included: " + entrance);
+        tvReminder.setText("Reminder: " + reminder);
 
 
 

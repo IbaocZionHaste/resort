@@ -210,6 +210,9 @@ public class CottageDetailActivity extends AppCompatActivity {
         rawPrice = intent.getStringExtra("accommodationPrice");
         availableDate = intent.getStringExtra("accommodationAvailableDate");
 
+        String reminder = intent.getStringExtra("accommodationReminder");
+        String entrance = intent.getStringExtra("accommodationEntrance");
+
         // Find views in the layout
         TextView tvName = findViewById(R.id.tvCottageName);
         TextView tvDescription = findViewById(R.id.tvCottageDescription);
@@ -220,6 +223,10 @@ public class CottageDetailActivity extends AppCompatActivity {
         TextView tvAmenities = findViewById(R.id.tvCottageAmenities);
         TextView tvPrice = findViewById(R.id.tvCottagePrice);
         TextView tvAvailableDate = findViewById(R.id.tvAvailableDate);
+
+        TextView tvReminder = findViewById(R.id.tvReminder);
+        TextView tvEntrance = findViewById(R.id.tvEntrance);
+
         ivImageSwipe = findViewById(R.id.ivCottageImage);
         ImageView btnBack = findViewById(R.id.btn);
         Button btnAddToCart = findViewById(R.id.btn_add_to_cart);
@@ -409,6 +416,9 @@ public class CottageDetailActivity extends AppCompatActivity {
         tvCapacity.setText("Capacity: " + capacity);
         tvDesign.setText("Design: " + design);
         tvLocation.setText("Location: " + location);
+
+        tvEntrance.setText("Entrance Included: " + entrance);
+        tvReminder.setText("Reminder: " + reminder);
 
         RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));

@@ -284,11 +284,20 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         intent.putExtra("accommodationCategory", product.getCategory());
         intent.putExtra("accommodationAmenities", product.getAmenities());
         intent.putExtra("accommodationAvailableDate", product.getAvailableDate());
+
+        intent.putExtra("accommodationReminder", product.getReminder());
+        intent.putExtra("accommodationEntrance", product.getEntrance());
+
+
+
         switch (product.getCategory()) {
             case "Boat":
             case "Room":
                 intent.putExtra("accommodationCapacity", product.getCapacity());
                 intent.putExtra("accommodationDesign", product.getDesign());
+                intent.putExtra("accommodationDestination", product.getDestination());
+                intent.putExtra("accommodationBoatName", product.getBoatName());
+                intent.putExtra("accommodationAddOns", product.getAddOns());
                 break;
 
             case "Food":

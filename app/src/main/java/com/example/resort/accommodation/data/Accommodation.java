@@ -18,6 +18,8 @@ public class Accommodation implements Serializable {
     // Category-specific fields
     private String capacity; // Boats, Cottages
     private String design; // Boats, Cottages
+
+    private String entrance, destination, reminder, boatname, addons; // Boat, Cottage, Room
     private String food1, food2, food3, food4, food5, pieceNameFood; // Food, Package
     private String beverageFlavor, beverageOccasions, beverageServing, beverageSize; // Beverages
     private String flavorToppings, perfectFor, pieceNameDessert; // Desserts
@@ -171,6 +173,41 @@ public class Accommodation implements Serializable {
     }
     public void setAvailableDate(String availableDate) {
         this.availableDate = availableDate;
+    }
+
+
+
+
+    public String getEntrance() {
+        return entrance;
+    }
+    public void  setEntrance(String entrance) {
+        this.entrance = entrance;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+    public String getReminder() {
+        return reminder;
+    }
+    public void setReminder(String reminder) {
+        this.reminder = reminder;
+    }
+    public String getBoatName() {
+        return boatname;
+    }
+    public void setBoatName(String boatname) {
+        this.boatname = boatname;
+    }
+    public String getAddOns() {
+        return addons;
+    }
+    public void setAddOns(String addons) {
+        this.addons = addons;
     }
 }
 
