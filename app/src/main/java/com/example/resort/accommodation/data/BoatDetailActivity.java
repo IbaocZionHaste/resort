@@ -461,8 +461,6 @@ public class BoatDetailActivity extends AppCompatActivity {
         tvNameBoat.setText("Boat Name: " + boatName);
         tvDestination.setText("Destination: " + destination);
 
-
-
         // --- NEW CODE: Initialize RecyclerView for Reviews ---
         RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
