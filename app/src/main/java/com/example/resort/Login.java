@@ -246,19 +246,19 @@ public class Login extends AppCompatActivity {
                                                     if (isVerified) {
                                                         Intent intent = new Intent(Login.this, BottomNavigation.class);
                                                         startActivity(intent);
-                                                        overridePendingTransition(0, 0); // Instant transition (blink effect)
+                                                        overridePendingTransition(0, 0); /// Instant transition (blink effect)
                                                         finish();
                                                     } else {
                                                         Intent intent = new Intent(Login.this, VerificationCode.class);
                                                         intent.putExtra("phoneNumber", phoneNumber);
                                                         startActivity(intent);
-                                                        overridePendingTransition(0, 0); // Instant transition (blink effect)
+                                                        overridePendingTransition(0, 0); /// Instant transition (blink effect)
                                                         ///finish();
                                                     }
                                                 } else {
                                                     Intent intent = new Intent(Login.this, BottomNavigation.class);
                                                     startActivity(intent);
-                                                    overridePendingTransition(0, 0); // Instant transition (blink effect)
+                                                    overridePendingTransition(0, 0); /// Instant transition (blink effect)
                                                     finish();
                                                 }
                                             }

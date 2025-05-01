@@ -101,7 +101,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 }
             });
 
-            // Minus button: decrease quantity if above 1
+            /// Minus button: decrease quantity if above 1
             holder.minusButton.setOnClickListener(v -> {
                 if (item.getQuantity() > 1) {
                     item.setQuantity(item.getQuantity() - 1);
@@ -127,7 +127,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
 
 
-        // Delete button: remove the item from the cart
+        /// Delete button: remove the item from the cart
         holder.deleteButton.setOnClickListener(v -> {
             CartManager.getInstance(context, userId).removeItem(item);
             notifyItemRemoved(position);
@@ -146,6 +146,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 Intent intent = new Intent(context, AccommodationAddons.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
+
             });
         }
 
