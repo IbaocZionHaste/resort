@@ -387,7 +387,7 @@
             android:longClickable="true"
             android:focusableInTouchMode="true"
             android:layout_marginStart="130dp"
-            android:textAlignment="viewStart"
+            android:textAlignment="center"
             android:textColor="@color/blue"
             android:textSize="10sp" />
 
@@ -431,8 +431,8 @@
             android:clickable="true"
             android:linksClickable="true"
             android:longClickable="true"
-            android:layout_marginStart="120dp"
-            android:textAlignment="viewStart"
+            android:layout_marginStart="123dp"
+            android:textAlignment="center"
             android:textColor="@color/blue"
             android:textSize="10sp" />
 
