@@ -494,7 +494,7 @@ public class BeverageDetailActivity extends AppCompatActivity {
                 // Create a CartItem; ensure your CartItem class is updated to accept (name, price, category, image).
                 CartItem item = new CartItem(itemName, itemPrice, "Beverage", photoForCart);
                 CartManager.getInstance(this, userId).addItem(item);
-                Toast.makeText(BeverageDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BeverageDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
             }
         });
 

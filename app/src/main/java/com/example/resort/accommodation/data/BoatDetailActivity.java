@@ -621,7 +621,7 @@ public class BoatDetailActivity extends AppCompatActivity {
 
             CartItem item = new CartItem(name, itemPrice, "Boat", itemCapacity, photoForCart);
             CartManager.getInstance(this, uid).addItem(item);
-            Toast.makeText(BoatDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(BoatDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
         });
 
         // ----- Fetch Album Data Asynchronously -----

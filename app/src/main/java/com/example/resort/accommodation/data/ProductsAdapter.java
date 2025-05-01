@@ -214,7 +214,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                     cartManager.addItem(newCartItem);
                 }
 
-                Toast.makeText(context, "Add to cart success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Added to booking successfully", Toast.LENGTH_SHORT).show();
                 alertDialog.dismiss();
             });
 

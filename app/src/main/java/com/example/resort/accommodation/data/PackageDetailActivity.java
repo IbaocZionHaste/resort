@@ -608,7 +608,7 @@ public class PackageDetailActivity extends AppCompatActivity {
             // Create the CartItem with category "Package" and add it to the cart.
             CartItem item = new CartItem(name, itemPrice, "Package",photoForCart);
             CartManager.getInstance(this, uid).addItem(item);
-            Toast.makeText(PackageDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PackageDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
         });
 
 

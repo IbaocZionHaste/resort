@@ -618,7 +618,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
             CartItem item = new CartItem(name, itemPrice, "Room", itemCapacity, photoForCart);
             CartManager.getInstance(this, uid).addItem(item);
-            Toast.makeText(RoomDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RoomDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
         });
 
         // ----- Fetch Album Data Asynchronously -----

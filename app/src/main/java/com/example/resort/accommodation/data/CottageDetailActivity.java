@@ -567,7 +567,7 @@ public class CottageDetailActivity extends AppCompatActivity {
 
             CartItem item = new CartItem(name, itemPrice, "Cottage", itemCapacity, photoForCart);
             CartManager.getInstance(CottageDetailActivity.this, uid).addItem(item);
-            Toast.makeText(CottageDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CottageDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
         });
 
         // ----- Fetch Album Data Asynchronously -----
