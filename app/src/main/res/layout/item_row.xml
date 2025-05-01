@@ -14,6 +14,7 @@
         android:text="Category"
         android:textStyle="bold"
         android:textSize="12sp"
+        android:visibility="gone"
         android:textColor="@color/black" />
 
     <!-- Product Name -->
@@ -24,7 +25,7 @@
         android:layout_height="wrap_content"
         android:text="Product A"
         android:textStyle="bold"
-        android:textSize="12sp"
+        android:textSize="12.5sp"
         android:textColor="@color/black" />
 
     <!-- Quantity -->
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="1"
-        android:textSize="12sp"
+        android:textSize="12.5sp"
         android:textStyle="bold"
         android:textColor="@color/black" />
 
@@ -46,7 +47,7 @@
         android:gravity="end"
         android:text="$25.00"
         android:textStyle="bold"
-        android:textSize="12sp"
+        android:textSize="12.5sp"
         android:textColor="@color/black" />
 
 </LinearLayout>

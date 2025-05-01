@@ -305,6 +305,8 @@ public class Comment extends AppCompatActivity {
                 }
             }
 
+
+
             final String allNames = names.isEmpty()
                     ? "No Items"
                     : TextUtils.join(", ", names);
