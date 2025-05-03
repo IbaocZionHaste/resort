@@ -103,27 +103,27 @@
         app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintVertical_bias="0.0" />
 
+    <!-- Date Field -->
+
     <TextView
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="72dp"
         android:drawableLeft="@drawable/ic_profile_about"
+        android:drawablePadding="10dp"
         android:paddingStart="8dp"
+        android:paddingEnd="10dp"
         android:text="Please be informed. Check-out time is hours after the Check-in time."
+        android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="14sp"
-        android:paddingEnd="10dp"
         android:textStyle="bold"
         android:typeface="monospace"
-        android:drawablePadding="10dp"
-        android:textAlignment="textStart"
-        app:layout_constraintBottom_toTopOf="@+id/next"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Date Field -->
 
     <Button
         android:id="@+id/next"
@@ -135,7 +135,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/message"
-        app:layout_constraintHorizontal_bias="0.927"
+        app:layout_constraintHorizontal_bias="0.937"
         app:layout_constraintStart_toStartOf="@+id/message"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976" />
@@ -144,17 +144,17 @@
         android:id="@+id/totalPriceText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="textStart"
         android:textColor="@color/red"
         android:textSize="15dp"
         android:textStyle="bold"
-        android:textAlignment="textStart"
         android:typeface="monospace"
         app:layout_constraintBottom_toBottomOf="@+id/next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message"
-        app:layout_constraintVertical_bias="0.472" />
+        app:layout_constraintTop_toTopOf="@+id/next"
+        app:layout_constraintVertical_bias="0.611" />
 
     <EditText
         android:id="@+id/editTextDate"
