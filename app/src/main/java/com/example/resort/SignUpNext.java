@@ -194,7 +194,7 @@ public class SignUpNext extends AppCompatActivity {
         }
 
         /// Sort alphabetically, excluding the first prompt
-        Collections.sort(list.subList(1, list.size()));  // :contentReference[oaicite:0]{index=0}
+        Collections.sort(list.subList(1, list.size()));  /// :contentReference[oaicite:0]{index=0}
 
         ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -225,7 +225,7 @@ public class SignUpNext extends AppCompatActivity {
             }
 
             /// Sort alphabetically, excluding the first prompt
-            Collections.sort(list.subList(1, list.size()));  // :contentReference[oaicite:1]{index=1}
+            Collections.sort(list.subList(1, list.size()));  /// :contentReference[oaicite:1]{index=1}
 
             ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
             ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -256,7 +256,7 @@ public class SignUpNext extends AppCompatActivity {
             }
 
             /// Sort alphabetically, excluding the first prompt
-            Collections.sort(list.subList(1, list.size()));  // :contentReference[oaicite:2]{index=2}
+            Collections.sort(list.subList(1, list.size()));  /// :contentReference[oaicite:2]{index=2}
 
             ArrayAdapter<String> ad = new ArrayAdapter<>(
                     this,
@@ -383,7 +383,7 @@ public class SignUpNext extends AppCompatActivity {
 //import java.util.Iterator;
 //import java.util.List;
 //
-///**
+//**
 // * SignUpNext Activity now supports all Philippine provinces.
 // * Ensure AndroidManifest.xml contains:
 // * <uses-permission android:name="android.permission.INTERNET" />
@@ -1043,7 +1043,6 @@ public class SignUpNext extends AppCompatActivity {
 //    }
 //}
 //
-
 
 ///Get Current fix
 //package com.example.resort;
