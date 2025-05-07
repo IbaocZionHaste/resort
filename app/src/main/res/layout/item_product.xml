@@ -48,7 +48,6 @@
                 android:textSize="12sp"
                 android:textColorHint="@color/white"
                 android:paddingStart="20dp"
-                android:textStyle="bold"
                 android:padding="2dp"
                 android:maxLines="1"
                 android:layout_marginTop="0dp"

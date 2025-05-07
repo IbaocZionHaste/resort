@@ -1089,7 +1089,7 @@ public class BookingStatus extends AppCompatActivity {
                 bookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // Kung no booking data, stop polling and clear the UI after delay.
+                        /// Kung no booking data, stop polling and clear the UI after delay.
                         if (!snapshot.hasChildren()) {
                             stopPolling();
                             new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -1112,6 +1112,11 @@ public class BookingStatus extends AppCompatActivity {
                                 showDot5Message();
                                 stopPolling();
 
+                                /// Stop the foreground service
+                                Intent stopIntent = new Intent(BookingStatus.this, BookingStatusService.class);
+                                stopService(stopIntent);
+                                Log.d("BookingStatus", "Foreground service stopped.");
+
                                 ///This code the my review is change to my review done after the booking is done
                                 DatabaseReference myReviewRef = FirebaseDatabase.getInstance()
                                         .getReference("users")
@@ -1126,40 +1131,51 @@ public class BookingStatus extends AppCompatActivity {
                                 myReviewRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot reviewSnapshot) {
-                                        if (reviewSnapshot.exists()) {
-                                            ///Map<String, Object> approvedReviews = new HashMap<>(); Not Use
-
-                                            for (DataSnapshot review : reviewSnapshot.getChildren()) {
-                                                //noinspection unchecked
-                                                Map<String, Object> reviewData = (Map<String, Object>) review.getValue();
-                                                if (reviewData != null) {
-                                                    reviewData.remove("statusReview");
-
-                                                    /// Generate a unique key for each review
-                                                    DatabaseReference newReviewRef = myReviewDoneRef.push();
-                                                    newReviewRef.setValue(reviewData)
-                                                            .addOnCompleteListener(task -> {
-                                                                if (task.isSuccessful()) {
-                                                                    Log.d("CopyReview", "Review successfully added to MyReviewDone.");
-                                                                } else {
-                                                                    Log.e("CopyReview", "Failed to add review to MyReviewDone", task.getException());
-                                                                }
-                                                            });
-                                                }
+                                        if (!reviewSnapshot.exists()) {
+                                            Log.d("Review", "No MyReview data to copy.");
+                                            return;
+                                        }
+                                        for (DataSnapshot review : reviewSnapshot.getChildren()) {
+                                            String originalKey = review.getKey();
+                                            if (originalKey == null) {
+                                                /// No key? Skip it—can’t map it reliably
+                                                Log.w("CopyReview", "Encountered a review with null key; skipping.");
+                                                continue;
                                             }
 
-                                            /// After copying, delete the original MyReview data
-                                            myReviewRef.removeValue()
-                                                    .addOnCompleteListener(deleteTask -> {
-                                                        if (deleteTask.isSuccessful()) {
-                                                            Log.d("DeleteReview", "Original MyReview deleted after copy.");
+                                            //noinspection unchecked
+                                            Map<String, Object> reviewData = (Map<String, Object>) review.getValue();
+                                            if (reviewData == null) {
+                                                Log.w("CopyReview", "Review data for key " + originalKey + " is null; skipping.");
+                                                continue;
+                                            }
+
+                                            /// Drop the status flag
+                                            reviewData.remove("statusReview");
+
+                                            /// Use the same key to overwrite if it already exists
+                                            myReviewDoneRef.child(originalKey)
+                                                    .setValue(reviewData)
+                                                    .addOnCompleteListener(task -> {
+                                                        if (task.isSuccessful()) {
+                                                            Log.d("CopyReview", "Review " + originalKey + " added/updated in MyReviewDone.");
                                                         } else {
-                                                            Log.e("DeleteReview", "Failed to delete MyReview.", deleteTask.getException());
+                                                            Log.e("CopyReview", "Failed to add review " + originalKey,
+                                                                    task.getException());
                                                         }
                                                     });
-                                        } else {
-                                            Log.d("Review", "No MyReview data to copy.");
                                         }
+
+                                        /// Finally, delete the whole original node in one go
+                                        myReviewRef.removeValue()
+                                                .addOnCompleteListener(deleteTask -> {
+                                                    if (deleteTask.isSuccessful()) {
+                                                        Log.d("DeleteReview", "Original MyReview deleted after copy.");
+                                                    } else {
+                                                        Log.e("DeleteReview", "Failed to delete MyReview.",
+                                                                deleteTask.getException());
+                                                    }
+                                                });
                                     }
 
                                     @Override
@@ -1168,15 +1184,16 @@ public class BookingStatus extends AppCompatActivity {
                                     }
                                 });
 
-                                ///Delay 1 minute
+
+                                ///Delay 1 second
                                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                                     ///clearBookingMessageUI();
                                     ///clearBookingPreferences();
                                     ///moveAllBookingsToHistory();
                                 }, 1000);
-                                break; // Exit loop after processing one booking.
+                                break; /// Exit loop after processing one booking.
                             }
-                            // if Failed, stop polling and execute clear functions.
+                            /// if Failed, stop polling and execute clear functions.
                             else if (finalStatus != null && finalStatus.equalsIgnoreCase("Refund") && !finalProcessed) {
                                 finalProcessed = true;
                                 progress = 0;
@@ -1231,12 +1248,12 @@ public class BookingStatus extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Boolean isRead = snapshot.child("read").getValue(Boolean.class);
-                // Only update the notification if it is not marked as read.
+                /// Only update the notification if it is not marked as read.
                 if (isRead != null && isRead) {
-                    // The notification is already read—do not overwrite it.
+                    /// The notification is already read—do not overwrite it.
                     return;
                 }
-                // Build notification data without altering the 'read' flag if it exists.
+                /// Build notification data without altering the 'read' flag if it exists.
                 Map<String, Object> notificationData = new HashMap<>();
                 notificationData.put("message", message);
                 notificationData.put("timestamp", getCurrentTime());
@@ -1246,7 +1263,7 @@ public class BookingStatus extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Optionally log or handle the error.
+                /// Optionally log or handle the error.
             }
         });
     }
@@ -1305,7 +1322,7 @@ public class BookingStatus extends AppCompatActivity {
                         }
                     });
                 }
-                // After processing all bookings, remove them from MyBooking
+                /// After processing all bookings, remove them from MyBooking
                 myBookingRef.removeValue();
             }
 
@@ -1400,12 +1417,12 @@ public class BookingStatus extends AppCompatActivity {
                     String status = paymentMethodSnapshot.child("Status").getValue(String.class);
                     Long total = paymentMethodSnapshot.child("total").getValue(Long.class);
 
-                    // Create the dialog builder
+                    /// Create the dialog builder
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     LayoutInflater inflater = LayoutInflater.from(context);
                     View view = inflater.inflate(R.layout.payment_details, null);
 
-                    // Set all TextViews with the data
+                    /// Set all TextViews with the data
                     ((TextView) view.findViewById(R.id.tvName)).setText(firstname + " " + lastname);
                     ((TextView) view.findViewById(R.id.tvPaymentMethod)).setText(payment);
                     ((TextView) view.findViewById(R.id.tvAmount)).setText("₱" + (amount != null ? amount : 0));
@@ -1415,15 +1432,15 @@ public class BookingStatus extends AppCompatActivity {
                     ((TextView) view.findViewById(R.id.tvPhone)).setText(paymentMethodSnapshot.child("Phone").getValue(String.class));
                     ((TextView) view.findViewById(R.id.tvReference)).setText(reference);
 
-                    // Change the button text to "Okay"
+                    /// Change the button text to "Okay"
                     Button CancelButton = view.findViewById(R.id.btnCancelPayment);
                     CancelButton.setText("Cancel");
 
-                    // Create and show the dialog
+                    /// Create and show the dialog
                     AlertDialog dialog = builder.setView(view).create();
                     dialog.show();
 
-                    // Set a click listener on the "Okay" button to dismiss the dialog
+                    /// Set a click listener on the "Okay" button to dismiss the dialog
                     CancelButton.setOnClickListener(v -> {
                         if (dialog.isShowing()) {
                             dialog.dismiss();

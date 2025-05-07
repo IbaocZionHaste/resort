@@ -76,6 +76,7 @@
         android:text="Cotegories"
         android:textColor="@color/black"
         android:textSize="13dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.089"
         app:layout_constraintStart_toStartOf="parent"
@@ -111,11 +112,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="11dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
                 android:text="Cottage"
                 android:textColor="@color/black"
-                android:textSize="7sp"
+                android:textSize="8sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -247,11 +248,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="14dp"
                 android:gravity="center"
                 android:text="Room"
                 android:textColor="@color/black"
-                android:textSize="7sp"
+                android:textSize="8sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -276,11 +277,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="11dp"
                 android:gravity="center"
                 android:text="Package"
                 android:textColor="@color/black"
-                android:textSize="7sp"
+                android:textSize="8sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -309,6 +310,7 @@
         android:text="Feature Accommodations"
         android:textColor="@color/black"
         android:textSize="13dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.119"
@@ -326,6 +328,7 @@
         android:text="+ : shortcut to add to booking"
         android:textColor="@color/black"
         android:textSize="10dp"
+        android:drawableTint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/featured_cottage"
         app:layout_constraintHorizontal_bias="0.0"

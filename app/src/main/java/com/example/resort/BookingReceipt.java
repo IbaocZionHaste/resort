@@ -204,9 +204,9 @@ public class BookingReceipt extends AppCompatActivity {
 
                             boolean isSaved = saveReceiptImage(screenshot);
                             if (isSaved) {
-                                Toast.makeText(BookingReceipt.this, "Receipt saved to gallery", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BookingReceipt.this, "Booking Overview saved to gallery", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(BookingReceipt.this, "Error saving receipt", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BookingReceipt.this, "Error saving Booking Overview", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }, 200); /// 200ms delay for UI update

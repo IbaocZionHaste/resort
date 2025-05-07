@@ -44,16 +44,7 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:layout_margin="8dp"
-            android:backgroundTint="@color/light_blue"
-            android:textColor="@android:color/white"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"/>
+
 
         <Button
             android:id="@+id/btnCancel"
@@ -62,6 +53,17 @@
             android:text="Cancel"
             android:layout_margin="8dp"
             android:backgroundTint="@color/red"
+            android:textColor="@android:color/white"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/light_blue"
             android:textColor="@android:color/white"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"/>
