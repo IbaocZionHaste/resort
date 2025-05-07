@@ -6,7 +6,7 @@
     card_view:cardCornerRadius="14dp"
     android:id="@+id/Card"
     android:focusable="true"
-    android:layout_margin="4dp"
+    android:layout_margin="5dp"
     android:backgroundTint="#E0E5EC">
 
     <LinearLayout
@@ -14,7 +14,7 @@
         android:layout_height="150dp"
         android:orientation="vertical"
         android:background="@color/transparent"
-        android:padding="5dp">
+        android:padding="0dp">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -27,37 +27,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
                 android:clickable="false"
                 android:focusable="false" />
         </androidx.cardview.widget.CardView>
 
-
-<!--        <TextView-->
-<!--            android:id="@+id/productName"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="25dp"-->
-<!--            android:textSize="12sp"-->
-<!--            android:textStyle="bold"-->
-<!--            android:padding="5dp"-->
-<!--            android:layout_marginTop="2dp"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:fontFamily="@font/arial_th"-->
-<!--            android:textAlignment="center"-->
-<!--            android:text="Product Name"-->
-<!--            android:clickable="false"-->
-<!--            android:focusable="false" />-->
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/plus"-->
-<!--            android:layout_width="20dp"-->
-<!--            android:layout_height="20dp"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:fontFamily="@font/arial_th"-->
-<!--            android:textAlignment="center"-->
-<!--            android:text="Product Name"-->
-<!--            android:src="@drawable/ic_plus_cart"-->
-<!--            android:clickable="false"-->
-<!--            android:focusable="false" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,7 +50,8 @@
                 android:paddingStart="20dp"
                 android:textStyle="bold"
                 android:padding="2dp"
-                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:layout_marginTop="0dp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/arial_th"
                 android:textAlignment="center" />
@@ -94,7 +69,6 @@
                 android:focusableInTouchMode="true"
                 card_view:tint="@color/red" />
         </LinearLayout>
-
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

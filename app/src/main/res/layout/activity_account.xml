@@ -67,7 +67,7 @@
                         <View
                             android:id="@+id/view3"
                             android:layout_width="match_parent"
-                            android:layout_height="680dp"
+                            android:layout_height="625dp"
                             android:background="@drawable/background_account_color" />
 
                         <!-- Overlay container for Input Fields -->
@@ -233,20 +233,20 @@
                                     android:textColor="@color/black"
                                     android:textSize="15sp" />
 
-                                <EditText
-                                    android:id="@+id/editTextText5"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="45dp"
-                                    android:layout_marginTop="8dp"
-                                    android:background="@drawable/edittext_background"
-                                    android:clickable="false"
-                                    android:drawablePadding="10dp"
-                                    android:focusable="false"
-                                    android:hint="Username"
-                                    android:inputType="text"
-                                    android:paddingLeft="15dp"
-                                    android:textColor="@color/black"
-                                    android:textSize="15sp" />
+<!--                                <EditText-->
+<!--                                    android:id="@+id/editTextText5"-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="45dp"-->
+<!--                                    android:layout_marginTop="8dp"-->
+<!--                                    android:background="@drawable/edittext_background"-->
+<!--                                    android:clickable="false"-->
+<!--                                    android:drawablePadding="10dp"-->
+<!--                                    android:focusable="false"-->
+<!--                                    android:hint="Username"-->
+<!--                                    android:inputType="text"-->
+<!--                                    android:paddingLeft="15dp"-->
+<!--                                    android:textColor="@color/black"-->
+<!--                                    android:textSize="15sp" />-->
 
 
                                 <EditText

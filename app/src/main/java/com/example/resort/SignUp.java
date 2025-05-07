@@ -62,7 +62,7 @@ public class SignUp extends AppCompatActivity {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         etEmail = findViewById(R.id.editTextTextEmailAddress);
-        etUsername = findViewById(R.id.editTextText6);
+        ///etUsername = findViewById(R.id.editTextText6);
         etPassword = findViewById(R.id.editTextTextPassword3);
         etConfirmPassword = findViewById(R.id.editTextTextPassword2);
         Button btnSignUp = findViewById(R.id.button);
@@ -207,7 +207,7 @@ private void registerUser() {
             : null;
 
     /// First check if username already exists under "users"
-    mDatabase.child("users").orderByChild("username").equalTo(username)
+    mDatabase.child("users").orderByChild("firstName").equalTo(username)
             .get().addOnCompleteListener(task -> {
                 if (!task.isSuccessful()) {
                     progressDialog.dismiss();
@@ -235,7 +235,7 @@ private void registerUser() {
                         progressDialog.dismiss();
                         Log.i("SignUp", "Username already taken by another user");
                         Toast.makeText(SignUp.this,
-                                "Sorry, username is already taken.",
+                                "Sorry, User is already taken.",
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -299,7 +299,7 @@ private void registerUser() {
                                             userData.put("phoneVerified", phoneVerified);
                                             userData.put("gender", gender);
                                             userData.put("email", email);
-                                            userData.put("username", username);
+                                            ///userData.put("username", username);
                                             userData.put("imageUrl", "default_image_url");
                                             userData.put("registrationDate", registrationDate);
                                             userData.put("isOnline", true);
@@ -370,7 +370,7 @@ private void registerUser() {
         });
     }
 
-    /// Method to reset all input fields
+    /// Method to reset all input fields   NOT USE
     private void resetFields() {
         etEmail.setText("");
         etUsername.setText("");
@@ -379,7 +379,7 @@ private void registerUser() {
         termsCheckBox.setChecked(false);
     }
 
-    /// Method to navigate to LoginActivity
+    /// Method to navigate to LoginActivity  NOT USE
     private void navigateToLoginActivity() {
         Intent intent = new Intent(SignUp.this, Login.class);
         startActivity(intent);
@@ -392,7 +392,7 @@ private void registerUser() {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    /// Method to show progress dialog
+    /// Method to show progress dialog  NOT USE
     private void showProgressDialog() {
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Registering...");

@@ -315,7 +315,7 @@ public class Comment extends AppCompatActivity {
             DatabaseReference userRef = FirebaseDatabase.getInstance()
                     .getReference("users")
                     .child(userId)
-                    .child("username");
+                    .child("firstName");
 
             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @SuppressLint("SetTextI18n")

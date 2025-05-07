@@ -48,7 +48,7 @@ public class Account extends AppCompatActivity {
         etProvince = findViewById(R.id.editTextText7);
         etAge = findViewById(R.id.editTextText);
         etGender = findViewById(R.id.editTextText4);
-        etUsername = findViewById(R.id.editTextText5);
+        ///etUsername = findViewById(R.id.editTextText5);
         etEmail = findViewById(R.id.editTextText2);
         etPhone = findViewById(R.id.editTextText9);
         Button back = findViewById(R.id.back2);
@@ -88,7 +88,7 @@ public class Account extends AppCompatActivity {
                                     String province = snapshot.child("province").getValue(String.class);
                                     String age = snapshot.child("age").getValue(String.class);
                                     String gender = snapshot.child("gender").getValue(String.class);
-                                    String username = snapshot.child("username").getValue(String.class);
+                                    ///String username = snapshot.child("username").getValue(String.class);
                                     String email = snapshot.child("email").getValue(String.class);
                                     String phone = snapshot.child("phoneNumber").getValue(String.class);
 
@@ -101,7 +101,7 @@ public class Account extends AppCompatActivity {
                                     etProvince.setText(province);
                                     etAge.setText(age);
                                     etGender.setText(gender);
-                                    etUsername.setText(username);
+                                    ///etUsername.setText(username);
                                     etEmail.setText(email);
                                     etPhone.setText(phone);
 
@@ -117,7 +117,7 @@ public class Account extends AppCompatActivity {
                                     editor.putString("province", province);
                                     editor.putString("age", age);
                                     editor.putString("gender", gender);
-                                    editor.putString("username", username);
+                                    ///editor.putString("username", username);
                                     editor.putString("email", email);
                                     editor.putString("phoneNumber", phone);
                                     editor.apply();
@@ -153,7 +153,7 @@ public class Account extends AppCompatActivity {
             etProvince.setText(sharedPreferences.getString("province", ""));
             etAge.setText(sharedPreferences.getString("age", ""));
             etGender.setText(sharedPreferences.getString("gender", ""));
-            etUsername.setText(sharedPreferences.getString("username", ""));
+            ///etUsername.setText(sharedPreferences.getString("username", ""));
             etEmail.setText(sharedPreferences.getString("email", ""));
             etPhone.setText(sharedPreferences.getString("phoneNumber", ""));
         }

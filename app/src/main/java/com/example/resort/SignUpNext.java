@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -191,6 +192,10 @@ public class SignUpNext extends AppCompatActivity {
                 if (!"population".equals(prov)) list.add(prov);
             }
         }
+
+        /// Sort alphabetically, excluding the first prompt
+        Collections.sort(list.subList(1, list.size()));  // :contentReference[oaicite:0]{index=0}
+
         ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         provinceSpinner.setAdapter(ad);
@@ -218,6 +223,10 @@ public class SignUpNext extends AppCompatActivity {
                 String m = munis.next();
                 if (!"population".equals(m)) list.add(m);
             }
+
+            /// Sort alphabetically, excluding the first prompt
+            Collections.sort(list.subList(1, list.size()));  // :contentReference[oaicite:1]{index=1}
+
             ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
             ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             municipalitySpinner.setAdapter(ad);
@@ -245,6 +254,9 @@ public class SignUpNext extends AppCompatActivity {
                 String b = bars.next();
                 if (!"population".equals(b) && !"class".equals(b)) list.add(b);
             }
+
+            /// Sort alphabetically, excluding the first prompt
+            Collections.sort(list.subList(1, list.size()));  // :contentReference[oaicite:2]{index=2}
 
             ArrayAdapter<String> ad = new ArrayAdapter<>(
                     this,

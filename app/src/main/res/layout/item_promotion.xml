@@ -11,12 +11,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="#E0E5EC"
-        android:padding="10dp">
+        android:padding="0dp">
 
         <!-- CardView to round the promo image -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="235dp"
+            android:layout_height="245dp"
             app:cardCornerRadius="10dp"
             android:elevation="0dp"
             app:cardPreventCornerOverlap="false"
@@ -89,6 +89,7 @@
             android:fontFamily="@font/arial_th"
             android:textColor="@color/black"
             android:textStyle="bold"
+            android:padding="5dp"
             android:layout_marginTop="8dp"/>
 
         <TextView
@@ -96,6 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
+            android:padding="5dp"
             android:textColor="@color/black"
             android:textAlignment="viewStart"
             android:justificationMode="inter_word"

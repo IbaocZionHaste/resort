@@ -182,15 +182,24 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         editTextTimeIn.setFocusable(false);
         editTextTimeOut.setFocusable(false);
 
-        /// --- DATE PICKER (unchanged) ---
+
+
+        /// --- DATE PICKER (prevent past dates) ---
         editTextDate.setOnClickListener(v -> {
             Calendar c = Calendar.getInstance();
-            new DatePickerDialog(this,
+            DatePickerDialog dlg = new DatePickerDialog(
+                    this,
                     (view, year, month, day) ->
                             editTextDate.setText(String.format("%02d/%02d/%04d", month+1, day, year)),
-                    c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
-                    .show();
+                    c.get(Calendar.YEAR),
+                    c.get(Calendar.MONTH),
+                    c.get(Calendar.DAY_OF_MONTH)
+            );
+            // Prevent selecting dates before today
+            dlg.getDatePicker().setMinDate(c.getTimeInMillis());
+            dlg.show();
         });
+
 
         /// --- TIME-IN PICKER (6 AM → 6 PM office hours) ---
         editTextTimeIn.setOnClickListener(v -> {
