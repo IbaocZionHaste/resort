@@ -101,7 +101,7 @@
 
         <LinearLayout
             android:id="@+id/food"
-            android:layout_width="65.3dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/border_rounded"
@@ -111,14 +111,14 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="15dp"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_accommo_food" /> <!-- Replace with your actual drawable -->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="18dp"
                 android:gravity="center"
                 android:text="Food"
                 android:textColor="@color/black"
@@ -128,7 +128,7 @@
 
         <LinearLayout
             android:id="@+id/dessert"
-            android:layout_width="65.3dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/border_rounded"
@@ -138,14 +138,14 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="15dp"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_accommo_desserts" /> <!-- Replace with your actual drawable -->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="11dp"
+                android:layout_marginStart="14dp"
                 android:gravity="center"
                 android:text="Dessert"
                 android:textColor="@color/black"
@@ -155,7 +155,7 @@
 
         <LinearLayout
             android:id="@+id/beverage"
-            android:layout_width="65.3dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/border_rounded"
@@ -165,14 +165,14 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="13dp"
+                android:layout_marginStart="15dp"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_accommo_drink" /> <!-- Replace with your actual drawable -->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="9dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
                 android:text="Beverage"
                 android:textColor="@color/black"
@@ -182,7 +182,7 @@
 
         <LinearLayout
             android:id="@+id/alcohol"
-            android:layout_width="65.3dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/border_rounded"
@@ -192,14 +192,14 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="13dp"
+                android:layout_marginStart="15dp"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_accommo_alcohol" /> <!-- Replace with your actual drawable -->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="14dp"
                 android:gravity="center"
                 android:text="Alcohol"
                 android:textColor="@color/black"
