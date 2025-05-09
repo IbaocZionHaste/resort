@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.resort.BookingStatus;
 import com.example.resort.R;
 import com.example.resort.history.data.BookingData;
 import com.google.gson.Gson;
@@ -82,7 +83,11 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
                     break;
                 case "refund":
                     holder.tvStatus.setText("Status: Refunded");
-                    holder.tvStatus.setTextColor(Color.YELLOW); // Blue for Refunded
+                    holder.tvStatus.setTextColor(Color.RED); // Blue for Refunded
+                    break;
+                case "Pending":
+                    holder.tvStatus.setText("Status: Pending");
+                    holder.tvStatus.setTextColor(Color.CYAN); // Blue for Refunded
                     break;
                 default:
                     holder.tvStatus.setText("Status: Unknown");
@@ -95,12 +100,34 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.ViewHold
 
 
         /// When "View Details" is clicked, open the detail activity
-        holder.btnViewDetails.setOnClickListener(v -> {
-            Intent intent = new Intent(context, ViewDetailsActivity.class);
-            String bookingJson = new Gson().toJson(booking);
-            intent.putExtra("bookingData", bookingJson);
-            context.startActivity(intent);
-        });
+//        holder.btnViewDetails.setOnClickListener(v -> {
+//            Intent intent = new Intent(context, ViewDetailsActivity.class);
+//            String bookingJson = new Gson().toJson(booking);
+//            intent.putExtra("bookingData", bookingJson);
+//            context.startActivity(intent);
+//        });
+
+        /// Determine the payment status
+        String paymentStatus = "";
+        if (booking.getPaymentTransaction() != null && booking.getPaymentTransaction().paymentStatus != null) {
+            paymentStatus = booking.getPaymentTransaction().paymentStatus;
+        }
+
+        /// Set click listener based on payment status
+        if ("Pending".equalsIgnoreCase(paymentStatus)) {
+            holder.btnViewDetails.setOnClickListener(v -> {
+                Intent intent = new Intent(context, BookingStatus.class);
+                context.startActivity(intent);
+            });
+        } else {
+            holder.btnViewDetails.setOnClickListener(v -> {
+                Intent intent = new Intent(context, ViewDetailsActivity.class);
+                String bookingJson = new Gson().toJson(booking);
+                intent.putExtra("bookingData", bookingJson);
+                context.startActivity(intent);
+            });
+
+        }
     }
 
     @Override

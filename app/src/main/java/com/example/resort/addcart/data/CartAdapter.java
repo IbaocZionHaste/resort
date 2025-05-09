@@ -78,6 +78,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             holder.capacity.setVisibility(View.GONE);
         }
 
+
         /// Check category: hide plus/minus and quantity for Boat, Cottage, and Package items
         if ("Boat".equals(item.getCategory()) || "Cottage".equals(item.getCategory()) || "Package".equals(item.getCategory()) || "Room".equals(item.getCategory())) {
             holder.plusButton.setVisibility(View.GONE);

@@ -112,6 +112,7 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         adapter.updateCartItems(cartManager.getCartItems());
         adapter.notifyDataSetChanged();
         updateTotalPrice();
+
     }
 
     @Override
@@ -183,7 +184,6 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         editTextTimeOut.setFocusable(false);
 
 
-
         /// --- DATE PICKER (prevent past dates) ---
         editTextDate.setOnClickListener(v -> {
             Calendar c = Calendar.getInstance();
@@ -195,7 +195,9 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
                     c.get(Calendar.MONTH),
                     c.get(Calendar.DAY_OF_MONTH)
             );
-            // Prevent selecting dates before today
+
+            /// Disable today: set minimum date to tomorrow
+            c.add(Calendar.DAY_OF_MONTH, 1);
             dlg.getDatePicker().setMinDate(c.getTimeInMillis());
             dlg.show();
         });
@@ -281,6 +283,7 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
             return "";
         }
     }
+
 }
 
 

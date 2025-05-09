@@ -114,7 +114,7 @@
         android:drawablePadding="10dp"
         android:paddingStart="8dp"
         android:paddingEnd="10dp"
-        android:text="Please be informed. Check-out time is hours after the Check-in time."
+        android:text="Please be informed. bookings must be made at least 1 day in advance. Check-out time is hours after the Check-in time."
         android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="14sp"

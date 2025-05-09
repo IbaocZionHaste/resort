@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment {
         // Booking Status Shortcut
         LinearLayout progress = view.findViewById(R.id.progress);
         progress.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), BookingStatus.class);
+            Intent intent = new Intent(getActivity(), BookingHistory.class);
             startActivity(intent);
         });
         LinearLayout review = view.findViewById(R.id.review);
@@ -116,11 +116,12 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-        LinearLayout history = view.findViewById(R.id.history);
-        history.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), BookingHistory.class);
-            startActivity(intent);
-        });
+//        LinearLayout history = view.findViewById(R.id.history);
+//        history.setOnClickListener(v -> {
+//            Intent intent = new Intent(getActivity(), BookingHistory.class);
+//            startActivity(intent);
+//        });
+
     }
     //Shortcut Button End
 

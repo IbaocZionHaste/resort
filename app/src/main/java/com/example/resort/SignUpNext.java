@@ -50,9 +50,10 @@ public class SignUpNext extends AppCompatActivity {
     private EditText etLastName;
     private EditText etFirstName;
     private EditText etMI;
-    private Spinner streetSpinner;
+    ///private Spinner streetSpinner;
     private EditText etAge;
     private EditText etPhone;
+    private EditText street;
     private Spinner genderSpinner;
     private Spinner provinceSpinner;
     private Spinner municipalitySpinner;
@@ -71,7 +72,7 @@ public class SignUpNext extends AppCompatActivity {
         etLastName = findViewById(R.id.editTextText6);
         etFirstName = findViewById(R.id.editTextText15);
         etMI = findViewById(R.id.editTextText11);
-        streetSpinner = findViewById(R.id.editTextText32);
+        street = findViewById(R.id.editTextText32);
         etAge = findViewById(R.id.editTextTextPassword);
         etPhone = findViewById(R.id.editTextTextPassword2);
         genderSpinner = findViewById(R.id.genderSpinner);
@@ -86,7 +87,7 @@ public class SignUpNext extends AppCompatActivity {
 
         /// Setup spinners and load data
         setupGenderSpinner();
-        setupPurokSpinner();
+        ///setupPurokSpinner();
         fetchLocationsJson();
 
 
@@ -133,7 +134,7 @@ public class SignUpNext extends AppCompatActivity {
                 intent.putExtra("province", provinceSpinner.getSelectedItem().toString());
                 intent.putExtra("municipality", municipalitySpinner.getSelectedItem().toString());
                 intent.putExtra("barangay", barangaySpinner.getSelectedItem().toString());
-                intent.putExtra("street", streetSpinner.getSelectedItem().toString());
+                intent.putExtra("street", street.getText().toString().trim());
                 intent.putExtra("age", etAge.getText().toString().trim());
                 String rawPhone = etPhone.getText().toString().trim();
                 String formattedPhone = formatPhoneNumber(rawPhone);
@@ -279,20 +280,21 @@ public class SignUpNext extends AppCompatActivity {
         }
     }
 
-    private void setupPurokSpinner() {
-        List<String> list = new ArrayList<>();
-        list.add("Select Purok...");
-        for (int i = 1; i <= 20; i++) list.add("Purok " + i);
-        ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
-        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        streetSpinner.setAdapter(ad);
-        streetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
-                if (v instanceof TextView) ((TextView) v).setTextColor(Color.BLACK);
-            }
-            @Override public void onNothingSelected(AdapterView<?> p) {}
-        });
-    }
+
+//    private void setupPurokSpinner() {
+//        List<String> list = new ArrayList<>();
+//        list.add("Select Purok...");
+//        for (int i = 1; i <= 20; i++) list.add("Purok " + i);
+//        ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+//        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        streetSpinner.setAdapter(ad);
+//        streetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
+//                if (v instanceof TextView) ((TextView) v).setTextColor(Color.BLACK);
+//            }
+//            @Override public void onNothingSelected(AdapterView<?> p) {}
+//        });
+//    }
 
     private void setupGenderSpinner() {
         List<String> list = new ArrayList<>();
@@ -330,7 +332,8 @@ public class SignUpNext extends AppCompatActivity {
                 provinceSpinner.getSelectedItemPosition() > 0 &&
                 municipalitySpinner.getSelectedItemPosition() > 0 &&
                 barangaySpinner.getSelectedItemPosition() > 0 &&
-                streetSpinner.getSelectedItemPosition() > 0 &&
+                ///streetSpinner.getSelectedItemPosition() > 0 &&
+                !TextUtils.isEmpty(street.getText().toString().trim()) &&
                 !TextUtils.isEmpty(etAge.getText().toString().trim()) &&
                 !TextUtils.isEmpty(etPhone.getText().toString().trim()) &&
                 genderSpinner.getSelectedItemPosition() > 0;

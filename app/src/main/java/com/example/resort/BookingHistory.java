@@ -53,34 +53,81 @@ public class BookingHistory extends AppCompatActivity {
         back.setOnClickListener(v -> onBackPressed());
     }
 
+//    private void loadBookingData() {
+//        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users")
+//                .child(userId)
+//                .child("MyHistory");
+//
+//        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @SuppressLint("NotifyDataSetChanged")
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                bookingList.clear();
+//                for (DataSnapshot historySnap : snapshot.getChildren()) {
+//                    BookingData booking = historySnap.getValue(BookingData.class);
+//                    if (booking != null) {
+//                        /// Optionally, set the Firebase key as the ID.
+//                        booking.setId(historySnap.getKey());
+//                        bookingList.add(booking);
+//                    }
+//                }
+//                adapter.notifyDataSetChanged();
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                /// Handle errors here
+//            }
+//        });
+//    }
+
     private void loadBookingData() {
         String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users")
-                .child(userId)
-                .child("MyHistory");
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
+        // Fetch MyHistory
+        userRef.child("MyHistory").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                bookingList.clear();
                 for (DataSnapshot historySnap : snapshot.getChildren()) {
                     BookingData booking = historySnap.getValue(BookingData.class);
                     if (booking != null) {
-                        /// Optionally, set the Firebase key as the ID.
                         booking.setId(historySnap.getKey());
                         bookingList.add(booking);
                     }
                 }
                 adapter.notifyDataSetChanged();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                /// Handle errors here
+                // Handle errors here
+            }
+        });
+
+        /// Fetch MyBooking
+        userRef.child("MyBooking").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot bookingSnap : snapshot.getChildren()) {
+                    BookingData booking = bookingSnap.getValue(BookingData.class);
+                    if (booking != null) {
+                        booking.setId(bookingSnap.getKey());
+                        bookingList.add(booking);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle errors here
             }
         });
     }
+
 }
+
 
 
 ///No Current User
