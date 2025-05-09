@@ -3,10 +3,7 @@ package com.example.resort.accommodation.data;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.resort.Booking;
 import com.example.resort.R;
 import com.example.resort.addcart.data.CartItem;
 import com.example.resort.addcart.data.CartManager;
@@ -40,9 +38,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AlcoholDetailActivity extends AppCompatActivity {
 
@@ -194,15 +192,15 @@ public class AlcoholDetailActivity extends AppCompatActivity {
             return insets;
         });
 
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("accommodationName");
-        String description = intent.getStringExtra("accommodationDesc");
-        String alcoholContent = intent.getStringExtra("alcoholContent");
-        String alcoholType = intent.getStringExtra("alcoholType");
-        String alcoholSize = intent.getStringExtra("alcoholSize");
-        String status = intent.getStringExtra("accommodationStat");
-        String price = intent.getStringExtra("accommodationPrice");
-        String imageUrl = intent.getStringExtra("accommodationImage");
+        AtomicReference<Intent> intent = new AtomicReference<>(getIntent());
+        String name = intent.get().getStringExtra("accommodationName");
+        String description = intent.get().getStringExtra("accommodationDesc");
+        String alcoholContent = intent.get().getStringExtra("alcoholContent");
+        String alcoholType = intent.get().getStringExtra("alcoholType");
+        String alcoholSize = intent.get().getStringExtra("alcoholSize");
+        String status = intent.get().getStringExtra("accommodationStat");
+        String price = intent.get().getStringExtra("accommodationPrice");
+        String imageUrl = intent.get().getStringExtra("accommodationImage");
 
         TextView tvName = findViewById(R.id.tvAlcoholName);
         TextView tvDescription = findViewById(R.id.tvAlcoholDescription);
@@ -456,12 +454,12 @@ public class AlcoholDetailActivity extends AppCompatActivity {
             if (existingItem != null) {
                 // If the product exists, check its quantity.
                 if (existingItem.getQuantity() >= 10) {
-                    Toast.makeText(AlcoholDetailActivity.this, "Product limit reached (Max 10 items)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AlcoholDetailActivity.this, "Booking limit reached. Max 10 per booking.", Toast.LENGTH_SHORT).show();
                 } else {
                     // Increase the product's quantity by one.
                     existingItem.setQuantity(existingItem.getQuantity() + 1);
                     CartManager.getInstance(this, userId).persistCart();
-                    Toast.makeText(AlcoholDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AlcoholDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 // If the product doesn't exist in the cart, add it with a quantity of 1.
@@ -493,6 +491,12 @@ public class AlcoholDetailActivity extends AppCompatActivity {
                 CartItem item = new CartItem(itemName, itemPrice, "Alcohol", photoForCart);
                 CartManager.getInstance(this, userId).addItem(item);
                 Toast.makeText(AlcoholDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
+
+                /// Redirect to another activity
+//                intent.set(new Intent(AlcoholDetailActivity.this, Booking.class));
+//                intent.get().putExtra("userId", userId);  /// Pass extra data if needed
+//                startActivity(intent.get());
+//                finish();
             }
         });
 

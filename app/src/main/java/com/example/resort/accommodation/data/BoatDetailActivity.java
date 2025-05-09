@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.resort.Booking;
 import com.example.resort.R;
 import com.example.resort.addcart.data.CartItem;
 import com.example.resort.addcart.data.CartManager;
@@ -204,24 +205,24 @@ public class BoatDetailActivity extends AppCompatActivity {
         });
 
         // Extract extras from the intent.
-        Intent intent = getIntent();
-        String productId = intent.getStringExtra("productId");
-        String name = intent.getStringExtra("accommodationName");
-        String description = intent.getStringExtra("accommodationDesc");
-        String capacity = intent.getStringExtra("accommodationCapacity");
-        String design = intent.getStringExtra("accommodationDesign");
-        String status = intent.getStringExtra("accommodationStat");
-        rawPrice = intent.getStringExtra("accommodationPrice");
-        String amenities = intent.getStringExtra("accommodationAmenities");
+        final Intent[] intent = {getIntent()};
+        String productId = intent[0].getStringExtra("productId");
+        String name = intent[0].getStringExtra("accommodationName");
+        String description = intent[0].getStringExtra("accommodationDesc");
+        String capacity = intent[0].getStringExtra("accommodationCapacity");
+        String design = intent[0].getStringExtra("accommodationDesign");
+        String status = intent[0].getStringExtra("accommodationStat");
+        rawPrice = intent[0].getStringExtra("accommodationPrice");
+        String amenities = intent[0].getStringExtra("accommodationAmenities");
 
-        String reminder = intent.getStringExtra("accommodationReminder");
-        String addOns = intent.getStringExtra("accommodationAddOns");
-        String boatName = intent.getStringExtra("accommodationBoatName");
-        String destination = intent.getStringExtra("accommodationDestination");
+        String reminder = intent[0].getStringExtra("accommodationReminder");
+        String addOns = intent[0].getStringExtra("accommodationAddOns");
+        String boatName = intent[0].getStringExtra("accommodationBoatName");
+        String destination = intent[0].getStringExtra("accommodationDestination");
 
         //String imageUrl = intent.getStringExtra("accommodationImage");
         // Get the available date extra (if provided)
-        availableDate = intent.getStringExtra("accommodationAvailableDate");
+        availableDate = intent[0].getStringExtra("accommodationAvailableDate");
 
         // Find views in the layout.
         TextView tvName = findViewById(R.id.tvBoatName);
@@ -573,7 +574,7 @@ public class BoatDetailActivity extends AppCompatActivity {
                 }
             }
             if (productExists) {
-                Toast.makeText(BoatDetailActivity.this, "Sorry, only 1 item of this product can be booked.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BoatDetailActivity.this, "You’ve already booked this. One per booking!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -622,6 +623,12 @@ public class BoatDetailActivity extends AppCompatActivity {
             CartItem item = new CartItem(name, itemPrice, "Boat", itemCapacity, photoForCart);
             CartManager.getInstance(this, uid).addItem(item);
             Toast.makeText(BoatDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
+
+            intent[0] = new Intent(BoatDetailActivity.this, Booking.class);
+            intent[0].putExtra("userId", uid);
+            startActivity(intent[0]);
+            finish();
+
         });
 
         // ----- Fetch Album Data Asynchronously -----

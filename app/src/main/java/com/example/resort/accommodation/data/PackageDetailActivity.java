@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.resort.Booking;
 import com.example.resort.R;
 import com.example.resort.addcart.data.CartItem;
 import com.example.resort.addcart.data.CartManager;
@@ -201,24 +202,24 @@ public class PackageDetailActivity extends AppCompatActivity {
         });
 
         // Extract extras from the intent.
-        Intent intent = getIntent();
-        String productId = intent.getStringExtra("productId");
-        String name = intent.getStringExtra("accommodationName");
-        String description = intent.getStringExtra("accommodationDesc");
-        String capacityCottage = intent.getStringExtra("capacityCottage");
-        String food1 = intent.getStringExtra("food1");
-        String food2 = intent.getStringExtra("food2");
-        String food3 = intent.getStringExtra("food3");
-        String food4 = intent.getStringExtra("food4");
-        String food5 = intent.getStringExtra("food5");
-        String food6 = intent.getStringExtra("food6");
-        String status = intent.getStringExtra("accommodationStat");
-        String beverage = intent.getStringExtra("accommodationBeverage");
-        String cottage = intent.getStringExtra("accommodationCottage");
-        String price = intent.getStringExtra("accommodationPrice");
+        final Intent[] intent = {getIntent()};
+        String productId = intent[0].getStringExtra("productId");
+        String name = intent[0].getStringExtra("accommodationName");
+        String description = intent[0].getStringExtra("accommodationDesc");
+        String capacityCottage = intent[0].getStringExtra("capacityCottage");
+        String food1 = intent[0].getStringExtra("food1");
+        String food2 = intent[0].getStringExtra("food2");
+        String food3 = intent[0].getStringExtra("food3");
+        String food4 = intent[0].getStringExtra("food4");
+        String food5 = intent[0].getStringExtra("food5");
+        String food6 = intent[0].getStringExtra("food6");
+        String status = intent[0].getStringExtra("accommodationStat");
+        String beverage = intent[0].getStringExtra("accommodationBeverage");
+        String cottage = intent[0].getStringExtra("accommodationCottage");
+        String price = intent[0].getStringExtra("accommodationPrice");
         //String imageUrl = intent.getStringExtra("accommodationImage");
         // Get the available date extra (if provided)
-        availableDate = intent.getStringExtra("accommodationAvailableDate");
+        availableDate = intent[0].getStringExtra("accommodationAvailableDate");
 
         // Find views in the layout.
         TextView tvName = findViewById(R.id.tvPackageName);
@@ -569,7 +570,7 @@ public class PackageDetailActivity extends AppCompatActivity {
                 }
             }
             if (productExists) {
-                Toast.makeText(PackageDetailActivity.this, "Sorry, only 1 item of this product can be booked.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PackageDetailActivity.this, "You’ve already booked this. One per booking!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -609,6 +610,12 @@ public class PackageDetailActivity extends AppCompatActivity {
             CartItem item = new CartItem(name, itemPrice, "Package",photoForCart);
             CartManager.getInstance(this, uid).addItem(item);
             Toast.makeText(PackageDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
+
+            intent[0] = new Intent(PackageDetailActivity.this, Booking.class);
+            intent[0].putExtra("userId", uid);
+            startActivity(intent[0]);
+            finish();
+
         });
 
 

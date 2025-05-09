@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.resort.Booking;
 import com.example.resort.R;
 import com.example.resort.addcart.data.CartItem;
 import com.example.resort.addcart.data.CartManager;
@@ -190,15 +191,15 @@ public class DessertDetailActivity extends AppCompatActivity {
             return insets;
         });
 
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("accommodationName");
-        String description = intent.getStringExtra("accommodationDesc");
-        String flavorToppings = intent.getStringExtra("flavorToppings");
-        String pieceNameDessert = intent.getStringExtra("pieceNameDessert");
-        String perfectFor = intent.getStringExtra("perfectFor");
-        String price = intent.getStringExtra("accommodationPrice");
-        String status = intent.getStringExtra("accommodationStat");
-        String imageUrl = intent.getStringExtra("accommodationImage");
+        final Intent[] intent = {getIntent()};
+        String name = intent[0].getStringExtra("accommodationName");
+        String description = intent[0].getStringExtra("accommodationDesc");
+        String flavorToppings = intent[0].getStringExtra("flavorToppings");
+        String pieceNameDessert = intent[0].getStringExtra("pieceNameDessert");
+        String perfectFor = intent[0].getStringExtra("perfectFor");
+        String price = intent[0].getStringExtra("accommodationPrice");
+        String status = intent[0].getStringExtra("accommodationStat");
+        String imageUrl = intent[0].getStringExtra("accommodationImage");
 
         TextView tvName = findViewById(R.id.tvDessertName);
         TextView tvDescription = findViewById(R.id.tvDessertDescription);
@@ -455,12 +456,12 @@ public class DessertDetailActivity extends AppCompatActivity {
             if (existingItem != null) {
                 // If the product exists, check its quantity.
                 if (existingItem.getQuantity() >= 10) {
-                    Toast.makeText(DessertDetailActivity.this, "Product limit reached (Max 10 items)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DessertDetailActivity.this, "Booking limit reached. Max 10 per booking.", Toast.LENGTH_SHORT).show();
                 } else {
                     // Increase the product's quantity by one.
                     existingItem.setQuantity(existingItem.getQuantity() + 1);
                     CartManager.getInstance(this, uid).persistCart();
-                    Toast.makeText(DessertDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DessertDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 // If the product doesn't exist in the cart, add it with a quantity of 1.
@@ -490,6 +491,12 @@ public class DessertDetailActivity extends AppCompatActivity {
                 CartItem item = new CartItem(itemName, itemPrice, "Dessert", photoForCart);
                 CartManager.getInstance(this, uid).addItem(item);
                 Toast.makeText(DessertDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
+
+//                intent[0] = new Intent(DessertDetailActivity.this, Booking.class);
+//                intent[0].putExtra("userId", uid);
+//                startActivity(intent[0]);
+//                finish();
+
             }
         });
 

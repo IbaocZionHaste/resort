@@ -164,12 +164,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                     "Room".equalsIgnoreCase(product.getCategory()) ||
                     "Package".equalsIgnoreCase(product.getCategory())) {
                 if (existingItem != null) {
-                    Toast.makeText(context, "Sorry, only 1 item allowed for " + product.getCategory(), Toast.LENGTH_SHORT).show();
+                    ///Toast.makeText(context, "Sorry, only 1 item allowed for " + product.getCategory(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "You’ve already booked this. One per booking!", Toast.LENGTH_SHORT).show();
+
                     return;
                 }
             } else {
                 if (existingItem != null && existingItem.getQuantity() >= 10) {
-                    Toast.makeText(context, "Sorry, only 10 items allowed for " + product.getName(), Toast.LENGTH_SHORT).show();
+                    ///Toast.makeText(context, "Sorry, only 10 items allowed for " + product.getName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Booking limit reached. Max 10 per booking.", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }

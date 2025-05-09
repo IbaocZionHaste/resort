@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.resort.Booking;
 import com.example.resort.R;
 import com.example.resort.addcart.data.CartItem;
 import com.example.resort.addcart.data.CartManager;
@@ -193,13 +194,13 @@ public class FoodDetailActivity extends AppCompatActivity {
         });
 
         // Extract extras from the intent.
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("accommodationName");
-        String description = intent.getStringExtra("accommodationDesc");
-        String food1 = intent.getStringExtra("food1");
-        String pieceNameFood = intent.getStringExtra("pieceNameFood");
-        String status = intent.getStringExtra("accommodationStat");
-        String price = intent.getStringExtra("accommodationPrice");
+        final Intent[] intent = {getIntent()};
+        String name = intent[0].getStringExtra("accommodationName");
+        String description = intent[0].getStringExtra("accommodationDesc");
+        String food1 = intent[0].getStringExtra("food1");
+        String pieceNameFood = intent[0].getStringExtra("pieceNameFood");
+        String status = intent[0].getStringExtra("accommodationStat");
+        String price = intent[0].getStringExtra("accommodationPrice");
         //String imageUrl = intent.getStringExtra("accommodationImage");
 
         // Find views in the layout.
@@ -459,11 +460,11 @@ public class FoodDetailActivity extends AppCompatActivity {
             if (existingItem != null) {
                 // If product exists, check its quantity.
                 if (existingItem.getQuantity() >= 10) {
-                    Toast.makeText(FoodDetailActivity.this, "Product limit reached (Max 10 items)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FoodDetailActivity.this, "Booking limit reached. Max 10 per booking.", Toast.LENGTH_SHORT).show();
                 } else {
                     existingItem.setQuantity(existingItem.getQuantity() + 1);
                     CartManager.getInstance(this, uid).persistCart();
-                    Toast.makeText(FoodDetailActivity.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FoodDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 // If product doesn't exist, add it with quantity of 1.
@@ -493,6 +494,12 @@ public class FoodDetailActivity extends AppCompatActivity {
                 CartItem item = new CartItem(itemName, itemPrice, "Food",photoForCart);
                 CartManager.getInstance(this, uid).addItem(item);
                 Toast.makeText(FoodDetailActivity.this, "Added to booking successfully", Toast.LENGTH_SHORT).show();
+
+//                intent[0] = new Intent(FoodDetailActivity.this, Booking.class);
+//                intent[0].putExtra("userId", uid);
+//                startActivity(intent[0]);
+//                finish();
+
             }
         });
 
