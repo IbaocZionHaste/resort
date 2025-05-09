@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.resort.Booking;
 import com.example.resort.R;
 import com.example.resort.addcart.data.CartItem;
 import com.example.resort.addcart.data.CartManager;
@@ -192,10 +193,24 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             Button btnOk = dialogView.findViewById(R.id.btnOk);
             btnOk.setOnClickListener(view -> {
                 double priceValue = Double.parseDouble(product.getPrice());
+
+//                Integer capacityValue = null;
+//                if ("Boat".equalsIgnoreCase(product.getCategory()) || "Cottage".equalsIgnoreCase(product.getCategory()) || "Room".equalsIgnoreCase(product.getCategory())) {
+//                    capacityValue = (product.getCapacity() != null) ? Integer.valueOf(product.getCapacity()) : null;
+//                }
+
+                /// Only set capacity for certain categories
                 Integer capacityValue = null;
-                if ("Boat".equalsIgnoreCase(product.getCategory()) || "Cottage".equalsIgnoreCase(product.getCategory()) || "Room".equalsIgnoreCase(product.getCategory())) {
-                    capacityValue = (product.getCapacity() != null) ? Integer.valueOf(product.getCapacity()) : null;
+                String category = product.getCategory();
+                if ("Boat".equalsIgnoreCase(category)
+                        || "Cottage".equalsIgnoreCase(category)
+                        || "Room".equalsIgnoreCase(category)
+                        || "Package".equalsIgnoreCase(category)) {
+                    capacityValue = (product.getCapacity() != null)
+                            ? Integer.valueOf(product.getCapacity())
+                            : null;
                 }
+
 
                 /// Use album photo if available; otherwise fall back to the main image URL.
                 String photoForCart = (holder.albumPhoto1 != null && !holder.albumPhoto1.isEmpty())
@@ -205,7 +220,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 CartItem newCartItem = new CartItem(
                         product.getName(),
                         priceValue,
-                        product.getCategory(),
+                        ///product.getCategory(),
+                        category,
                         capacityValue,
                         photoForCart
                 );
@@ -219,6 +235,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
                 Toast.makeText(context, "Added to booking successfully", Toast.LENGTH_SHORT).show();
                 alertDialog.dismiss();
+
+                /// === New: Redirect to BookingActivity for the four categories only ===
+                if ("Boat".equalsIgnoreCase(category)
+                        || "Cottage".equalsIgnoreCase(category)
+                        || "Room".equalsIgnoreCase(category)
+                        || "Package".equalsIgnoreCase(category)) {
+                    Intent intent = new Intent(context, Booking.class);
+                    /// If you're calling from non-Activity context, add FLAG_ACTIVITY_NEW_TASK:
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+
             });
 
             /// Handle the Cancel button click
@@ -229,6 +257,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             alertDialog.setOnCancelListener(dialog -> {
                 /// No action needed; dialog is simply dismissed
             });
+
         });
 
         /// Open detail activity on item click.
