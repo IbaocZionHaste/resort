@@ -50,6 +50,9 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
     // User-specific CartManager instance.
     private CartManager cartManager;
 
+    private List<CartItem> cartItems; /// current cart items
+
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +68,12 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         }
         String userId = currentUser.getUid();
 
-        // Initialize the CartManager using the current user's UID.
+        /// Initialize the CartManager using the current user's UID.
         cartManager = CartManager.getInstance(this, userId);
+        cartItems = cartManager.getCartItems();
 
-        // Checkout button and back arrow.
+
+        /// Checkout button and back arrow.
         Button btnCheckout = findViewById(R.id.next);
         ImageView backArrow = findViewById(R.id.backArrow);
         backArrow.setOnClickListener(v -> onBackPressed());
@@ -101,8 +106,23 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         editTextTimeOut = findViewById(R.id.editTextTimeOut);
         messageTextView = findViewById(R.id.message);
 
-        // Set up the date and time pickers.
+        /// If a Room-category item was removed elsewhere, reset fields
+        CartItem roomItem = null;
+        for (CartItem ci : cartManager.getCartItems()) {
+            if ("Room".equalsIgnoreCase(ci.getCategory())) {
+                roomItem = ci;
+                break;
+            }
+        }
+        if (roomItem == null && cartManager.hasRoomItems() == false) {
+            /// No room items: ensure date/time are cleared and editable
+            setupDateAndTimePickers();
+        }
+
+        /// Set up the date and time pickers.
         setupDateAndTimePickers();
+        setupPickers();
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -112,12 +132,13 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         adapter.updateCartItems(cartManager.getCartItems());
         adapter.notifyDataSetChanged();
         updateTotalPrice();
-
+        setupDateAndTimePickers();
     }
 
     @Override
     public void onCartUpdated() {
         updateTotalPrice();
+        setupDateAndTimePickers();
     }
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
@@ -176,13 +197,70 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         finish();
     }
 
-    ///This check in time picker
+
+    ///Room Only Automatic Set Date and Time
     @SuppressLint("DefaultLocale")
     private void setupDateAndTimePickers() {
+        cartItems = cartManager.getCartItems();
+
+        if (cartManager.hasRoomItems()) {
+            /// Auto-fill tomorrow's date
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            String formattedDate = String.format("%02d/%02d/%04d",
+                    calendar.get(Calendar.MONTH) + 1,
+                    calendar.get(Calendar.DAY_OF_MONTH),
+                    calendar.get(Calendar.YEAR));
+            editTextDate.setText(formattedDate);
+
+            /// Fixed time-in and time-out for Room
+            editTextTimeIn.setText("03:00 PM");
+            editTextTimeOut.setText("11:00 AM");
+
+            /// Disable editing
+            editTextDate.setEnabled(false);
+            editTextTimeIn.setEnabled(false);
+            editTextTimeOut.setEnabled(false);
+
+            /// Calculate duration: 3:00 PM to 11:00 AM next day = 20 hours
+            int inHour = 15;  // 3 PM
+            int inMin = 0;
+            int outHour = 11; // 11 AM
+            int outMin = 0;
+
+            int diffMins = ((24 - inHour + outHour) * 60 + (outMin - inMin));
+            long diffHrs = diffMins / 60;
+
+            messageTextView.setTextColor(Color.BLACK);
+            messageTextView.setText(String.format(
+                    Locale.getDefault(),
+                    "Please be informed. Check‑out time is %d hour%s after Check‑in.",
+                    diffHrs,
+                    diffHrs > 1 ? "s" : ""
+            ));
+        } else {
+            /// Reset everything and allow manual input
+            editTextDate.setText("");
+            editTextTimeIn.setText("");
+            editTextTimeOut.setText("");
+
+            /// Re-enable fields
+            editTextDate.setEnabled(true);
+            editTextTimeIn.setEnabled(true);
+            editTextTimeOut.setEnabled(true);
+
+            messageTextView.setText("Please be informed. bookings must be made at least 1 day in advance. Check-out time is hours after the Check-in time.");  // Clear the message
+        }
+    }
+
+
+
+    ///This check in time picker
+    @SuppressLint("DefaultLocale")
+    private void setupPickers() {
         editTextDate.setFocusable(false);
         editTextTimeIn.setFocusable(false);
         editTextTimeOut.setFocusable(false);
-
 
         /// --- DATE PICKER (prevent past dates) ---
         editTextDate.setOnClickListener(v -> {
@@ -258,6 +336,8 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         });
     }
 
+
+
     /// Unchanged formatter
     @SuppressLint("DefaultLocale")
     private String formatTime(int hourOfDay, int minute) {
@@ -284,6 +364,13 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         }
     }
 
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
 }
 
 

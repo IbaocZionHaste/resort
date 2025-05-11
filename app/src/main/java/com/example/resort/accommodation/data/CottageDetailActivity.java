@@ -345,10 +345,10 @@ public class CottageDetailActivity extends AppCompatActivity {
                 productRef.child("status").setValue("Available");
             }
         } else if ("Unavailable".equalsIgnoreCase(status)) {
-            tvStatus.setText("Sold Out");
+            tvStatus.setText("Unavailable");
             tvStatus.setTextColor(getResources().getColor(R.color.red));
             btnAddToCart.setEnabled(false);
-            btnAddToCart.setText("Sold Out");
+            btnAddToCart.setText("Unavailable");
 
             if (availableDate != null && !availableDate.trim().isEmpty()) {
                 String extractedDate = availableDate;

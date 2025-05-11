@@ -46,6 +46,16 @@ public class CartManager {
     }
 
 
+    public boolean hasRoomItems() {
+        for (CartItem item : cartItems) {
+            if ("Room".equalsIgnoreCase(item.getCategory())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /// Returns the CartItem that matches the given product name, or null if not found.
     public CartItem getCartItem(String productName) {
         for (CartItem item : cartItems) {

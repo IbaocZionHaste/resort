@@ -1,19 +1,21 @@
 package com.example.resort.addcart.data;
 
+import java.util.Objects;
+
 public class CartItem {
     private final String name;
     private final double price;
     private final String category;
     private int quantity;
-    private Integer capacity; // Only for Cottage and Boat
-    private String imageUrl;  // New field for item image
+    private Integer capacity; /// Only for Cottage and Boat
+    private String imageUrl;  /// New field for item image
 
     /// Constructor for items that may have capacity (Cottage and Boat)
     public CartItem(String name, double price, String category, Integer capacity, String imageUrl) {
         this.name = name;
         this.price = price;
         this.category = category;
-        this.quantity = 1; // Default quantity
+        this.quantity = 1; /// Default quantity
         this.imageUrl = imageUrl;
         /// Assign capacity ONLY if it's a "Cottage" or "Boat"
         this.capacity = ("Cottage".equals(category) || "Boat".equals(category) || "Room".equals(category)) ? capacity : null;
@@ -73,6 +75,22 @@ public class CartItem {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        CartItem other = (CartItem) obj;
+        return category.equals(other.category); /// Or use ID if that's more unique
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(category); /// Use same field as above
+    }
+
 
 
 }

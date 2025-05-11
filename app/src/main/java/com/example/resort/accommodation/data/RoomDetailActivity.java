@@ -372,10 +372,10 @@ public class RoomDetailActivity extends AppCompatActivity {
             }
 
         } else if ("Unavailable".equalsIgnoreCase(status)) {
-            tvStatus.setText("Sold Out");
+            tvStatus.setText("Unavailable");
             tvStatus.setTextColor(getResources().getColor(R.color.red));
             btnAddToCart.setEnabled(false);
-            btnAddToCart.setText("Sold Out");
+            btnAddToCart.setText("Unavailable");
 
             // Process availableDate if provided.
             if (availableDate != null && !availableDate.trim().isEmpty()) {

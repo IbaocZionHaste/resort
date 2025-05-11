@@ -1072,7 +1072,6 @@ public class BookingStatus extends AppCompatActivity {
     }
 
 
-
     /// Final Approved by Admin
     private Handler pollingHandler;
     private Runnable pollTask;
