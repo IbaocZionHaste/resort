@@ -126,6 +126,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintBottom_toTopOf="@+id/textView24"
@@ -142,7 +143,7 @@
         android:layout_marginEnd="10dp"
         android:drawableLeft="@drawable/ic_profile_about"
         android:drawablePadding="10dp"
-        android:text="In case of a refund, 30% of the booking amount will be returned to the guest."
+        android:hint="In case of a refund, 0% of the booking amount will be returned to the guest."
         android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="15sp"
@@ -189,20 +190,20 @@
             app:layout_constraintTop_toTopOf="@+id/checkBoxGcash"
             app:layout_constraintVertical_bias="0.385" />
 
-    <CheckBox
-        android:id="@+id/checkBoxGcash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Gcash"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.062"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.385" />
+        <CheckBox
+            android:id="@+id/checkBoxGcash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gcash"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/textView27"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.062"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView24"
+            app:layout_constraintVertical_bias="0.385" />
 
     <TextView
         android:id="@+id/textView28"
@@ -276,22 +277,23 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.647" />
 
-    <TextView
-        android:id="@+id/textView24"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/arial_th"
-        android:text="Mode of Payment:"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.066"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.341" />
+        <TextView
+            android:id="@+id/textView24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/arial_th"
+            android:text="Mode of Payment:"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:layout_marginTop="5dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.066"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.341" />
 
     <TextView
         android:id="@+id/textView33"

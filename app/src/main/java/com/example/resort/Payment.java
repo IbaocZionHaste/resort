@@ -184,6 +184,29 @@ public class Payment extends AppCompatActivity {
                 });
 
 
+        /// Refund Information
+        TextView refundMessage = findViewById(R.id.message);
+
+        FirebaseDatabase.getInstance()
+                .getReference("refunddescription/description")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            String description = snapshot.getValue(String.class);
+                            refundMessage.setText(description);
+                        } else {
+                            refundMessage.setText("No info available.");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        refundMessage.setText("Error loading information.");
+                    }
+                });
+
+
         /// Auth and booking ref setup
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
@@ -221,6 +244,8 @@ public class Payment extends AppCompatActivity {
                 // Optional: handle errors
             }
         });
+
+
 
         /// Prefill amount fields from paymentTransaction
         myBookingRef.addListenerForSingleValueEvent(new ValueEventListener() {
