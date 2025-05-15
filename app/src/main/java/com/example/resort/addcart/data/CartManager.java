@@ -46,6 +46,7 @@ public class CartManager {
     }
 
 
+
     public boolean hasRoomItems() {
         for (CartItem item : cartItems) {
             if ("Room".equalsIgnoreCase(item.getCategory())) {
@@ -54,7 +55,6 @@ public class CartManager {
         }
         return false;
     }
-
 
     /// Returns the CartItem that matches the given product name, or null if not found.
     public CartItem getCartItem(String productName) {
@@ -111,7 +111,7 @@ public class CartManager {
 
     /// Updates an existing item (simply persists the changes).
     public void updateItem(CartItem item) {
-        // As item is a reference, we simply save the cart.
+        /// As item is a reference, we simply save the cart.
         saveCart();
     }
 

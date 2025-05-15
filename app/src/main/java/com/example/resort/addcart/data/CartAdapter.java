@@ -185,7 +185,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 }
 
 
-
 ///Fix Current
 //package com.example.resort.addcart.data;
 //

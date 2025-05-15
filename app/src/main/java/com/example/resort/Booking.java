@@ -47,10 +47,13 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
     private CartAdapter adapter;
     private EditText editTextDate, editTextTimeIn, editTextTimeOut;
     private TextView messageTextView;
-    // User-specific CartManager instance.
+
+    /// User-specific CartManager instance.
     private CartManager cartManager;
 
-    private List<CartItem> cartItems; /// current cart items
+    private List<CartItem> cartItems;
+
+    /// current cart items
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -59,10 +62,10 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_booking);
 
-        // Retrieve the current Firebase user.
+        /// Retrieve the current Firebase user.
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            // If user is not logged in, exit this activity.
+            /// If user is not logged in, exit this activity.
             finish();
             return;
         }
@@ -78,18 +81,18 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         ImageView backArrow = findViewById(R.id.backArrow);
         backArrow.setOnClickListener(v -> onBackPressed());
 
-        // Adjust layout for system insets (edge-to-edge).
+        /// Adjust layout for system insets (edge-to-edge).
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Fullscreen
+        /// Fullscreen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // Setup RecyclerView for Cart Items.
+        /// Setup RecyclerView for Cart Items.
         RecyclerView cartRecyclerView = findViewById(R.id.recyclerView);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         totalPriceText = findViewById(R.id.totalPriceText);
@@ -97,10 +100,10 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         cartRecyclerView.setAdapter(adapter);
         updateTotalPrice();
 
-        // Set button click to proceed to checkout.
+        /// Set button click to proceed to checkout.
         btnCheckout.setOnClickListener(v -> goToCheckout());
 
-        // Initialize EditText fields and message TextView for date and time inputs.
+        /// Initialize EditText fields and message TextView for date and time inputs.
         editTextDate = findViewById(R.id.editTextDate);
         editTextTimeIn = findViewById(R.id.editTextTimeIn);
         editTextTimeOut = findViewById(R.id.editTextTimeOut);
@@ -114,7 +117,7 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
                 break;
             }
         }
-        if (roomItem == null && cartManager.hasRoomItems() == false) {
+        if (roomItem == null && !cartManager.hasRoomItems()) {
             /// No room items: ensure date/time are cleared and editable
             setupDateAndTimePickers();
         }
@@ -183,11 +186,11 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
             return;
         }
 
-        // Generate formatted booking info: "Date: March 9 2025 (8am - 4pm)".
+        /// Generate formatted booking info: "Date: March 9 2025 (8am - 4pm)".
         String bookingInfo = getFormattedBookingInfo(editTextDate.getText().toString(),
                 editTextTimeIn.getText().toString(), editTextTimeOut.getText().toString());
 
-        // Pass cart details and booking info to the BookingReceipt activity.
+        /// Pass cart details and booking info to the BookingReceipt activity.
         Intent intent = new Intent(this, BookingReceipt.class);
         intent.putStringArrayListExtra("CART_ITEMS", itemDetails);
         intent.putExtra("TOTAL_PRICE", total);
@@ -198,7 +201,7 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
     }
 
 
-    ///Room Only Automatic Set Date and Time
+    /// Room Only Automatic Set Date and Time
     @SuppressLint("DefaultLocale")
     private void setupDateAndTimePickers() {
         cartItems = cartManager.getCartItems();
@@ -217,15 +220,18 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
             editTextTimeIn.setText("03:00 PM");
             editTextTimeOut.setText("11:00 AM");
 
+            /// Make them semi-transparent
+            editTextTimeIn.setAlpha(0.5f);
+            editTextTimeOut.setAlpha(0.5f);
+
             /// Disable editing
-            editTextDate.setEnabled(false);
             editTextTimeIn.setEnabled(false);
             editTextTimeOut.setEnabled(false);
 
             /// Calculate duration: 3:00 PM to 11:00 AM next day = 20 hours
-            int inHour = 15;  // 3 PM
+            int inHour = 15;  /// 3 PM
             int inMin = 0;
-            int outHour = 11; // 11 AM
+            int outHour = 11; /// 11 AM
             int outMin = 0;
 
             int diffMins = ((24 - inHour + outHour) * 60 + (outMin - inMin));
@@ -249,15 +255,24 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
             editTextTimeIn.setEnabled(true);
             editTextTimeOut.setEnabled(true);
 
-            messageTextView.setText("Please be informed. bookings must be made at least 1 day in advance. Check-out time is hours after the Check-in time.");  // Clear the message
+            /// Reset opacity (make fully visible again)
+            editTextTimeIn.setAlpha(1.0f);
+            editTextTimeOut.setAlpha(1.0f);
+
+            /// Optional: Reset text color if you changed it earlier
+            editTextTimeIn.setTextColor(Color.BLACK);
+            editTextTimeOut.setTextColor(Color.BLACK);
+
+            messageTextView.setText("Please be informed. bookings must be made at least 1 day in advance. Check-out time is hours after the Check-in time.");  /// Clear the message
         }
     }
-
 
 
     ///This check in time picker
     @SuppressLint("DefaultLocale")
     private void setupPickers() {
+
+        /// Prevent keyboard & ensure pickers only
         editTextDate.setFocusable(false);
         editTextTimeIn.setFocusable(false);
         editTextTimeOut.setFocusable(false);
@@ -273,49 +288,66 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
                     c.get(Calendar.MONTH),
                     c.get(Calendar.DAY_OF_MONTH)
             );
-
-            /// Disable today: set minimum date to tomorrow
+            /// Disable today: minimum = tomorrow
             c.add(Calendar.DAY_OF_MONTH, 1);
+
+            /// min = tomorrow :contentReference[oaicite:3]{index=3}
             dlg.getDatePicker().setMinDate(c.getTimeInMillis());
             dlg.show();
         });
 
-
-        /// --- TIME-IN PICKER (6 AM → 6 PM office hours) ---
+        /// --- TIME-IN PICKER (6 AM → 6 PM office hours + custom gate) ---
         editTextTimeIn.setOnClickListener(v -> {
             Calendar now = Calendar.getInstance(TimeZone.getTimeZone("Asia/Manila"));
             int initH = now.get(Calendar.HOUR_OF_DAY);
             int initM = now.get(Calendar.MINUTE);
 
             new TimePickerDialog(this, (view, hourOfDay, minute) -> {
-                int inMins = hourOfDay * 60 + minute;
-                final int OPEN = 6 * 60;   // 6:00 AM
-                final int CLOSE = 18 * 60; // 6:00 PM
+                /// 0) CUSTOM GATE: only 6–9 any minute, PLUS exactly 10:00 AM
+                if (hourOfDay < 6 || hourOfDay > 10) {
+                    Toast.makeText(this,
+                            "Please pick between 6 AM and 10 AM only",
+                            Toast.LENGTH_SHORT).show();
+                    editTextTimeIn.setText("");
+                    editTextTimeOut.setText("");
+                    return;
+                }
 
-                /// 1) Must be within 6 AM–6 PM
+                if (hourOfDay == 10 && minute != 0) {
+                    Toast.makeText(this,
+                            "10 AM must be exactly 10:00",
+                            Toast.LENGTH_SHORT).show();
+                    editTextTimeIn.setText("");
+                    editTextTimeOut.setText("");
+                    return;
+                }
+                /// 1) Office hours: 6 AM–6 PM > this Not Use because 6 to 10 am only the user pick the time other not allow
+                int inMins = hourOfDay * 60 + minute;
+                final int OPEN = 6 * 60;   /// 6:00 AM
+                final int CLOSE = 18 * 60; /// 6:00 PM
                 if (inMins < OPEN || inMins >= CLOSE) {
                     Toast.makeText(this,
-                            "Office hours are 6:00 AM–6:00 PM only",
+                            "Office hours are 6:00 AM–6:00 PM only",
                             Toast.LENGTH_SHORT).show();
                     editTextTimeIn.setText("");
                     editTextTimeOut.setText("");
                     return;
                 }
 
-                /// 2) Need at least 1 hr before closing
+                /// 2) Must book at least 1 hr before closing > this Not Use because 6 to 10 am only the user pick the time other not allow
                 if (CLOSE - inMins < 60) {
                     Toast.makeText(this,
-                            "You need to book at least 1 full hour before 6 PM",
+                            "You need to book at least 1 full hour before 6 PM",
                             Toast.LENGTH_SHORT).show();
                     editTextTimeIn.setText("");
                     editTextTimeOut.setText("");
                     return;
                 }
 
-                /// 3) Calculate check‑out: up to 8 hrs max, capped at 6 PM
+
+                /// 3) Compute check-out: up to 8 hrs, capped at 6 PM
                 int outMins = Math.min(inMins + 8*60, CLOSE);
                 long diffHrs = (outMins - inMins) / 60;
-
                 /// 4) Format & display
                 String inStr = formatTime(hourOfDay, minute);
                 int outH = outMins / 60;
@@ -327,15 +359,16 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
                 messageTextView.setTextColor(Color.BLACK);
                 messageTextView.setText(String.format(
                         Locale.getDefault(),
-                        "Please be informed. Check‑out time is %d hour%s after Check‑in.",
+                        "Please be informed. Check-out time is %d hour%s after Check-in.",
                         diffHrs,
                         diffHrs > 1 ? "s" : ""
                 ));
-
-            }, initH, initM, false).show();
+            },
+                    initH, initM, false)
+                    /// show TimePickerDialog :contentReference[oaicite:4]{index=4}
+                    .show();
         });
     }
-
 
 
     /// Unchanged formatter
@@ -368,11 +401,89 @@ public class Booking extends AppCompatActivity implements CartUpdateListener {
         return cartItems;
     }
 
-    public void setCartItems(List<CartItem> cartItems) {
-        this.cartItems = cartItems;
-    }
 }
 
+
+///This code not filter 6am to 10am only allow and the other not allow to pick
+//    @SuppressLint("DefaultLocale")
+//    private void setupPickers() {
+//        editTextDate.setFocusable(false);
+//        editTextTimeIn.setFocusable(false);
+//        editTextTimeOut.setFocusable(false);
+//
+//        /// --- DATE PICKER (prevent past dates) ---
+//        editTextDate.setOnClickListener(v -> {
+//            Calendar c = Calendar.getInstance();
+//            DatePickerDialog dlg = new DatePickerDialog(
+//                    this,
+//                    (view, year, month, day) ->
+//                            editTextDate.setText(String.format("%02d/%02d/%04d", month+1, day, year)),
+//                    c.get(Calendar.YEAR),
+//                    c.get(Calendar.MONTH),
+//                    c.get(Calendar.DAY_OF_MONTH)
+//            );
+//
+//            /// Disable today: set minimum date to tomorrow
+//            c.add(Calendar.DAY_OF_MONTH, 1);
+//            dlg.getDatePicker().setMinDate(c.getTimeInMillis());
+//            dlg.show();
+//        });
+
+//
+//        /// --- TIME-IN PICKER (6 AM → 6 PM office hours) ---
+//        editTextTimeIn.setOnClickListener(v -> {
+//            Calendar now = Calendar.getInstance(TimeZone.getTimeZone("Asia/Manila"));
+//            int initH = now.get(Calendar.HOUR_OF_DAY);
+//            int initM = now.get(Calendar.MINUTE);
+//
+//            new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+//                int inMins = hourOfDay * 60 + minute;
+//                final int OPEN = 6 * 60;   // 6:00 AM
+//                final int CLOSE = 18 * 60; // 6:00 PM
+//
+//                /// 1) Must be within 6 AM–6 PM
+//                if (inMins < OPEN || inMins >= CLOSE) {
+//                    Toast.makeText(this,
+//                            "Office hours are 6:00 AM–6:00 PM only",
+//                            Toast.LENGTH_SHORT).show();
+//                    editTextTimeIn.setText("");
+//                    editTextTimeOut.setText("");
+//                    return;
+//                }
+//
+//                /// 2) Need at least 1 hr before closing
+//                if (CLOSE - inMins < 60) {
+//                    Toast.makeText(this,
+//                            "You need to book at least 1 full hour before 6 PM",
+//                            Toast.LENGTH_SHORT).show();
+//                    editTextTimeIn.setText("");
+//                    editTextTimeOut.setText("");
+//                    return;
+//                }
+//
+//                /// 3) Calculate check‑out: up to 8 hrs max, capped at 6 PM
+//                int outMins = Math.min(inMins + 8*60, CLOSE);
+//                long diffHrs = (outMins - inMins) / 60;
+//
+//                /// 4) Format & display
+//                String inStr = formatTime(hourOfDay, minute);
+//                int outH = outMins / 60;
+//                int outMin = outMins % 60;
+//                String outStr = formatTime(outH, outMin);
+//
+//                editTextTimeIn.setText(inStr);
+//                editTextTimeOut.setText(outStr);
+//                messageTextView.setTextColor(Color.BLACK);
+//                messageTextView.setText(String.format(
+//                        Locale.getDefault(),
+//                        "Please be informed. Check‑out time is %d hour%s after Check‑in.",
+//                        diffHrs,
+//                        diffHrs > 1 ? "s" : ""
+//                ));
+//
+//            }, initH, initM, false).show();
+//        });
+//    }
 
 
 /// This code 12am 6 am office hour
