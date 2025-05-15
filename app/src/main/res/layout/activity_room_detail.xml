@@ -89,7 +89,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+
             android:orientation="vertical">
 
             <!-- CardView containing boat details with horizontal margins -->
@@ -104,6 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/pink"
                     android:padding="16dp">
 
                     <!-- Row 1: Boat Name and Rating -->
@@ -199,6 +200,7 @@
                         android:layout_height="wrap_content"
                         android:text="Description"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:fontFamily="@font/arial_th"
@@ -222,6 +224,7 @@
                         android:layout_height="wrap_content"
                         android:text="Capacity: "
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:layout_marginTop="4dp" />
 
                     <!-- Boat Design -->
@@ -231,6 +234,7 @@
                         android:layout_height="wrap_content"
                         android:text="Design: "
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:layout_marginTop="4dp" />
 
                     <!-- Boat Amenities -->
@@ -240,6 +244,7 @@
                         android:layout_height="wrap_content"
                         android:text="Amenities: "
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:layout_marginTop="4dp" />
@@ -251,6 +256,7 @@
                         android:text="Entrance Inlcuded: "
                         android:textSize="20sp"
                         android:textAlignment="viewStart"
+                        android:textColor="@color/grey"
                         android:justificationMode="inter_word"
                         android:layout_marginTop="4dp" />
 
@@ -261,6 +267,7 @@
                         android:text="Reminder: "
                         android:textSize="20sp"
                         android:drawablePadding="5dp"
+                        android:textColor="@color/grey"
                         app:drawableStartCompat="@drawable/ic_profile_about"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
