@@ -370,7 +370,7 @@ public class BookingReceipt extends AppCompatActivity {
         }
 
         if (!foodAndDrinks.isEmpty()) {
-            receipt.append("Food/Dessert/Beverage/Alcohol\n");
+            receipt.append("Accommodation Add-ons\n");
             for (CartItem item : foodAndDrinks) {
                 String itemName = item.getName();
                 if (item.getQuantity() > 1) {

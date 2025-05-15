@@ -88,7 +88,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+
             android:orientation="vertical">
 
             <!-- CardView containing details with horizontal margins for a neat inset -->
@@ -103,6 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/pink"
                     android:padding="16dp">
 
                     <!-- Row 1: Cottage Name and Rating -->
@@ -197,6 +198,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Description"
+                        android:textColor="@color/grey"
                         android:textSize="20sp"
                         android:fontFamily="@font/arial_th"
                         android:textAlignment="viewStart"
@@ -220,6 +222,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Capacity: "
+                        android:textColor="@color/grey"
                         android:textSize="20sp"
                         android:layout_marginTop="4dp" />
 
@@ -230,6 +233,7 @@
                         android:layout_height="wrap_content"
                         android:text="Design: "
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:layout_marginTop="4dp" />
@@ -241,6 +245,7 @@
                         android:layout_height="wrap_content"
                         android:text="Amenities: "
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:layout_marginTop="4dp" />
@@ -252,6 +257,7 @@
                         android:layout_height="wrap_content"
                         android:text="Location: "
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:layout_marginTop="4dp" />
@@ -263,6 +269,7 @@
                         android:layout_height="wrap_content"
                         android:text="Entrance Inlcuded: "
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:layout_marginTop="4dp" />
@@ -273,6 +280,7 @@
                         android:layout_height="wrap_content"
                         android:text="Reminder: "
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:drawablePadding="5dp"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"

@@ -73,7 +73,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+
             android:orientation="vertical">
 
             <!-- CardView for Beverage Details -->
@@ -88,6 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/pink"
                     android:padding="16dp">
 
                     <!-- Row 1: Beverage Name and Rating -->
@@ -180,6 +181,7 @@
                         android:layout_height="wrap_content"
                         android:text="Description"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:fontFamily="@font/arial_th"
@@ -203,6 +205,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_th"
                         android:text="Size:"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:textSize="20sp" />

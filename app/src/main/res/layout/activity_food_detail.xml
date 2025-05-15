@@ -73,7 +73,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+
             android:orientation="vertical">
 
             <!-- CardView for food details with horizontal margins -->
@@ -88,6 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/pink"
                     android:padding="16dp">
 
                     <!-- Row 1: Food Name and Rating -->
@@ -185,6 +186,7 @@
                         android:layout_height="wrap_content"
                         android:text="Description"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:fontFamily="@font/arial_th"
@@ -207,6 +209,7 @@
                         android:layout_height="wrap_content"
                         android:text="Size:"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:layout_marginTop="4dp" />
@@ -217,6 +220,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_th"
                         android:text="Good For:"
+                        android:textColor="@color/grey"
                         android:layout_marginTop="4dp"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"

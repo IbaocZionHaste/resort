@@ -88,7 +88,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+
             android:orientation="vertical">
 
             <!-- CardView for Package Details -->
@@ -103,6 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/pink"
                     android:padding="16dp">
 
                     <!-- Row 1: Package Name and Rating -->
@@ -194,6 +195,7 @@
                         android:layout_height="wrap_content"
                         android:text="Description"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
                         android:fontFamily="@font/arial_th"
@@ -215,6 +217,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Capacity:"
+                        android:textColor="@color/grey"
                         android:textSize="20sp"
                         android:textAlignment="viewStart"
                         android:justificationMode="inter_word"
@@ -227,6 +230,7 @@
                         android:layout_height="wrap_content"
                         android:text="Cottage:"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
@@ -238,6 +242,7 @@
                         android:layout_height="wrap_content"
                         android:text="Beverage:"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:textAlignment="viewStart"
                         android:layout_marginBottom="4dp"
                         android:justificationMode="inter_word" />
@@ -250,6 +255,7 @@
                         android:layout_height="wrap_content"
                         android:text="Item 1:"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:layout_marginBottom="4dp" />
 
                     <TextView
@@ -258,6 +264,7 @@
                         android:layout_height="wrap_content"
                         android:text="Item 2:"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:layout_marginBottom="4dp" />
 
                     <TextView
@@ -266,6 +273,7 @@
                         android:layout_height="wrap_content"
                         android:text="Item 3:"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:layout_marginBottom="4dp" />
 
                     <TextView
@@ -274,6 +282,7 @@
                         android:layout_height="wrap_content"
                         android:text="Item 4:"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:layout_marginBottom="4dp" />
 
                     <TextView
@@ -282,6 +291,7 @@
                         android:layout_height="wrap_content"
                         android:text="Item 5:"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:layout_marginBottom="4dp" />
 
                     <TextView
@@ -290,6 +300,7 @@
                         android:layout_height="wrap_content"
                         android:text="Item 6:"
                         android:textSize="20sp"
+                        android:textColor="@color/grey"
                         android:layout_marginBottom="4dp" />
                     <!-- Package Location -->
 
