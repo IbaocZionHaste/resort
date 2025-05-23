@@ -150,7 +150,7 @@
                 android:id="@+id/tvOrderItemsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Order Items:"
+                android:text="Booking Details:"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:fontFamily="@font/arial_th"
